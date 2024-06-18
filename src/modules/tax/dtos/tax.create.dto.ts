@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsString, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsPositive,
+  IsString,
+  Max,
+  MinLength,
+} from 'class-validator';
 
 export class CreateTaxDto {
   @ApiProperty({ example: 'FODEC', type: String })
@@ -9,6 +16,8 @@ export class CreateTaxDto {
 
   @ApiProperty({ example: '0.05', type: Number })
   @IsNumber()
+  @IsPositive()
+  @Max(1)
   rate: number;
 
   @ApiProperty({ example: 'true', type: Boolean })

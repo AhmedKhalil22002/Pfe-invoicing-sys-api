@@ -68,7 +68,8 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
   }
 
   public async softDelete(id: string | number): Promise<T> {
-    this.entity.softDelete(id);
-    return this.findOneById(id);
+    const entity = await this.findOneById(id);
+    await this.entity.softDelete(id);
+    return entity;
   }
 }
