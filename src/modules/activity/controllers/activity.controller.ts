@@ -17,6 +17,7 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { ActivityEntity } from '../repositories/entities/activity.entity';
 import { PageOptionsDto } from 'src/common/database/interfaces/database.pagination.interface';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { UpdateActivityDto } from '../dtos/activity.update.dto';
 
 @ApiTags('activity')
 @Controller({
@@ -71,7 +72,7 @@ export class ActivityController {
   })
   async update(
     @Param('id') id: number,
-    @Body() updateActivityDto: Partial<CreateActivityDto>,
+    @Body() updateActivityDto: UpdateActivityDto,
   ): Promise<Record<string, any>> {
     const activity = await this.activityService.update(id, updateActivityDto);
     if (!activity) {

@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ActivityRepository } from '../repositories/repository/activity.repository';
 import { ActivityEntity } from '../repositories/entities/activity.entity';
 import { CreateActivityDto } from '../dtos/activity.create.dto';
-import { DeepPartial } from 'typeorm';
 import {
   PageOptionsDto,
   skip,
 } from 'src/common/database/interfaces/database.pagination.interface';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { UpdateActivityDto } from '../dtos/activity.update.dto';
 
 @Injectable()
 export class ActivityService {
@@ -43,20 +43,18 @@ export class ActivityService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async save(
-    createActivityDto: DeepPartial<CreateActivityDto>,
-  ): Promise<ActivityEntity> {
+  async save(createActivityDto: CreateActivityDto): Promise<ActivityEntity> {
     return this.activityRepository.save(createActivityDto);
   }
 
   async update(
     id: number,
-    updateActivityDto: DeepPartial<CreateActivityDto>,
+    updateActivityDto: UpdateActivityDto,
   ): Promise<ActivityEntity> {
     const activity = await this.findOneById(id);
     return this.activityRepository.save({
-      ...updateActivityDto,
       ...activity,
+      ...updateActivityDto,
     });
   }
 
