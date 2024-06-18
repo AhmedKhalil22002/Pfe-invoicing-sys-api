@@ -12,10 +12,8 @@ export default registerAs(
     globalPrefix: '/api',
     http: {
       enable: process.env.HTTP_ENABLE === 'true' ?? false,
-      host: process.env.HTTP_HOST ?? 'localhost',
-      port: process.env.HTTP_PORT
-        ? Number.parseInt(process.env.HTTP_PORT)
-        : 3000,
+      host: process.env.APP_HOST ?? 'localhost',
+      port: process.env.APP_PORT ? Number.parseInt(process.env.APP_PORT) : 3000,
     },
 
     jobEnable: process.env.JOB_ENABLE === 'true' ?? false,

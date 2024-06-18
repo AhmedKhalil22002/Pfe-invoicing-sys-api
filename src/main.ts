@@ -17,7 +17,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
+  const logger = new Logger();
+
   const configService = app.get(ConfigService);
+
+  // const env: string = configService.get<string>('app.env');
+  const host: string = configService.get<string>('app.http.host');
+  const port: number = configService.get<number>('app.http.port');
+
   const docName: string = configService.get<string>('doc.name');
   const docDesc: string = configService.get<string>('doc.description');
   const docVersion: string = configService.get<string>('doc.version');
@@ -27,7 +34,7 @@ async function bootstrap() {
     .setTitle(docName)
     .setDescription(docDesc)
     .setVersion(docVersion)
-    .addServer('http://localhost:3000/', 'Local environment')
+    .addServer(`http://${host}:${port}/`, 'Local environment')
     .addServer('https://staging.yourapi.com/', 'Staging')
     .addServer('https://production.yourapi.com/', 'Production')
     .addBearerAuth(
@@ -61,10 +68,6 @@ async function bootstrap() {
     customSiteTitle: docName,
   });
 
-  // const env: string = configService.get<string>('app.env');
-  const host: string = configService.get<string>('app.http.host');
-  const port: number = configService.get<number>('app.http.port');
-  const logger = new Logger();
   // logger.log(`==========================================================`);
   // logger.log(`Environment Variable`, 'NestApplication');
   // logger.log(JSON.parse(JSON.stringify(process.env)), 'NestApplication');
