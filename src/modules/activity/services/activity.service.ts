@@ -62,6 +62,10 @@ export class ActivityService {
     return this.activityRepository.softDelete(id);
   }
 
+  async deleteAll() {
+    return this.activityRepository.deleteAll();
+  }
+
   async getTotal(): Promise<number> {
     return this.activityRepository.getTotalCount({});
   }

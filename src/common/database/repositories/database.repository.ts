@@ -72,4 +72,12 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     await this.entity.softDelete(id);
     return entity;
   }
+
+  public async deleteAll(): Promise<void> {
+    try {
+      await this.entity.clear();
+    } catch (error) {
+      throw new Error(`Failed to delete all entities: ${error.message}`);
+    }
+  }
 }
