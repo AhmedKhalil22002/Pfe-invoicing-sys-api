@@ -20,8 +20,8 @@ export class MigrationCountrySeed {
   }
 
   @Command({
-    command: 'remove:country',
-    describe: 'remove country',
+    command: 'rollback:country',
+    describe: 'rollback country',
   })
   async remove(): Promise<void> {
     try {

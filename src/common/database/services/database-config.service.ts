@@ -7,6 +7,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    const isMigration = this.isMigrationOrSeedCommand();
     return {
       type: this.configService.get('database.type', { infer: true }),
       url: this.configService.get('database.url', { infer: true }),
@@ -15,9 +16,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get('database.username', { infer: true }),
       password: this.configService.get('database.password', { infer: true }),
       database: this.configService.get('database.name', { infer: true }),
-      synchronize: this.configService.get('database.synchronize', {
-        infer: true,
-      }),
+      synchronize: isMigration
+        ? false
+        : this.configService.get('database.synchronize', { infer: true }),
       dropSchema: false,
       keepConnectionAlive: true,
       logging:
@@ -51,5 +52,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
           : undefined,
       },
     } as TypeOrmModuleOptions;
+  }
+
+  private isMigrationOrSeedCommand(): boolean {
+    const migrationOrSeedKeywords = ['migration', 'seed'];
+    return process.argv.some((arg) =>
+      migrationOrSeedKeywords.some((keyword) => arg.includes(keyword)),
+    );
   }
 }

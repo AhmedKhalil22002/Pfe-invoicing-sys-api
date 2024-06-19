@@ -29,10 +29,15 @@ export class ActivityController {
 
   @Get('/list')
   @ApiPaginatedResponse(ActivityEntity)
-  async findAll(
+  async findAllPaginated(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<ActivityEntity>> {
-    return await this.activityService.findAll(pageOptionsDto);
+    return await this.activityService.findAllPaginated(pageOptionsDto);
+  }
+
+  @Get('/all')
+  async findAll(): Promise<ActivityEntity[]> {
+    return await this.activityService.findAll();
   }
 
   @Get('/:id')

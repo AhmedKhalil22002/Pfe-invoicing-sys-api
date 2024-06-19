@@ -24,7 +24,11 @@ export class ActivityService {
     });
   }
 
-  async findAll(
+  async findAll(): Promise<ActivityEntity[]> {
+    return await this.activityRepository.findAll();
+  }
+
+  async findAllPaginated(
     pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<ActivityEntity>> {
     const count = await this.activityRepository.getTotalCount({
