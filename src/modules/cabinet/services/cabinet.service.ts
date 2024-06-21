@@ -75,8 +75,8 @@ export class CabinetService {
       ...updateCabinetDto.address,
     });
     return this.cabinetRepository.save({
-      ...updateCabinetDto,
       ...cabinet,
+      ...updateCabinetDto,
     });
   }
 
