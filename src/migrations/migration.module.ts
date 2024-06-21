@@ -12,11 +12,14 @@ import { CountryModule } from 'src/modules/country/country.module';
 import { CurrencyModule } from 'src/modules/currency/currency.module';
 import { TaxModule } from 'src/modules/tax/tax.module';
 import { MigrationTaxSeed } from './seeders/migration.tax.seed';
+import { MigrationCabinetSeed } from './seeders/migration.cabinet.seed';
+import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 
 @Module({
   imports: [
     CommandModule,
     ActivityModule,
+    CabinetModule,
     CountryModule,
     CurrencyModule,
     TaxModule,
@@ -34,6 +37,7 @@ import { MigrationTaxSeed } from './seeders/migration.tax.seed';
   ],
   providers: [
     MigrationActivitySeed,
+    MigrationCabinetSeed,
     MigrationCountrySeed,
     MigrationCurrencySeed,
     MigrationTaxSeed,

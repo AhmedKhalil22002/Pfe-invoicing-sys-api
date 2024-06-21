@@ -85,6 +85,10 @@ export class CabinetService {
     return this.cabinetRepository.softDelete(id);
   }
 
+  async deleteAll() {
+    this.cabinetRepository.deleteAll();
+  }
+
   async getTotal(): Promise<number> {
     return this.cabinetRepository.getTotalCount({});
   }

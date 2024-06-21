@@ -19,15 +19,17 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed:activity": "nestjs-command seed:activity",
+    "seed:cabinet": "nestjs-command seed:cabinet",
     "seed:country": "nestjs-command seed:country",
     "seed:currency": "nestjs-command seed:currency",
     "seed:tax": "nestjs-command seed:tax",
     "rollback:activity": "nestjs-command rollback:activity",
+    "rollback:cabinet": "nestjs-command rollback:cabinet",
     "rollback:country": "nestjs-command rollback:country",
     "rollback:currency": "nestjs-command rollback:currency",
     "rollback:tax": "nestjs-command rollback:tax",
-    "seed:all" : "nestjs-command seed:country && nestjs-command seed:currency && nestjs-command seed:activity && nestjs-command seed:tax",
-    "rollback:all":"nestjs-command rollback:country && nestjs-command rollback:currency && nestjs-command rollback:activity && nestjs-command rollback:tax"
+    "seed:all" : "nestjs-command seed:country && nestjs-command seed:currency && nestjs-command seed:activity && nestjs-command seed:tax && nestjs-command seed:cabinet",
+    "rollback:all":"nestjs-command rollback:cabinet && nestjs-command rollback:tax && nestjs-command rollback:activity && nestjs-command rollback:currency && nestjs-command rollback:country"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

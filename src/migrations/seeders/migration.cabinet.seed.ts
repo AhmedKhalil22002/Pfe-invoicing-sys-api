@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
-import { CountryService } from 'src/modules/country/services/country.service';
-import { countries } from '../data/country.data';
+import { CabinetService } from 'src/modules/cabinet/services/cabinet.service';
+import { cabinet } from '../data/cabinet.data';
 import { Connection } from 'typeorm';
 
 @Injectable()
-export class MigrationCountrySeed {
+export class MigrationCabinetSeed {
   constructor(
-    private readonly countryService: CountryService,
+    private readonly cabinetService: CabinetService,
     private readonly connection: Connection,
   ) {}
 
   @Command({
-    command: 'seed:country',
-    describe: 'seeds countries',
+    command: 'seed:cabinet',
+    describe: 'seeds cabinet',
   })
   async seeds(): Promise<void> {
     try {
-      await this.countryService.saveMany(countries);
+      await this.cabinetService.save(cabinet);
     } catch (err: any) {
       throw new Error(err.message);
     }
   }
 
   @Command({
-    command: 'rollback:country',
-    describe: 'rollback countries',
+    command: 'rollback:cabinet',
+    describe: 'rollback cabinet',
   })
   async remove(): Promise<void> {
     try {
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 0;');
-      await this.countryService.deleteAll();
+      await this.cabinetService.deleteAll();
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 1;');
     } catch (err: any) {
       throw new Error(err.message);
