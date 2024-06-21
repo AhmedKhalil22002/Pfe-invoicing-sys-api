@@ -1,7 +1,7 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { CountryService } from '../services/country.service';
-import { CountryEntity } from '../repositories/entities/country.entity';
+import { ResponseCountryDto } from '../dtos/country.response.dto';
 
 @ApiTags('country')
 @Controller({
@@ -12,7 +12,7 @@ export class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
   @Get('/list')
-  async findAll(): Promise<CountryEntity[]> {
+  async findAll(): Promise<ResponseCountryDto[]> {
     return await this.countryService.findAll();
   }
 
@@ -22,11 +22,7 @@ export class CountryController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<Record<string, any>> {
-    const country = await this.countryService.findOneById(id);
-    if (!country) {
-      throw new NotFoundException(`Country with ID ${id} not found`);
-    }
-    return country;
+  async findOneById(@Param('id') id: number): Promise<ResponseCountryDto> {
+    return await this.countryService.findOneById(id);
   }
 }

@@ -16,7 +16,6 @@ import { TaxEntity } from '../repositories/entities/tax.entity';
 import { PageOptionsDto } from 'src/common/database/interfaces/database.pagination.interface';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { ActivityEntity } from 'src/modules/activity/repositories/entities/activity.entity';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 
@@ -32,7 +31,7 @@ export class TaxController {
   @ApiPaginatedResponse(TaxEntity)
   async findAll(
     @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<ActivityEntity>> {
+  ): Promise<PageDto<TaxEntity>> {
     return await this.taxService.findAll(pageOptionsDto);
   }
 

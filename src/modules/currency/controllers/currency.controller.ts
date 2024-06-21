@@ -1,7 +1,7 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { CurrencyService } from '../services/currency.service';
-import { CurrencyEntity } from '../repositories/entities/currency.entity';
+import { ResponseCurrencyDto } from '../dtos/currency.response.dto';
 
 @ApiTags('currency')
 @Controller({
@@ -12,7 +12,7 @@ export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
   @Get('/list')
-  async findAll(): Promise<CurrencyEntity[]> {
+  async findAll(): Promise<ResponseCurrencyDto[]> {
     return await this.currencyService.findAll();
   }
 
@@ -22,11 +22,7 @@ export class CurrencyController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<Record<string, any>> {
-    const currency = await this.currencyService.findOneById(id);
-    if (!currency) {
-      throw new NotFoundException(`Currency with ID ${id} not found`);
-    }
-    return currency;
+  async findOneById(@Param('id') id: number): Promise<ResponseCurrencyDto> {
+    return await this.currencyService.findOneById(id);
   }
 }

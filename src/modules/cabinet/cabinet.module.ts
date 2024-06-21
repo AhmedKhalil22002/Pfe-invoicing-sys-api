@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
 import { CabinetService } from './services/cabinet.service';
 import { CabinetRepositoryModule } from './repositories/cabinet.repository.module';
+import { AddressModule } from '../address/address.module';
+import { CurrencyModule } from '../currency/currency.module';
+import { ActivityModule } from '../activity/activity.module';
 
 @Module({
   controllers: [],
   providers: [CabinetService],
   exports: [CabinetService],
-  imports: [CabinetRepositoryModule],
+  imports: [
+    CabinetRepositoryModule,
+    ActivityModule,
+    AddressModule,
+    CurrencyModule,
+  ],
 })
 export class CabinetModule {}

@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { CreateAddressDto } from 'src/modules/address/dtos/address.create';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
 export class CreateCabinetDto {
@@ -24,10 +25,12 @@ export class CreateCabinetDto {
   @MinLength(9)
   taxIdNumber?: string;
 
+  @ApiProperty({ type: () => CreateAddressDto })
+  address: CreateAddressDto;
+
   @ApiProperty({ example: 1, type: Number })
   activityId?: number;
 
-  userId?: number;
+  @ApiProperty({ example: 1, type: Number })
   currencyId?: number;
-  addressId?: number;
 }

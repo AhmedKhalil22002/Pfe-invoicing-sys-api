@@ -45,6 +45,10 @@ export class TaxService {
     return this.taxRepository.save(createTaxDto);
   }
 
+  async saveMany(createTaxDtos: CreateTaxDto[]): Promise<TaxEntity[]> {
+    return this.taxRepository.saveMany(createTaxDtos);
+  }
+
   async update(id: number, updateTaxDto: UpdateTaxDto): Promise<TaxEntity> {
     const tax = await this.findOneById(id);
     return this.taxRepository.save({
@@ -55,6 +59,10 @@ export class TaxService {
 
   async softDelete(id: number): Promise<TaxEntity> {
     return this.taxRepository.softDelete(id);
+  }
+
+  async deleteAll(): Promise<void> {
+    return this.taxRepository.deleteAll();
   }
 
   async getTotal(): Promise<number> {

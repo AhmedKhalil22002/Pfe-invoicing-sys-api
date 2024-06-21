@@ -21,7 +21,7 @@ export class MigrationCurrencySeed {
 
   @Command({
     command: 'rollback:currency',
-    describe: 'rollback currency',
+    describe: 'rollback currencies',
   })
   async remove(): Promise<void> {
     try {

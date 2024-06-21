@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ActivityModule } from 'src/modules/activity/activity.module';
 import { ActivityController } from 'src/modules/activity/controllers/activity.controller';
+import { AddressModule } from 'src/modules/address/address.module';
+import { AddressController } from 'src/modules/address/controllers/address.controller';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { CabinetController } from 'src/modules/cabinet/controllers/cabinet.controller';
 import { CountryController } from 'src/modules/country/controllers/country.controller';
@@ -13,6 +15,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
 @Module({
   controllers: [
     ActivityController,
+    AddressController,
     CabinetController,
     CountryController,
     CurrencyController,
@@ -22,6 +25,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
   exports: [],
   imports: [
     ActivityModule,
+    AddressModule,
     CabinetModule,
     CountryModule,
     CurrencyModule,

@@ -2,7 +2,6 @@ import {
   Controller,
   Param,
   Get,
-  NotFoundException,
   Body,
   Post,
   Put,
@@ -12,7 +11,12 @@ import { CabinetService } from '../services/cabinet.service';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { CabinetEntity } from '../repositories/entities/cabinet.entity';
 import { CreateCabinetDto } from '../dtos/cabinet.create.dto';
-import { UpdateActivityDto } from 'src/modules/activity/dtos/activity.update.dto';
+import { ResponseCabinetDto } from '../dtos/cabinet.response.dto';
+import { AddressService } from 'src/modules/address/services/address.service';
+import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';
+import { ActivityService } from 'src/modules/activity/services/activity.service';
+import { CurrencyService } from 'src/modules/currency/services/currency.service';
+import { CountryService } from 'src/modules/country/services/country.service';
 
 @ApiTags('cabinet')
 @Controller({
@@ -20,10 +24,16 @@ import { UpdateActivityDto } from 'src/modules/activity/dtos/activity.update.dto
   path: '/cabinet',
 })
 export class CabinetController {
-  constructor(private readonly cabinetService: CabinetService) {}
+  constructor(
+    private readonly cabinetService: CabinetService,
+    private readonly activityService: ActivityService,
+    private readonly addressService: AddressService,
+    private readonly currencyService: CurrencyService,
+    private readonly countryService: CountryService,
+  ) {}
 
   @Get('/list')
-  async findAll(): Promise<Record<string, any>[]> {
+  async findAll(): Promise<ResponseCabinetDto[]> {
     return await this.cabinetService.findAll();
   }
 
@@ -33,18 +43,24 @@ export class CabinetController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<CabinetEntity> {
+  async findOneById(@Param('id') id: number): Promise<ResponseCabinetDto> {
     const cabinet = await this.cabinetService.findOneById(id);
-    if (!cabinet) {
-      throw new NotFoundException(`Cabinet with ID ${id} not found`);
-    }
-    return cabinet;
+    const address = await this.addressService.findOneById(cabinet.addressId);
+    const currency = await this.currencyService.findOneById(cabinet.currencyId);
+    const activity = await this.activityService.findOneById(cabinet.activityId);
+    const country = await this.countryService.findOneById(address.countryId);
+    return {
+      ...cabinet,
+      address: { ...address, country: country },
+      activity: activity,
+      currency: currency,
+    };
   }
 
   @Post('')
   async save(
     @Body() createCabinetDto: CreateCabinetDto,
-  ): Promise<CabinetEntity> {
+  ): Promise<ResponseCabinetDto> {
     return this.cabinetService.save(createCabinetDto);
   }
 
@@ -56,12 +72,8 @@ export class CabinetController {
   })
   async update(
     @Param('id') id: number,
-    @Body() updateCabinetDto: UpdateActivityDto,
+    @Body() updateCabinetDto: UpdateCabinetDto,
   ): Promise<CabinetEntity> {
-    const cabinet = await this.findOneById(id);
-    if (!cabinet) {
-      throw new NotFoundException(`Cabinet with ID ${id} not found`);
-    }
     return this.cabinetService.update(id, updateCabinetDto);
   }
 
@@ -72,10 +84,6 @@ export class CabinetController {
     required: true,
   })
   async delete(@Param('id') id: number): Promise<CabinetEntity> {
-    const cabinet = await this.findOneById(id);
-    if (!cabinet) {
-      throw new NotFoundException(`Cabinet with ID ${id} not found`);
-    }
     return this.cabinetService.softDelete(id);
   }
 }

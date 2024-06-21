@@ -6,7 +6,7 @@ import {
   DATABASE_UPDATED_AT_FIELD_NAME,
 } from 'src/common/database/constants/database.constant';
 
-export abstract class QueryDtoHelper {
+export abstract class ResponseDtoHelper {
   @ApiProperty({ type: Date })
   [DATABASE_DELETED_AT_FIELD_NAME]?: Date;
 
