@@ -16,6 +16,13 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     this.entity = entity;
   }
 
+  public async findOneById(id: string | number): Promise<T> {
+    const options: FindOptionsWhere<T> = {
+      id: id,
+    } as unknown as FindOptionsWhere<T>;
+    return await this.entity.findOneBy(options);
+  }
+
   public async save(data: DeepPartial<T>): Promise<T> {
     return await this.entity.save(data);
   }
@@ -32,19 +39,16 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     return this.entity.create(data);
   }
 
-  public async findOneById(id: string | number): Promise<T> {
-    const options: FindOptionsWhere<T> = {
-      id: id,
-    } as unknown as FindOptionsWhere<T>;
-    return await this.entity.findOneBy(options);
-  }
-
   public async findByCondition(filterCondition: FindOneOptions<T>): Promise<T> {
     return await this.entity.findOne(filterCondition);
   }
 
   public async findWithRelations(relations: FindManyOptions<T>): Promise<T[]> {
     return await this.entity.find(relations);
+  }
+
+  public async findOne(options: FindOneOptions<T>): Promise<T | undefined> {
+    return this.entity.findOne(options);
   }
 
   public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
@@ -57,10 +61,6 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
 
   public async preload(entityLike: DeepPartial<T>): Promise<T> {
     return await this.entity.preload(entityLike);
-  }
-
-  public async findOne(options: FindOneOptions<T>): Promise<T> {
-    return this.entity.findOne(options);
   }
 
   public async getTotalCount(options: FindOneOptions<T>): Promise<number> {

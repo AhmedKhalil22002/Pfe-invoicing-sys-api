@@ -25,7 +25,7 @@ export class ActivityService {
   }
 
   async findOneByLabel(label: string): Promise<ActivityEntity | null> {
-    const activity = await this.activityRepository.findOne({
+    const activity = await this.activityRepository.findByCondition({
       where: { label: label, deletedAt: null },
     });
     if (!activity) return null;
@@ -45,7 +45,6 @@ export class ActivityService {
     const entities = await this.activityRepository.findAll({
       skip: skip(pageOptionsDto),
       take: pageOptionsDto.take,
-      order: { label: pageOptionsDto.order },
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptionsDto,

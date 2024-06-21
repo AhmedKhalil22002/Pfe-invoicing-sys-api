@@ -18,12 +18,12 @@ export class ResponseCabinetDto extends ResponseDtoHelper {
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
   taxIdNumber?: string;
 
-  @ApiProperty({ type: () => ResponseAddressDto })
+  @ApiProperty({ type: () => ResponseAddressDto, nullable: true })
   address: ResponseAddressDto;
 
-  @ApiProperty({ type: () => ResponseActivityDto })
+  @ApiProperty({ type: () => ResponseActivityDto, nullable: true })
   activity?: ResponseActivityDto;
 
-  @ApiProperty({ type: () => ResponseCurrencyDto })
+  @ApiProperty({ type: () => ResponseCurrencyDto, nullable: true })
   currency?: ResponseCurrencyDto;
 }

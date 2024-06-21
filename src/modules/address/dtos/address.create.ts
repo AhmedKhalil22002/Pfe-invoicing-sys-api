@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateAddressDto {
   @ApiProperty({ example: faker.address.streetAddress(), type: String })
@@ -20,6 +20,6 @@ export class CreateAddressDto {
   zipcode: string;
 
   @ApiProperty({ example: 1, type: Number })
-  @IsNumber()
+  @IsInt()
   countryId: number;
 }

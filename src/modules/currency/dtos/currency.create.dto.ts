@@ -4,15 +4,15 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsNumber,
   Length,
   MaxLength,
+  IsInt,
 } from 'class-validator';
 
 export class CreateCurrencyDto {
   @ApiProperty({ example: 1, type: Number })
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
   id: number;
 
   @ApiProperty({ example: faker.finance.currencyName, type: String })

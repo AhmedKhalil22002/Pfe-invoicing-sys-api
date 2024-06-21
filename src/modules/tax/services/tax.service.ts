@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { TaxRepository } from '../repositories/repository/tax.repository';
 import { TaxEntity } from '../repositories/entities/tax.entity';
-import {
-  PageOptionsDto,
-  skip,
-} from 'src/common/database/interfaces/database.pagination.interface';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
+import { QueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
+import { ResponseTaxDto } from '../dtos/tax.response.dto';
+import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 
 @Injectable()
 export class TaxService {
@@ -18,23 +17,31 @@ export class TaxService {
     return await this.taxRepository.findOneById(id);
   }
 
-  async findOneByLabel(label: string): Promise<TaxEntity> {
-    return await this.taxRepository.findOne({
-      where: { label: label, deletedAt: null },
+  async findOneByCondition(
+    options: QueryOptions<ResponseTaxDto>,
+  ): Promise<TaxEntity> {
+    return await this.taxRepository.findByCondition({
+      where: { ...options.filters, deletedAt: null },
     });
   }
 
-  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<TaxEntity>> {
-    const count = await this.taxRepository.getTotalCount({
-      withDeleted: false,
-    });
+  async findAll(
+    options?: QueryOptions<ResponseTaxDto>,
+  ): Promise<PageDto<TaxEntity>> {
+    const { filters, strictMatching, sort, pageOptions } = options;
+
+    const where = buildWhereClause(filters, strictMatching);
+
+    const count = await this.taxRepository.getTotalCount({ where });
     const entities = await this.taxRepository.findAll({
-      skip: skip(pageOptionsDto),
-      take: pageOptionsDto.take,
-      order: { label: pageOptionsDto.order },
+      where,
+      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
+      take: pageOptions?.take || 10,
+      order: sort,
     });
+
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptionsDto,
+      pageOptionsDto: pageOptions,
       itemCount: count,
     });
 

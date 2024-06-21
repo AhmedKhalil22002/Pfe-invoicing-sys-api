@@ -1,0 +1,54 @@
+import { faker } from '@faker-js/faker';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  Length,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { CreateAddressDto } from 'src/modules/address/dtos/address.create';
+
+export class CreateFirmDto {
+  @ApiProperty({ example: faker.company.name() })
+  @IsString()
+  @Length(1, 255)
+  companyName: string;
+
+  @ApiProperty({
+    example: `https://www.${faker.company.name()}.com`,
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  website?: string;
+
+  @ApiProperty({ example: true, type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  isCompany?: boolean;
+
+  @ApiProperty({ example: faker.finance.routingNumber(), type: String })
+  @IsString()
+  @MinLength(9)
+  taxIdNumber?: string;
+
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  activityId?: number;
+
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  currencyId?: number;
+
+  @ApiProperty({ type: () => CreateAddressDto })
+  deliveryAddress: CreateAddressDto;
+
+  @ApiProperty({ type: () => CreateAddressDto })
+  invoicingAddress: CreateAddressDto;
+}
