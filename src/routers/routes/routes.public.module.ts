@@ -11,6 +11,8 @@ import { CurrencyController } from 'src/modules/currency/controllers/currency.co
 import { CurrencyModule } from 'src/modules/currency/currency.module';
 import { FirmController } from 'src/modules/firm/controllers/firm.controller';
 import { FirmModule } from 'src/modules/firm/firm.module';
+import { InterlocutorModule } from 'src/modules/interlocutor/Interlocutor.module';
+import { InterlocutorController } from 'src/modules/interlocutor/controllers/interlocutor.controller';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 
@@ -22,6 +24,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CountryController,
     CurrencyController,
     FirmController,
+    InterlocutorController,
     TaxController,
   ],
   providers: [],
@@ -33,6 +36,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CountryModule,
     CurrencyModule,
     FirmModule,
+    InterlocutorModule,
     TaxModule,
   ],
 })
