@@ -13,7 +13,9 @@ export class QueryOptionsDto<T> {
     example: {},
   })
   sort?: { [P in keyof T]?: 'ASC' | 'DESC' };
+}
 
+export class PagingQueryOptionsDto<T> extends QueryOptionsDto<T> {
   @ApiProperty({ type: PageOptionsDto })
   pageOptions?: PageOptionsDto;
 }

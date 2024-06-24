@@ -4,5 +4,8 @@ export interface QueryOptions<T> {
   filters?: Partial<T>;
   strictMatching?: { [P in keyof T]?: string };
   sort?: { [P in keyof T]?: 'ASC' | 'DESC' };
+}
+
+export interface PagingQueryOptions<T> extends QueryOptions<T> {
   pageOptions?: PageOptionsDto;
 }

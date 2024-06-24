@@ -15,7 +15,7 @@ export class CreateFirmDto {
   @ApiProperty({ example: faker.company.name() })
   @IsString()
   @Length(1, 255)
-  companyName: string;
+  name: string;
 
   @ApiProperty({
     example: `https://www.${faker.company.name()}.com`,
@@ -29,7 +29,7 @@ export class CreateFirmDto {
   @ApiProperty({ example: true, type: Boolean })
   @IsBoolean()
   @IsOptional()
-  isCompany?: boolean;
+  isPerson?: boolean;
 
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
   @IsString()
@@ -51,4 +51,8 @@ export class CreateFirmDto {
 
   @ApiProperty({ type: () => CreateAddressDto })
   invoicingAddress: CreateAddressDto;
+
+  @ApiProperty({ example: 1, nullable: true })
+  @IsOptional()
+  cabinetId?: number;
 }

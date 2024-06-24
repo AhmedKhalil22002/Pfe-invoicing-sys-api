@@ -1,22 +1,29 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { ActivityEntity } from 'src/modules/activity/repositories/entities/activity.entity';
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
+import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('firm')
 export class FirmEntity extends EntityHelper {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  companyName: string;
+  name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   webiste: string;
 
   @Column({ type: 'boolean', default: true })
-  isCompany: boolean;
+  isPerson: boolean;
 
   @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
   taxIdNumber: string;
@@ -48,4 +55,11 @@ export class FirmEntity extends EntityHelper {
 
   @Column({ type: 'int', nullable: true })
   deliveryAddressId: number;
+
+  @ManyToOne(() => CabinetEntity)
+  @JoinColumn({ name: 'cabinetId' })
+  cabinet: CabinetEntity;
+
+  @Column({ type: 'int', nullable: true })
+  cabinetId: number;
 }

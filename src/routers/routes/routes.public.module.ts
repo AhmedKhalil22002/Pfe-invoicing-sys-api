@@ -9,6 +9,8 @@ import { CountryController } from 'src/modules/country/controllers/country.contr
 import { CountryModule } from 'src/modules/country/country.module';
 import { CurrencyController } from 'src/modules/currency/controllers/currency.controller';
 import { CurrencyModule } from 'src/modules/currency/currency.module';
+import { FirmController } from 'src/modules/firm/controllers/firm.controller';
+import { FirmModule } from 'src/modules/firm/firm.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 
@@ -19,6 +21,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CabinetController,
     CountryController,
     CurrencyController,
+    FirmController,
     TaxController,
   ],
   providers: [],
@@ -29,6 +32,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CabinetModule,
     CountryModule,
     CurrencyModule,
+    FirmModule,
     TaxModule,
   ],
 })

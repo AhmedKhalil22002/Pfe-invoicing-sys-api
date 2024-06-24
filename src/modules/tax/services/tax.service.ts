@@ -5,33 +5,49 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
-import { QueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
+import {
+  PagingQueryOptions,
+  QueryOptions,
+} from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
 import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
+import { TaxNotFoundException } from '../errors/tax.notfound.error';
+import { TaxAlreadyExistsException } from '../errors/tax.alreadyexists.error';
 
 @Injectable()
 export class TaxService {
   constructor(private readonly taxRepository: TaxRepository) {}
 
   async findOneById(id: number): Promise<TaxEntity> {
-    return await this.taxRepository.findOneById(id);
+    const tax = await this.taxRepository.findOneById(id);
+    if (!tax) {
+      throw new TaxNotFoundException();
+    }
+    return tax;
   }
 
   async findOneByCondition(
     options: QueryOptions<ResponseTaxDto>,
   ): Promise<TaxEntity> {
-    return await this.taxRepository.findByCondition({
+    const tax = await this.taxRepository.findByCondition({
       where: { ...options.filters, deletedAt: null },
     });
+    if (!tax) return null;
+    return tax;
   }
 
-  async findAll(
-    options?: QueryOptions<ResponseTaxDto>,
+  async findAll(): Promise<TaxEntity[]> {
+    return await this.taxRepository.findAll();
+  }
+
+  async findAllPaginated(
+    options?: PagingQueryOptions<ResponseTaxDto>,
   ): Promise<PageDto<TaxEntity>> {
+    // console.log(options);
     const { filters, strictMatching, sort, pageOptions } = options;
 
     const where = buildWhereClause(filters, strictMatching);
-
+    // console.log(where);
     const count = await this.taxRepository.getTotalCount({ where });
     const entities = await this.taxRepository.findAll({
       where,
@@ -49,6 +65,12 @@ export class TaxService {
   }
 
   async save(createTaxDto: CreateTaxDto): Promise<TaxEntity> {
+    const tax = await this.taxRepository.findByCondition({
+      where: { label: createTaxDto.label },
+    });
+    if (tax) {
+      throw new TaxAlreadyExistsException();
+    }
     return this.taxRepository.save(createTaxDto);
   }
 
@@ -65,6 +87,7 @@ export class TaxService {
   }
 
   async softDelete(id: number): Promise<TaxEntity> {
+    await this.findOneById(id);
     return this.taxRepository.softDelete(id);
   }
 

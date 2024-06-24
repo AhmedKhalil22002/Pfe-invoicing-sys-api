@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { FirmRepository } from '../repositories/repository/firm.repository';
 import { FirmEntity } from '../repositories/entities/firm.entity';
-import {
-  PageOptionsDto,
-  skip,
-} from 'src/common/database/interfaces/database.pagination.interface';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { FirmNotFoundException } from '../errors/firm.notfound.error';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
+import { QueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import { PagingQueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
+import { ResponseFirmDto } from '../dtos/firm.response.dto';
+import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 
 @Injectable()
 export class FirmService {
@@ -23,22 +23,37 @@ export class FirmService {
     return firm;
   }
 
+  async findOneByCondition(
+    options: QueryOptionsDto<CreateFirmDto>,
+  ): Promise<FirmEntity | null> {
+    const firm = await this.firmRepository.findByCondition({
+      where: { ...options.filters, deletedAt: null },
+    });
+    if (!firm) return null;
+    return firm;
+  }
+
   async findAll(): Promise<FirmEntity[]> {
     return await this.firmRepository.findAll();
   }
 
   async findAllPaginated(
-    pageOptionsDto: PageOptionsDto,
+    options?: PagingQueryOptions<ResponseFirmDto>,
   ): Promise<PageDto<FirmEntity>> {
-    const count = await this.firmRepository.getTotalCount({
-      withDeleted: false,
-    });
+    const { filters, strictMatching, sort, pageOptions } = options;
+
+    const where = buildWhereClause(filters, strictMatching);
+
+    const count = await this.firmRepository.getTotalCount({ where });
     const entities = await this.firmRepository.findAll({
-      skip: skip(pageOptionsDto),
-      take: pageOptionsDto.take,
+      where,
+      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
+      take: pageOptions?.take || 10,
+      order: sort,
     });
+
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptionsDto,
+      pageOptionsDto: pageOptions,
       itemCount: count,
     });
 

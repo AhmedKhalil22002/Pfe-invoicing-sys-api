@@ -7,7 +7,6 @@ export function buildWhereClause<T>(
   const where: any = {};
   if (filters) {
     for (const [key, value] of Object.entries(filters)) {
-      console.log(Boolean(strictMatching[key as keyof T]));
       if (strictMatching && strictMatching[key as keyof T] == 'true') {
         where[key] = value;
       } else {

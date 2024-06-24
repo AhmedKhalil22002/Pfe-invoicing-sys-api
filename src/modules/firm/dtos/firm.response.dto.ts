@@ -1,16 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResponseDtoHelper } from 'src/common/database/dtos/database.response.dto';
-import { ActivityEntity } from 'src/modules/activity/repositories/entities/activity.entity';
-import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
-import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
+import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response.dto';
+import { ResponseAddressDto } from 'src/modules/address/dtos/address.response';
+import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
+import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 
-export class FirmResponseDto extends ResponseDtoHelper {
+export class ResponseFirmDto extends ResponseDtoHelper {
   @ApiProperty({ example: 1 })
   id: number;
 
   @ApiProperty({ example: faker.company.name() })
-  companyName: string;
+  name: string;
 
   @ApiProperty({
     example: `https://www.${faker.company.name()}.com`,
@@ -19,32 +20,38 @@ export class FirmResponseDto extends ResponseDtoHelper {
   website?: string;
 
   @ApiProperty({ example: true })
-  isCompany: boolean;
+  isPerson: boolean;
 
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
   taxIdNumber?: string;
 
-  @ApiProperty({ type: () => ActivityEntity, nullable: true })
-  activity?: ActivityEntity;
+  @ApiProperty({ type: () => ResponseActivityDto, nullable: true })
+  activity?: ResponseActivityDto;
 
   @ApiProperty({ example: 1, nullable: true })
   activityId?: number;
 
-  @ApiProperty({ type: () => CurrencyEntity, nullable: true })
-  currency?: CurrencyEntity;
+  @ApiProperty({ type: () => ResponseCurrencyDto, nullable: true })
+  currency?: ResponseCurrencyDto;
 
   @ApiProperty({ example: 1, nullable: true })
   currencyId?: number;
 
-  @ApiProperty({ type: () => AddressEntity, nullable: true })
-  invoicingAddress?: AddressEntity;
+  @ApiProperty({ type: () => ResponseAddressDto, nullable: true })
+  invoicingAddress?: ResponseAddressDto;
 
   @ApiProperty({ example: 1, nullable: true })
   invoicingAddressId?: number;
 
-  @ApiProperty({ type: () => AddressEntity, nullable: true })
-  deliveryAddress?: AddressEntity;
+  @ApiProperty({ type: () => ResponseAddressDto, nullable: true })
+  deliveryAddress?: ResponseAddressDto;
 
   @ApiProperty({ example: 1, nullable: true })
   deliveryAddressId?: number;
+
+  @ApiProperty({ type: () => ResponseCabinetDto, nullable: true })
+  cabinet?: ResponseCabinetDto;
+
+  @ApiProperty({ example: 1, nullable: true })
+  cabinetId?: number;
 }

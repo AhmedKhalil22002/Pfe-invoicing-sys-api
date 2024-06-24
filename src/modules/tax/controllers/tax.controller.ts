@@ -16,7 +16,7 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
-import { QueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 @ApiTags('tax')
 @Controller({
@@ -29,10 +29,10 @@ export class TaxController {
   @Get('/list')
   @ApiPaginatedResponse(ResponseTaxDto)
   async findAll(
-    @Query() options: QueryOptionsDto<ResponseTaxDto>,
+    @Query() options: PagingQueryOptionsDto<ResponseTaxDto>,
   ): Promise<PageDto<ResponseTaxDto>> {
     console.log(options);
-    return await this.taxService.findAll(options);
+    return await this.taxService.findAllPaginated(options);
   }
 
   @Get('/:id')

@@ -12,10 +12,10 @@ import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ActivityService } from '../services/activity.service';
 import { CreateActivityDto } from '../dtos/activity.create.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageOptionsDto } from 'src/common/database/interfaces/database.pagination.interface';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
+import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 
 @ApiTags('activity')
 @Controller({
@@ -28,9 +28,9 @@ export class ActivityController {
   @Get('/list')
   @ApiPaginatedResponse(ResponseActivityDto)
   async findAllPaginated(
-    @Query() pageOptionsDto: PageOptionsDto,
+    @Query() options: PagingQueryOptionsDto<ResponseActivityDto>,
   ): Promise<PageDto<ResponseActivityDto>> {
-    return await this.activityService.findAllPaginated(pageOptionsDto);
+    return await this.activityService.findAllPaginated(options);
   }
 
   @Get('/all')
