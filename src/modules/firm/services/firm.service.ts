@@ -10,10 +10,24 @@ import { QueryOptionsDto } from 'src/common/database/dtos/databse.query-options.
 import { PagingQueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
 import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
+import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
+import {
+  FirmAlreadyExistsException,
+  TaxIdNumberDuplicateException,
+} from '../errors/firm.alreadyexists.error';
+import { AddressService } from 'src/modules/address/services/address.service';
+import { CurrencyService } from 'src/modules/currency/services/currency.service';
+import { ActivityService } from 'src/modules/activity/services/activity.service';
 
 @Injectable()
 export class FirmService {
-  constructor(private readonly firmRepository: FirmRepository) {}
+  constructor(
+    private readonly firmRepository: FirmRepository,
+    private readonly activityService: ActivityService,
+    private readonly currencyService: CurrencyService,
+    private readonly addressService: AddressService,
+    private readonly interlocutorService: InterlocutorService,
+  ) {}
 
   async findOneById(id: number): Promise<FirmEntity> {
     const firm = await this.firmRepository.findOneById(id);
@@ -39,18 +53,48 @@ export class FirmService {
 
   async findAllPaginated(
     options?: PagingQueryOptions<ResponseFirmDto>,
-  ): Promise<PageDto<FirmEntity>> {
+  ): Promise<PageDto<ResponseFirmDto>> {
     const { filters, strictMatching, sort, pageOptions } = options;
 
     const where = buildWhereClause(filters, strictMatching);
 
     const count = await this.firmRepository.getTotalCount({ where });
-    const entities = await this.firmRepository.findAll({
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-    });
+    const entities = await Promise.all(
+      (
+        await this.firmRepository.findAll({
+          where,
+          skip: pageOptions?.page
+            ? (pageOptions.page - 1) * pageOptions.take
+            : 0,
+          take: pageOptions?.take || 10,
+          order: sort,
+        })
+      ).map(async (firm) => {
+        const deliveryAddress = await this.addressService.findOneById(
+          firm.deliveryAddressId,
+        );
+        const invoicingAddress = await this.addressService.findOneById(
+          firm.invoicingAddressId,
+        );
+        const interlocutor = await this.interlocutorService.findOneById(
+          firm.mainInterlocutorId,
+        );
+        const activity = await this.activityService.findOneById(
+          firm.activityId,
+        );
+        const currency = await this.currencyService.findOneById(
+          firm.currencyId,
+        );
+        return {
+          ...firm,
+          deliveryAddress: deliveryAddress,
+          invoicingAddress: invoicingAddress,
+          mainInterlocutor: interlocutor,
+          activity: activity,
+          currency: currency,
+        };
+      }),
+    );
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptions,
@@ -61,7 +105,37 @@ export class FirmService {
   }
 
   async save(createFirmDto: CreateFirmDto): Promise<FirmEntity> {
-    return this.firmRepository.save(createFirmDto);
+    console.log('save', createFirmDto);
+    let firm = await this.firmRepository.findByCondition({
+      where: { name: createFirmDto.name },
+    });
+    if (firm) {
+      throw new FirmAlreadyExistsException();
+    }
+
+    firm = await this.firmRepository.findByCondition({
+      where: { taxIdNumber: createFirmDto.taxIdNumber },
+    });
+
+    if (firm) {
+      throw new TaxIdNumberDuplicateException();
+    }
+
+    const interlocutor = await this.interlocutorService.save(
+      createFirmDto.mainInterlocutor,
+    );
+    const invoicingAddress = await this.addressService.save(
+      createFirmDto.invoicingAddress,
+    );
+    const deliveryAddress = await this.addressService.save(
+      createFirmDto.deliveryAddress,
+    );
+    return this.firmRepository.save({
+      ...createFirmDto,
+      invoicingAddressId: invoicingAddress.id,
+      deliveryAddressId: deliveryAddress.id,
+      mainInterlocutorId: interlocutor.id,
+    });
   }
 
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {

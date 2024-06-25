@@ -14,6 +14,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
 import { MigrationTaxSeed } from './seeders/migration.tax.seed';
 import { MigrationCabinetSeed } from './seeders/migration.cabinet.seed';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
+import { MigrationSchemaCommand } from './commands/migrations.schema.command';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
     MigrationCountrySeed,
     MigrationCurrencySeed,
     MigrationTaxSeed,
+    MigrationSchemaCommand,
   ],
   exports: [],
 })

@@ -10,6 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { CreateAddressDto } from 'src/modules/address/dtos/address.create';
+import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
 
 export class CreateFirmDto {
   @ApiProperty({ example: faker.company.name() })
@@ -18,7 +19,7 @@ export class CreateFirmDto {
   name: string;
 
   @ApiProperty({
-    example: `https://www.${faker.company.name()}.com`,
+    example: `https://www.${faker.company.name().replace(' ', '')}.com`,
     type: String,
   })
   @IsOptional()
@@ -47,10 +48,28 @@ export class CreateFirmDto {
   currencyId?: number;
 
   @ApiProperty({ type: () => CreateAddressDto })
-  deliveryAddress: CreateAddressDto;
+  deliveryAddress?: CreateAddressDto;
+
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  deliveryAddressId?: number;
 
   @ApiProperty({ type: () => CreateAddressDto })
-  invoicingAddress: CreateAddressDto;
+  invoicingAddress?: CreateAddressDto;
+
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  invoicingAddressId?: number;
+
+  @ApiProperty({ type: () => CreateInterlocutorDto })
+  mainInterlocutor?: CreateInterlocutorDto;
+
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  mainInterlocutorId?: number;
 
   @ApiProperty({ example: 1, nullable: true })
   @IsOptional()

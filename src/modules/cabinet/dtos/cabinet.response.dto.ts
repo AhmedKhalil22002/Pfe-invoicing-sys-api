@@ -19,7 +19,7 @@ export class ResponseCabinetDto extends ResponseDtoHelper {
   taxIdNumber?: string;
 
   @ApiProperty({ type: () => ResponseAddressDto, nullable: true })
-  address: ResponseAddressDto;
+  address?: ResponseAddressDto;
 
   @ApiProperty({ type: () => ResponseActivityDto, nullable: true })
   activity?: ResponseActivityDto;

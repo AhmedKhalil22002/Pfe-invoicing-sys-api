@@ -29,7 +29,8 @@
     "rollback:currency": "nestjs-command rollback:currency",
     "rollback:tax": "nestjs-command rollback:tax",
     "seed:all" : "nestjs-command seed:country && nestjs-command seed:currency && nestjs-command seed:activity && nestjs-command seed:tax && nestjs-command seed:cabinet",
-    "rollback:all":"nestjs-command rollback:cabinet && nestjs-command rollback:tax && nestjs-command rollback:activity && nestjs-command rollback:currency && nestjs-command rollback:country"
+    "rollback:all":"nestjs-command rollback:cabinet && nestjs-command rollback:tax && nestjs-command rollback:activity && nestjs-command rollback:currency && nestjs-command rollback:country",
+    "drop:all" : "nestjs-command schema:destroy"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

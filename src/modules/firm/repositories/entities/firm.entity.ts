@@ -3,10 +3,13 @@ import { ActivityEntity } from 'src/modules/activity/repositories/entities/activ
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
+import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -19,8 +22,8 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 255, nullable: false })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  webiste: string;
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  website: string;
 
   @Column({ type: 'boolean', default: true })
   isPerson: boolean;
@@ -62,4 +65,15 @@ export class FirmEntity extends EntityHelper {
 
   @Column({ type: 'int', nullable: true })
   cabinetId: number;
+
+  @ManyToMany(() => InterlocutorEntity)
+  @JoinTable()
+  interlocutors: InterlocutorEntity[];
+
+  @ManyToOne(() => InterlocutorEntity)
+  @JoinColumn({ name: 'mainInterlocutorId' })
+  mainInterlocutor: InterlocutorEntity;
+
+  @Column({ type: 'int', nullable: true })
+  mainInterlocutorId: number;
 }

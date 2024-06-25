@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FirmService } from '../services/firm.service';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
+import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import { PageDto } from 'src/common/database/dtos/database.page.dto';
 
 @ApiTags('firm')
 @Controller({
@@ -13,8 +16,11 @@ export class FirmController {
   constructor(private readonly firmService: FirmService) {}
 
   @Get('/all')
-  async findAll(): Promise<ResponseFirmDto[]> {
-    return await this.firmService.findAll();
+  @ApiPaginatedResponse(ResponseFirmDto)
+  async findAllPaginated(
+    @Query() options: PagingQueryOptionsDto<ResponseFirmDto>,
+  ): Promise<PageDto<ResponseFirmDto>> {
+    return await this.firmService.findAllPaginated(options);
   }
 
   @Get('/:id')

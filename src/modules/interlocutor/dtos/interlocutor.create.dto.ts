@@ -1,8 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { SocialTitles } from 'src/app/constants/social-titles.enum';
 
 export class CreateInterlocutorDto {
+  @ApiProperty({ example: SocialTitles.MR, enum: SocialTitles })
+  @IsOptional()
+  @IsEnum(SocialTitles)
+  title: SocialTitles;
+
   @ApiProperty({ example: faker.person.firstName(), type: String })
   @IsString()
   @MinLength(3)
