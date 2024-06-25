@@ -54,47 +54,24 @@ export class FirmService {
   async findAllPaginated(
     options?: PagingQueryOptions<ResponseFirmDto>,
   ): Promise<PageDto<ResponseFirmDto>> {
-    const { filters, strictMatching, sort, pageOptions } = options;
+    const { filters, strictMatching, sort, pageOptions } = options || {};
 
     const where = buildWhereClause(filters, strictMatching);
 
     const count = await this.firmRepository.getTotalCount({ where });
-    const entities = await Promise.all(
-      (
-        await this.firmRepository.findAll({
-          where,
-          skip: pageOptions?.page
-            ? (pageOptions.page - 1) * pageOptions.take
-            : 0,
-          take: pageOptions?.take || 10,
-          order: sort,
-        })
-      ).map(async (firm) => {
-        const deliveryAddress = await this.addressService.findOneById(
-          firm.deliveryAddressId,
-        );
-        const invoicingAddress = await this.addressService.findOneById(
-          firm.invoicingAddressId,
-        );
-        const interlocutor = await this.interlocutorService.findOneById(
-          firm.mainInterlocutorId,
-        );
-        const activity = await this.activityService.findOneById(
-          firm.activityId,
-        );
-        const currency = await this.currencyService.findOneById(
-          firm.currencyId,
-        );
-        return {
-          ...firm,
-          deliveryAddress: deliveryAddress,
-          invoicingAddress: invoicingAddress,
-          mainInterlocutor: interlocutor,
-          activity: activity,
-          currency: currency,
-        };
-      }),
-    );
+    const entities = await this.firmRepository.findAll({
+      where,
+      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
+      take: pageOptions?.take || 10,
+      order: sort,
+      relations: {
+        mainInterlocutor: true,
+        currency: true,
+        invoicingAddress: true,
+        deliveryAddress: true,
+        activity: true,
+      },
+    });
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptions,

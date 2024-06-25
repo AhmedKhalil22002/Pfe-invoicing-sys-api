@@ -45,14 +45,14 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   currencyId: number;
 
-  @ManyToOne(() => AddressEntity)
+  @ManyToOne(() => AddressEntity, { eager: true })
   @JoinColumn({ name: 'invoicingAddressId' })
   invoicingAddress: AddressEntity;
 
   @Column({ type: 'int', nullable: true })
   invoicingAddressId: number;
 
-  @ManyToOne(() => AddressEntity)
+  @ManyToOne(() => AddressEntity, { eager: true })
   @JoinColumn({ name: 'deliveryAddressId' })
   deliveryAddress: AddressEntity;
 

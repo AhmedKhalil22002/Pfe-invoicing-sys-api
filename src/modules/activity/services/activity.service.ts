@@ -54,7 +54,6 @@ export class ActivityService {
     options?: PagingQueryOptions<ResponseActivityDto>,
   ): Promise<PageDto<ActivityEntity>> {
     const { filters, strictMatching, sort, pageOptions } = options;
-    console.log(options);
     const where = buildWhereClause(filters, strictMatching);
     const count = await this.activityRepository.getTotalCount({ where });
     const entities = await this.activityRepository.findAll({

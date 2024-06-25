@@ -3,7 +3,9 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  QueryRunner,
   Repository,
+  SelectQueryBuilder,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
 import { EntityHelper } from '../interfaces/database.entity.interface';
@@ -14,6 +16,13 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
   private entity: Repository<T>;
   protected constructor(entity: Repository<T>) {
     this.entity = entity;
+  }
+
+  public async createQueryBuilder(
+    alias?: string,
+    queryRunner?: QueryRunner,
+  ): Promise<SelectQueryBuilder<T>> {
+    return this.entity.createQueryBuilder(alias, queryRunner);
   }
 
   public async findOneById(id: string | number): Promise<T> {

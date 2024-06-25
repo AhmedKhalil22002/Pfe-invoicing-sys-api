@@ -22,13 +22,21 @@ export class CabinetService {
   ) {}
 
   async findOneById(id: number): Promise<CabinetEntity> {
-    const cabinet = await this.cabinetRepository.findOneById(id);
+    const cabinet = await (
+      await this.cabinetRepository.createQueryBuilder('cabinet')
+    )
+      .leftJoinAndSelect('cabinet.address', 'address')
+      .leftJoinAndSelect('cabinet.currency', 'currency')
+      .leftJoinAndSelect('cabinet.activity', 'activity')
+      .leftJoinAndSelect('address.country', 'country')
+      .where('cabinet.id = :id', { id })
+      .getOne();
+
     if (!cabinet) {
       throw new CabinetNotFoundException();
     }
     return cabinet;
   }
-
   async findAll(): Promise<CabinetEntity[]> {
     return this.cabinetRepository.findAll();
   }
