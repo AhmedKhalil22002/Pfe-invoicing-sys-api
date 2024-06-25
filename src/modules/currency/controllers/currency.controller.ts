@@ -11,7 +11,7 @@ import { ResponseCurrencyDto } from '../dtos/currency.response.dto';
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
-  @Get('/list')
+  @Get('/all')
   async findAll(): Promise<ResponseCurrencyDto[]> {
     return await this.currencyService.findAll();
   }

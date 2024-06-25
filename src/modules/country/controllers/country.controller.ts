@@ -11,7 +11,7 @@ import { ResponseCountryDto } from '../dtos/country.response.dto';
 export class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
-  @Get('/list')
+  @Get('/all')
   async findAll(): Promise<ResponseCountryDto[]> {
     return await this.countryService.findAll();
   }
