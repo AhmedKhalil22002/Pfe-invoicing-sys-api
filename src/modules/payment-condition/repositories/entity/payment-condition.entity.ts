@@ -1,8 +1,8 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('payment-method')
-export class PaymentMethodEntity extends EntityHelper {
+@Entity('payment-condition')
+export class PaymentConditionEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,4 +11,7 @@ export class PaymentMethodEntity extends EntityHelper {
 
   @Column({ type: 'varchar', length: 1024, nullable: true })
   description: string;
+
+  @Column({ type: 'boolean', default: false })
+  isDeletionRestricted: boolean;
 }

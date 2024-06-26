@@ -1,4 +1,4 @@
-export const paymentMethods = [
+export const paymentConditions = [
   {
     label: 'Payable à réception',
     description: '',

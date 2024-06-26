@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsString, MinLength } from 'class-validator';
 
-export class CreatePaymentMethodDto {
+export class CreatePaymentConditionDto {
   @ApiProperty({ example: faker.finance.transactionType(), type: String })
   @IsString()
   @MinLength(3)
@@ -14,4 +14,12 @@ export class CreatePaymentMethodDto {
   })
   @IsString()
   description: string;
+
+  @ApiProperty({
+    example: faker.definitions.company.descriptor[0],
+    type: Boolean,
+    default: false,
+  })
+  @IsBoolean()
+  isDeletionRestricted: boolean;
 }

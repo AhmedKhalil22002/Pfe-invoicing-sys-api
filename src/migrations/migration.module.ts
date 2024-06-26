@@ -15,8 +15,8 @@ import { MigrationTaxSeed } from './seeders/migration.tax.seed';
 import { MigrationCabinetSeed } from './seeders/migration.cabinet.seed';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { MigrationSchemaCommand } from './commands/migrations.schema.command';
-import { PaymentMethodModule } from 'src/modules/payment-method/payment-method.module';
-import { MigrationPaymentMethodSeed } from './seeders/migration.payment-method.seed';
+import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
+import { MigrationPaymentConditionSeed } from './seeders/migration.payment-method.seed';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { MigrationPaymentMethodSeed } from './seeders/migration.payment-method.s
     CabinetModule,
     CountryModule,
     CurrencyModule,
-    PaymentMethodModule,
+    PaymentConditionModule,
     TaxModule,
     ConfigModule.forRoot({
       load: configs,
@@ -44,7 +44,7 @@ import { MigrationPaymentMethodSeed } from './seeders/migration.payment-method.s
     MigrationCabinetSeed,
     MigrationCountrySeed,
     MigrationCurrencySeed,
-    MigrationPaymentMethodSeed,
+    MigrationPaymentConditionSeed,
     MigrationTaxSeed,
     MigrationSchemaCommand,
   ],
