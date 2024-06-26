@@ -8,4 +8,10 @@ export class ResponsePaymentMethodDto extends ResponseDtoHelper {
 
   @ApiProperty({ example: faker.finance.transactionType(), type: String })
   label: string;
+
+  @ApiProperty({
+    example: faker.definitions.company.descriptor[0],
+    type: String,
+  })
+  description: string;
 }
