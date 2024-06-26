@@ -13,6 +13,8 @@ import { FirmController } from 'src/modules/firm/controllers/firm.controller';
 import { FirmModule } from 'src/modules/firm/firm.module';
 import { InterlocutorModule } from 'src/modules/interlocutor/Interlocutor.module';
 import { InterlocutorController } from 'src/modules/interlocutor/controllers/interlocutor.controller';
+import { PaymentMethodController } from 'src/modules/payment-method/controllers/payment-method.controller';
+import { PaymentMethodModule } from 'src/modules/payment-method/payment-method.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 
@@ -25,6 +27,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CurrencyController,
     FirmController,
     InterlocutorController,
+    PaymentMethodController,
     TaxController,
   ],
   providers: [],
@@ -37,6 +40,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CurrencyModule,
     FirmModule,
     InterlocutorModule,
+    PaymentMethodModule,
     TaxModule,
   ],
 })

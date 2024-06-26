@@ -15,14 +15,14 @@ export class CreateCurrencyDto {
   @IsInt()
   id: number;
 
-  @ApiProperty({ example: faker.finance.currencyName, type: String })
+  @ApiProperty({ example: faker.finance.currencyName(), type: String })
   @IsOptional()
   @IsString()
   @MaxLength(255)
   label?: string;
 
   @ApiProperty({
-    example: faker.finance.currencyCode,
+    example: faker.finance.currencyCode(),
     type: Number,
     nullable: true,
   })
@@ -32,7 +32,7 @@ export class CreateCurrencyDto {
   code?: string;
 
   @ApiProperty({
-    example: faker.finance.currencySymbol,
+    example: faker.finance.currencySymbol(),
     type: Number,
     nullable: true,
   })

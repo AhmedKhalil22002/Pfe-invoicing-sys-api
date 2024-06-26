@@ -15,6 +15,8 @@ import { MigrationTaxSeed } from './seeders/migration.tax.seed';
 import { MigrationCabinetSeed } from './seeders/migration.cabinet.seed';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { MigrationSchemaCommand } from './commands/migrations.schema.command';
+import { PaymentMethodModule } from 'src/modules/payment-method/payment-method.module';
+import { MigrationPaymentMethodSeed } from './seeders/migration.payment-method.seed';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { MigrationSchemaCommand } from './commands/migrations.schema.command';
     CabinetModule,
     CountryModule,
     CurrencyModule,
+    PaymentMethodModule,
     TaxModule,
     ConfigModule.forRoot({
       load: configs,
@@ -41,6 +44,7 @@ import { MigrationSchemaCommand } from './commands/migrations.schema.command';
     MigrationCabinetSeed,
     MigrationCountrySeed,
     MigrationCurrencySeed,
+    MigrationPaymentMethodSeed,
     MigrationTaxSeed,
     MigrationSchemaCommand,
   ],

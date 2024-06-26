@@ -20,6 +20,12 @@ export class ResponseFirmDto extends ResponseDtoHelper {
   })
   website?: string;
 
+  @ApiProperty({
+    example: 'Notes',
+    type: String,
+  })
+  notes?: string;
+
   @ApiProperty({ example: true })
   isPerson: boolean;
 

@@ -31,6 +31,9 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
   taxIdNumber: string;
 
+  @Column({ type: 'varchar', length: 1024, nullable: false })
+  notes: string;
+
   @ManyToOne(() => ActivityEntity)
   @JoinColumn({ name: 'activityId' })
   activity: ActivityEntity;

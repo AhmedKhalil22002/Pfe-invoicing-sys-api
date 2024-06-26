@@ -27,6 +27,15 @@ export class CreateFirmDto {
   @MaxLength(255)
   website?: string;
 
+  @ApiProperty({
+    example: 'dummy note',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(1024)
+  notes?: string;
+
   @ApiProperty({ example: true, type: Boolean })
   @IsBoolean()
   @IsOptional()
