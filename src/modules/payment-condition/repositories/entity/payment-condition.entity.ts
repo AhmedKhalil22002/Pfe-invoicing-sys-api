@@ -11,7 +11,4 @@ export class PaymentConditionEntity extends EntityHelper {
 
   @Column({ type: 'varchar', length: 1024, nullable: true })
   description: string;
-
-  @Column({ type: 'boolean', default: false })
-  isDeletionRestricted: boolean;
 }

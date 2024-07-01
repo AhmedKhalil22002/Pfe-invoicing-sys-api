@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   UpdateDateColumn,
@@ -7,6 +8,7 @@ import {
 import {
   DATABASE_CREATED_AT_FIELD_NAME,
   DATABASE_DELETED_AT_FIELD_NAME,
+  DATABASE_RESTRICT_DELETE_FIELD_NAME,
   DATABASE_UPDATED_AT_FIELD_NAME,
 } from 'src/common/database/constants/database.constant';
 import { Expose } from 'class-transformer';
@@ -23,4 +25,8 @@ export class EntityHelper extends BaseEntity {
   @DeleteDateColumn()
   @Expose({ name: DATABASE_DELETED_AT_FIELD_NAME })
   [DATABASE_DELETED_AT_FIELD_NAME]?: Date;
+
+  @Column({ type: 'boolean', default: false })
+  @Expose({ name: DATABASE_RESTRICT_DELETE_FIELD_NAME })
+  [DATABASE_RESTRICT_DELETE_FIELD_NAME]: boolean;
 }
