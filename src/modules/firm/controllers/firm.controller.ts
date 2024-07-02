@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FirmService } from '../services/firm.service';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
@@ -33,8 +41,18 @@ export class FirmController {
     return await this.firmService.findOneById(id);
   }
 
-  @Post('/')
+  @Post('')
   async save(@Body() createFirmDto: CreateFirmDto): Promise<ResponseFirmDto> {
     return await this.firmService.save(createFirmDto);
+  }
+
+  @Delete('/:id')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    required: true,
+  })
+  async delete(@Param('id') id: number): Promise<ResponseFirmDto> {
+    return await this.firmService.softDelete(id);
   }
 }
