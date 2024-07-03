@@ -56,6 +56,11 @@ export class CreateFirmDto {
   @IsOptional()
   currencyId?: number;
 
+  @ApiProperty({ example: 1, type: Number })
+  @IsInt()
+  @IsOptional()
+  paymentConditionId?: number;
+
   @ApiProperty({ type: () => CreateAddressDto })
   deliveryAddress?: CreateAddressDto;
 

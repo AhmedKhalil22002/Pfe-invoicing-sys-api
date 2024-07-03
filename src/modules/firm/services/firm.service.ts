@@ -18,6 +18,7 @@ import {
 import { AddressService } from 'src/modules/address/services/address.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
+import { PaymentConditionService } from 'src/modules/payment-condition/services/payment-condition.service';
 
 @Injectable()
 export class FirmService {
@@ -26,6 +27,7 @@ export class FirmService {
     private readonly activityService: ActivityService,
     private readonly currencyService: CurrencyService,
     private readonly addressService: AddressService,
+    private readonly paymentConditionService: PaymentConditionService,
     private readonly interlocutorService: InterlocutorService,
   ) {}
 
@@ -70,6 +72,7 @@ export class FirmService {
         invoicingAddress: true,
         deliveryAddress: true,
         activity: true,
+        paymentCondition: true,
       },
     });
 
@@ -117,6 +120,38 @@ export class FirmService {
 
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
     const firm = await this.findOneById(id);
+
+    const interlocutor = await this.interlocutorService.findOneById(
+      firm.mainInterlocutorId,
+    );
+
+    const invoicingAddress = await this.addressService.findOneById(
+      firm.invoicingAddressId,
+    );
+    const deliveryAddress = await this.addressService.findOneById(
+      firm.deliveryAddressId,
+    );
+
+    await this.activityService.findOneById(updateFirmDto.activityId);
+    await this.currencyService.findOneById(updateFirmDto.currencyId);
+    await this.paymentConditionService.findOneById(
+      updateFirmDto.paymentConditionId,
+    );
+
+    this.interlocutorService.update(firm.mainInterlocutorId, {
+      ...interlocutor,
+      ...updateFirmDto.mainInterlocutor,
+    });
+
+    this.addressService.update(firm.invoicingAddressId, {
+      ...invoicingAddress,
+      ...updateFirmDto.invoicingAddress,
+    });
+    this.addressService.update(firm.deliveryAddressId, {
+      ...deliveryAddress,
+      ...updateFirmDto.deliveryAddress,
+    });
+
     return this.firmRepository.save({
       ...firm,
       ...updateFirmDto,
@@ -124,7 +159,9 @@ export class FirmService {
   }
 
   async softDelete(id: number): Promise<FirmEntity> {
-    await this.findOneById(id);
+    const firm = await this.findOneById(id);
+    this.addressService.softDelete(firm.invoicingAddressId);
+    this.addressService.softDelete(firm.deliveryAddressId);
     return this.firmRepository.softDelete(id);
   }
 

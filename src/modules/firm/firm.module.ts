@@ -5,6 +5,7 @@ import { InterlocutorModule } from '../interlocutor/Interlocutor.module';
 import { AddressModule } from '../address/address.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { ActivityModule } from '../activity/activity.module';
+import { PaymentConditionModule } from '../payment-condition/payment-condition.module';
 
 @Module({
   controllers: [],
@@ -16,6 +17,7 @@ import { ActivityModule } from '../activity/activity.module';
     AddressModule,
     CurrencyModule,
     InterlocutorModule,
+    PaymentConditionModule,
   ],
 })
 export class FirmModule {}
