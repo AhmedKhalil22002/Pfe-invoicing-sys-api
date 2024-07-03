@@ -6,6 +6,7 @@ import { ResponseAddressDto } from 'src/modules/address/dtos/address.response';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
+import { ResponsePaymentConditionDto } from 'src/modules/payment-condition/dtos/payment-condition.response.dto';
 
 export class ResponseFirmDto extends ResponseDtoHelper {
   @ApiProperty({ example: 1 })
@@ -43,6 +44,12 @@ export class ResponseFirmDto extends ResponseDtoHelper {
 
   @ApiProperty({ example: 1, nullable: true })
   currencyId?: number;
+
+  @ApiProperty({ type: () => ResponsePaymentConditionDto, nullable: true })
+  paymentCondition?: ResponsePaymentConditionDto;
+
+  @ApiProperty({ example: 1, type: Number })
+  paymentConditionId?: number;
 
   @ApiProperty({ type: () => ResponseAddressDto, nullable: true })
   invoicingAddress?: ResponseAddressDto;

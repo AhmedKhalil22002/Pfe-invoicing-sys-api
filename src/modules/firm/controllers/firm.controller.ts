@@ -37,7 +37,7 @@ export class FirmController {
     type: 'number',
     required: true,
   })
-  async findOneById(id: number): Promise<ResponseFirmDto> {
+  async findOneById(@Param('id') id: number): Promise<ResponseFirmDto> {
     return await this.firmService.findOneById(id);
   }
 

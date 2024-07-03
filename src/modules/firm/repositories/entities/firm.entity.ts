@@ -4,6 +4,7 @@ import { AddressEntity } from 'src/modules/address/repositories/entities/address
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
+import { PaymentConditionEntity } from 'src/modules/payment-condition/repositories/entity/payment-condition.entity';
 import {
   Column,
   Entity,
@@ -48,6 +49,13 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   currencyId: number;
 
+  @ManyToOne(() => PaymentConditionEntity)
+  @JoinColumn({ name: 'paymentConditionId' })
+  paymentCondition: PaymentConditionEntity;
+
+  @Column({ type: 'int', nullable: true })
+  paymentConditionId: number;
+
   @ManyToOne(() => AddressEntity, { eager: true })
   @JoinColumn({ name: 'invoicingAddressId' })
   invoicingAddress: AddressEntity;
@@ -73,7 +81,7 @@ export class FirmEntity extends EntityHelper {
   @JoinTable()
   interlocutors: InterlocutorEntity[];
 
-  @ManyToOne(() => InterlocutorEntity)
+  @ManyToOne(() => InterlocutorEntity, { eager: true })
   @JoinColumn({ name: 'mainInterlocutorId' })
   mainInterlocutor: InterlocutorEntity;
 
