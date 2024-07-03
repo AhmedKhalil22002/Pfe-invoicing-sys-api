@@ -6,6 +6,7 @@ import {
   Delete,
   Query,
   Param,
+  Put,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FirmService } from '../services/firm.service';
@@ -14,6 +15,7 @@ import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { UpdateFirmDto } from '../dtos/firm.update.dto';
 
 @ApiTags('firm')
 @Controller({
@@ -44,6 +46,19 @@ export class FirmController {
   @Post('')
   async save(@Body() createFirmDto: CreateFirmDto): Promise<ResponseFirmDto> {
     return await this.firmService.save(createFirmDto);
+  }
+
+  @Put('/:id')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    required: true,
+  })
+  async update(
+    @Param('id') id: number,
+    @Body() updateActivityDto: UpdateFirmDto,
+  ): Promise<ResponseFirmDto> {
+    return await this.firmService.update(id, updateActivityDto);
   }
 
   @Delete('/:id')
