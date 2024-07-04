@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsUSTaxIdentificationNumber } from 'src/common/helper/decorators/IsUSTaxIdentificationNumber.decorator';
 import { CreateAddressDto } from 'src/modules/address/dtos/address.create';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
@@ -21,8 +22,7 @@ export class CreateCabinetDto {
   phone?: string;
 
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
-  @IsNotEmpty()
-  @MinLength(9)
+  @IsUSTaxIdentificationNumber()
   taxIdNumber?: string;
 
   @ApiProperty({ type: () => CreateAddressDto })

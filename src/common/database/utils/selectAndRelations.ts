@@ -18,6 +18,16 @@ export function getSelectAndRelations(
   return { select, relations };
 }
 
+export function arrayToTrueObject(arr: string[]): { [key: string]: boolean } {
+  return arr.reduce(
+    (obj, str) => {
+      obj[str] = true;
+      return obj;
+    },
+    {} as { [key: string]: boolean },
+  );
+}
+
 function getAllRelations(relationshipColumns: string[]) {
   const relations = {};
 

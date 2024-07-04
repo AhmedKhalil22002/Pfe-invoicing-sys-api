@@ -13,7 +13,10 @@ import { FirmService } from '../services/firm.service';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import {
+  PagingQueryOptionsDto,
+  QueryOptionsDto,
+} from 'src/common/database/dtos/databse.query-options.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
 
@@ -24,6 +27,13 @@ import { UpdateFirmDto } from '../dtos/firm.update.dto';
 })
 export class FirmController {
   constructor(private readonly firmService: FirmService) {}
+
+  @Get('/all')
+  async findAll(
+    @Query() options: QueryOptionsDto<ResponseFirmDto>,
+  ): Promise<ResponseFirmDto[]> {
+    return await this.firmService.findAll(options);
+  }
 
   @Get('/list')
   @ApiPaginatedResponse(ResponseFirmDto)
