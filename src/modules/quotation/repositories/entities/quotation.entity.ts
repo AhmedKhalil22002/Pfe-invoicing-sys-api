@@ -46,14 +46,14 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   currencyId: number;
 
-  @ManyToOne(() => FirmEntity)
+  @ManyToOne(() => FirmEntity, { eager: true })
   @JoinColumn({ name: 'firmId' })
   firm: FirmEntity;
 
   @Column({ type: 'int', nullable: true })
   firmId: number;
 
-  @ManyToOne(() => InterlocutorEntity)
+  @ManyToOne(() => InterlocutorEntity, { eager: true })
   @JoinColumn({ name: 'interlocutorId' })
   interlocutor: InterlocutorEntity;
 

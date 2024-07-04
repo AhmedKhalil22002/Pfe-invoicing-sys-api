@@ -1,22 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDate,
-  IsInt,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateQuotationDto {
-  @ApiProperty({ example: faker.date.anytime(), type: Date })
-  @IsOptional()
-  @IsDate()
+  @ApiProperty({ example: faker.date.anytime() })
   date?: Date;
 
-  @ApiProperty({ example: faker.date.anytime(), type: Date })
-  @IsOptional()
-  @IsDate()
+  @ApiProperty({ example: faker.date.anytime() })
   dueDate?: Date;
 
   @ApiProperty({
@@ -51,7 +41,6 @@ export class CreateQuotationDto {
     type: Number,
   })
   @IsOptional()
-  @IsInt()
   discount?: number;
 
   @ApiProperty({
@@ -59,7 +48,6 @@ export class CreateQuotationDto {
     type: Number,
   })
   @IsOptional()
-  @IsInt()
   subTotal?: number;
 
   @ApiProperty({
@@ -67,7 +55,6 @@ export class CreateQuotationDto {
     type: Number,
   })
   @IsOptional()
-  @IsInt()
   total?: number;
 
   @ApiProperty({

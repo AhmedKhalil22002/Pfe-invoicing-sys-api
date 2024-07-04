@@ -46,10 +46,18 @@ export class QuotationService {
     const where = buildWhereClause(filters, strictMatching);
     const count = await this.quotationRepository.getTotalCount({ where });
     const entities = await this.quotationRepository.findAll({
+      ...(Object.keys(options?.columns || {}).length > 0
+        ? { select: options.columns }
+        : {}),
       where,
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
       order: sort,
+      relations: {
+        interlocutor: true,
+        firm: true,
+        currency: true,
+      },
     });
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptions,

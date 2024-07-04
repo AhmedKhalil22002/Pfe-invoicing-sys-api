@@ -25,7 +25,7 @@ import { UpdateFirmDto } from '../dtos/firm.update.dto';
 export class FirmController {
   constructor(private readonly firmService: FirmService) {}
 
-  @Get('/all')
+  @Get('/list')
   @ApiPaginatedResponse(ResponseFirmDto)
   async findAllPaginated(
     @Query() options: PagingQueryOptionsDto<ResponseFirmDto>,

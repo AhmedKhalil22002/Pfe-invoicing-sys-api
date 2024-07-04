@@ -15,6 +15,8 @@ import { InterlocutorModule } from 'src/modules/interlocutor/Interlocutor.module
 import { InterlocutorController } from 'src/modules/interlocutor/controllers/interlocutor.controller';
 import { PaymentConditionController } from 'src/modules/payment-condition/controllers/payment-condition.controller';
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
+import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
+import { QuotationModule } from 'src/modules/quotation/quotation.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 
@@ -28,6 +30,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     FirmController,
     InterlocutorController,
     PaymentConditionController,
+    QuotationController,
     TaxController,
   ],
   providers: [],
@@ -41,6 +44,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     FirmModule,
     InterlocutorModule,
     PaymentConditionModule,
+    QuotationModule,
     TaxModule,
   ],
 })

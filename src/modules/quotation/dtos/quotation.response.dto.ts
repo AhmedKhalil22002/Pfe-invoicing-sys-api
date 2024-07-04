@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
+import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
+import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: faker.date.anytime(), type: Date })
@@ -56,9 +58,15 @@ export class ResponseQuotationDto {
   })
   firmId?: number;
 
+  @ApiProperty({ type: () => ResponseFirmDto })
+  firm?: ResponseFirmDto;
+
   @ApiProperty({
     example: '1',
     type: Number,
   })
   interlocutorId?: number;
+
+  @ApiProperty({ type: () => ResponseInterlocutorDto })
+  interlocutor?: ResponseInterlocutorDto;
 }
