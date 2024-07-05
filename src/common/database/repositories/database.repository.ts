@@ -25,6 +25,12 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     return this.entity.createQueryBuilder(alias, queryRunner);
   }
 
+  public async getRelatedEntityNames(): Promise<string[]> {
+    return this.entity.metadata.relations
+      .filter((relation) => relation.isManyToOne)
+      .map((relation) => relation.propertyName);
+  }
+
   public async findOneById(id: string | number): Promise<T> {
     const options: FindOptionsWhere<T> = {
       id: id,

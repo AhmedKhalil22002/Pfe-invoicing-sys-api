@@ -17,6 +17,8 @@ import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { MigrationSchemaCommand } from './commands/migrations.schema.command';
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
 import { MigrationPaymentConditionSeed } from './seeders/migration.payment-method.seed';
+import { MigrationQuotationSeed } from './seeders/migration.quotation.seed';
+import { QuotationModule } from 'src/modules/quotation/quotation.module';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { MigrationPaymentConditionSeed } from './seeders/migration.payment-metho
     CountryModule,
     CurrencyModule,
     PaymentConditionModule,
+    QuotationModule,
     TaxModule,
     ConfigModule.forRoot({
       load: configs,
@@ -46,6 +49,7 @@ import { MigrationPaymentConditionSeed } from './seeders/migration.payment-metho
     MigrationCurrencySeed,
     MigrationPaymentConditionSeed,
     MigrationTaxSeed,
+    MigrationQuotationSeed,
     MigrationSchemaCommand,
   ],
   exports: [],

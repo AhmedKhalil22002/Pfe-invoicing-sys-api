@@ -1,0 +1,53 @@
+import { PagingQueryOptions } from '../interfaces/database.query-options.interface';
+
+export function getSelectAndRelations(
+  relationshipColumns: string[],
+  options: PagingQueryOptions<any>,
+) {
+  let select = {};
+  let relations = {};
+
+  if (options.relationSelect) {
+    select = options.columns || {};
+    relations = getAllRelations(relationshipColumns);
+  } else {
+    select = options.columns || {};
+    relations = getSpecifiedRelations(relationshipColumns, options.columns);
+  }
+
+  return { select, relations };
+}
+
+export function arrayToTrueObject(arr: string[]): { [key: string]: boolean } {
+  return arr.reduce(
+    (obj, str) => {
+      obj[str] = true;
+      return obj;
+    },
+    {} as { [key: string]: boolean },
+  );
+}
+
+function getAllRelations(relationshipColumns: string[]) {
+  const relations = {};
+
+  relationshipColumns.forEach((column) => {
+    relations[column] = true;
+  });
+
+  return relations;
+}
+
+function getSpecifiedRelations(relationshipColumns: string[], columns?: any) {
+  const relations = {};
+
+  if (columns) {
+    relationshipColumns.forEach((column) => {
+      if (columns[column]) {
+        relations[column] = true;
+      }
+    });
+  }
+
+  return relations;
+}

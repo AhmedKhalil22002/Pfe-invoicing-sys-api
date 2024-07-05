@@ -19,6 +19,10 @@ import { AddressService } from 'src/modules/address/services/address.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { PaymentConditionService } from 'src/modules/payment-condition/services/payment-condition.service';
+import {
+  arrayToTrueObject,
+  getSelectAndRelations,
+} from 'src/common/database/utils/selectAndRelations';
 
 @Injectable()
 export class FirmService {
@@ -32,7 +36,12 @@ export class FirmService {
   ) {}
 
   async findOneById(id: number): Promise<FirmEntity> {
-    const firm = await this.firmRepository.findOneById(id);
+    const firm = await this.firmRepository.findByCondition({
+      where: { id },
+      relations: arrayToTrueObject(
+        await this.firmRepository.getRelatedEntityNames(),
+      ),
+    });
     if (!firm) {
       throw new FirmNotFoundException();
     }
@@ -42,15 +51,27 @@ export class FirmService {
   async findOneByCondition(
     options: QueryOptionsDto<CreateFirmDto>,
   ): Promise<FirmEntity | null> {
+    const { select, relations } = getSelectAndRelations(
+      await this.firmRepository.getRelatedEntityNames(),
+      options,
+    );
     const firm = await this.firmRepository.findByCondition({
+      select,
+      relations,
       where: { ...options.filters, deletedAt: null },
     });
     if (!firm) return null;
     return firm;
   }
 
-  async findAll(): Promise<FirmEntity[]> {
-    return await this.firmRepository.findAll();
+  async findAll(
+    options: QueryOptionsDto<ResponseFirmDto>,
+  ): Promise<FirmEntity[]> {
+    const { select, relations } = getSelectAndRelations(
+      await this.firmRepository.getRelatedEntityNames(),
+      options,
+    );
+    return await this.firmRepository.findAll({ select, relations });
   }
 
   async findAllPaginated(
@@ -58,22 +79,21 @@ export class FirmService {
   ): Promise<PageDto<ResponseFirmDto>> {
     const { filters, strictMatching, sort, pageOptions } = options || {};
 
-    const where = buildWhereClause(filters, strictMatching);
-
+    const where = buildWhereClause<ResponseFirmDto>(filters, strictMatching);
     const count = await this.firmRepository.getTotalCount({ where });
+
+    const { select, relations } = getSelectAndRelations(
+      await this.firmRepository.getRelatedEntityNames(),
+      options,
+    );
+
     const entities = await this.firmRepository.findAll({
+      select,
       where,
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
       order: sort,
-      relations: {
-        mainInterlocutor: true,
-        currency: true,
-        invoicingAddress: true,
-        deliveryAddress: true,
-        activity: true,
-        paymentCondition: true,
-      },
+      relations,
     });
 
     const pageMetaDto = new PageMetaDto({
@@ -85,7 +105,6 @@ export class FirmService {
   }
 
   async save(createFirmDto: CreateFirmDto): Promise<FirmEntity> {
-    console.log('save', createFirmDto);
     let firm = await this.firmRepository.findByCondition({
       where: { name: createFirmDto.name },
     });

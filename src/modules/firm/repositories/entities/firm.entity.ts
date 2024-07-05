@@ -56,14 +56,14 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   paymentConditionId: number;
 
-  @ManyToOne(() => AddressEntity, { eager: true })
+  @ManyToOne(() => AddressEntity)
   @JoinColumn({ name: 'invoicingAddressId' })
   invoicingAddress: AddressEntity;
 
   @Column({ type: 'int', nullable: true })
   invoicingAddressId: number;
 
-  @ManyToOne(() => AddressEntity, { eager: true })
+  @ManyToOne(() => AddressEntity)
   @JoinColumn({ name: 'deliveryAddressId' })
   deliveryAddress: AddressEntity;
 
@@ -81,7 +81,7 @@ export class FirmEntity extends EntityHelper {
   @JoinTable()
   interlocutors: InterlocutorEntity[];
 
-  @ManyToOne(() => InterlocutorEntity, { eager: true })
+  @ManyToOne(() => InterlocutorEntity)
   @JoinColumn({ name: 'mainInterlocutorId' })
   mainInterlocutor: InterlocutorEntity;
 
