@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { SocialTitles } from 'src/app/constants/social-titles.enum';
+import { SOCIAL_TITLES } from 'src/app/constants/social-titles.enum';
 
 export class ResponseInterlocutorDto {
   @ApiProperty({ example: 1, type: Number })
   id: number;
 
-  @ApiProperty({ example: SocialTitles.MR, enum: SocialTitles })
-  title: SocialTitles;
+  @ApiProperty({ example: SOCIAL_TITLES.MR, enum: SOCIAL_TITLES })
+  title: SOCIAL_TITLES;
 
   @ApiProperty({ example: faker.person.firstName(), type: String })
   name: string;

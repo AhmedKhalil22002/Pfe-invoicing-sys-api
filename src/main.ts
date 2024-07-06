@@ -72,7 +72,7 @@ async function bootstrap() {
   // logger.log(`Environment Variable`, 'NestApplication');
   // logger.log(JSON.parse(JSON.stringify(process.env)), 'NestApplication');
   // logger.log(`==========================================================`);
-  await app.listen(port, host);
+  await app.listen(port);
   logger.log(`==========================================================`);
   logger.log(`Http Server running on ${await app.getUrl()}`, 'NestApplication');
   logger.log(`==========================================================`);
