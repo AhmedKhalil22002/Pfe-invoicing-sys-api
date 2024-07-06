@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
-import { CabinetService } from 'src/modules/cabinet/services/cabinet.service';
-import { cabinet } from '../data/cabinet.data';
 import { Connection } from 'typeorm';
+import { QuotationService } from 'src/modules/quotation/services/quotation.service';
+import { quotations } from 'src/migrations/data/test/quotation.data';
 
 @Injectable()
-export class MigrationCabinetSeed {
+export class MigrationQuotationSeed {
   constructor(
-    private readonly cabinetService: CabinetService,
+    private readonly quotationService: QuotationService,
     private readonly connection: Connection,
   ) {}
 
   @Command({
-    command: 'seed:cabinet',
-    describe: 'seeds cabinet',
+    command: 'seed:quotation',
+    describe: 'seeds quotation',
   })
   async seeds(): Promise<void> {
     try {
-      await this.cabinetService.save(cabinet);
+      await this.quotationService.saveMany(quotations);
     } catch (err: any) {
       throw new Error(err.message);
     }
   }
 
   @Command({
-    command: 'rollback:cabinet',
-    describe: 'rollback cabinet',
+    command: 'rollback:quotation',
+    describe: 'rollback currencies',
   })
   async remove(): Promise<void> {
     try {
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 0;');
-      await this.cabinetService.deleteAll();
+      await this.quotationService.deleteAll();
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 1;');
     } catch (err: any) {
       throw new Error(err.message);

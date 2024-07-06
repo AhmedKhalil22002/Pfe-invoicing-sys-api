@@ -137,6 +137,26 @@ export class FirmService {
     });
   }
 
+  async saveMany(createFirmDtos: CreateFirmDto[]): Promise<FirmEntity[]> {
+    let existingFirm: FirmEntity;
+    for (const dto of createFirmDtos) {
+      existingFirm = await this.firmRepository.findByCondition({
+        where: { name: dto.name },
+      });
+      if (existingFirm) {
+        throw new FirmAlreadyExistsException();
+      }
+      existingFirm = await this.firmRepository.findByCondition({
+        where: { taxIdNumber: dto.taxIdNumber },
+      });
+      if (existingFirm) {
+        throw new TaxIdNumberDuplicateException();
+      }
+      await this.interlocutorService.save(dto.mainInterlocutor);
+    }
+    return this.firmRepository.saveMany(createFirmDtos);
+  }
+
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
     const firm = await this.findOneById(id);
 

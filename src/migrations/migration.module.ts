@@ -12,13 +12,15 @@ import { CountryModule } from 'src/modules/country/country.module';
 import { CurrencyModule } from 'src/modules/currency/currency.module';
 import { TaxModule } from 'src/modules/tax/tax.module';
 import { MigrationTaxSeed } from './seeders/migration.tax.seed';
-import { MigrationCabinetSeed } from './seeders/migration.cabinet.seed';
+import { MigrationCabinetSeed } from './seeders/test/migration.cabinet.seed';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { MigrationSchemaCommand } from './commands/migrations.schema.command';
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
 import { MigrationPaymentConditionSeed } from './seeders/migration.payment-method.seed';
-import { MigrationQuotationSeed } from './seeders/migration.quotation.seed';
+import { MigrationQuotationSeed } from './seeders/test/migration.quotation.seed';
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
+import { FirmModule } from 'src/modules/firm/firm.module';
+import { MigrationFirmSeed } from './seeders/test/migration.firm.seed';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { QuotationModule } from 'src/modules/quotation/quotation.module';
     CabinetModule,
     CountryModule,
     CurrencyModule,
+    FirmModule,
     PaymentConditionModule,
     QuotationModule,
     TaxModule,
@@ -47,6 +50,7 @@ import { QuotationModule } from 'src/modules/quotation/quotation.module';
     MigrationCabinetSeed,
     MigrationCountrySeed,
     MigrationCurrencySeed,
+    MigrationFirmSeed,
     MigrationPaymentConditionSeed,
     MigrationTaxSeed,
     MigrationQuotationSeed,
