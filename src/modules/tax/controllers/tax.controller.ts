@@ -28,11 +28,15 @@ export class TaxController {
 
   @Get('/list')
   @ApiPaginatedResponse(ResponseTaxDto)
-  async findAll(
+  async findAllPaginated(
     @Query() options: PagingQueryOptionsDto<ResponseTaxDto>,
   ): Promise<PageDto<ResponseTaxDto>> {
-    console.log(options);
     return await this.taxService.findAllPaginated(options);
+  }
+
+  @Get('/all')
+  async findAll(): Promise<ResponseTaxDto[]> {
+    return await this.taxService.findAll();
   }
 
   @Get('/:id')
