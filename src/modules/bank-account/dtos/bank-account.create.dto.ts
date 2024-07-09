@@ -46,7 +46,7 @@ export class CreateBankAccountDto {
 
   @ApiProperty({
     required: false,
-    example: faker.datatype.number({ min: 1, max: 1000 }),
+    example: 1,
   })
   @IsOptional()
   @IsInt()

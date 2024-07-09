@@ -22,10 +22,10 @@ export class BankAccountEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 20, nullable: true })
   rib: string;
 
-  @Column({ type: 'varchar', length: 24, nullable: true })
+  @Column({ type: 'varchar', length: 30, nullable: true })
   iban: string;
 
-  @ManyToOne(() => CurrencyEntity)
+  @ManyToOne(() => CurrencyEntity, { eager: true })
   @JoinColumn({ name: 'currencyId' })
   currency: CurrencyEntity;
 

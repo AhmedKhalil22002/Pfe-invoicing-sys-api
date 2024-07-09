@@ -36,7 +36,7 @@ export class BankAccountService {
         deletedAt: null,
       },
     });
-    return !!!existingBankAccount;
+    return !!existingBankAccount;
   }
 
   async findOneByCondition(
@@ -75,7 +75,7 @@ export class BankAccountService {
   async save(
     createBankAccountDto: CreateBankAccountDto,
   ): Promise<BankAccountEntity> {
-    if (this.isBankAccountExists(createBankAccountDto)) {
+    if (await this.isBankAccountExists(createBankAccountDto)) {
       throw new BankAccountAlreadyExistsException();
     }
     return this.bankAccountRepository.save(createBankAccountDto);
