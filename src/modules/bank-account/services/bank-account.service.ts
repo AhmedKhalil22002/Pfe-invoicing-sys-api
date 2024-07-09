@@ -13,6 +13,7 @@ import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { BankAccountAlreadyExistsException } from '../errors/bank-account.alreadyexists.error';
+import { getSelectAndRelations } from 'src/common/database/utils/selectAndRelations';
 
 @Injectable()
 export class BankAccountService {
@@ -56,19 +57,33 @@ export class BankAccountService {
   async findAllPaginated(
     options?: PagingQueryOptions<ResponseBankAccountDto>,
   ): Promise<PageDto<BankAccountEntity>> {
-    const { filters, strictMatching, sort, pageOptions } = options;
-    const where = buildWhereClause(filters, strictMatching);
+    const { filters, strictMatching, sort, pageOptions } = options || {};
+
+    const where = buildWhereClause<ResponseBankAccountDto>(
+      filters,
+      strictMatching,
+    );
     const count = await this.bankAccountRepository.getTotalCount({ where });
+
+    const { select, relations } = getSelectAndRelations(
+      await this.bankAccountRepository.getRelatedEntityNames(),
+      options,
+    );
+
     const entities = await this.bankAccountRepository.findAll({
+      select,
       where,
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
       order: sort,
+      relations,
     });
+
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptions,
       itemCount: count,
     });
+
     return new PageDto(entities, pageMetaDto);
   }
 
@@ -85,7 +100,7 @@ export class BankAccountService {
     createBankAccountDto: CreateBankAccountDto[],
   ): Promise<BankAccountEntity[]> {
     for (const dto of createBankAccountDto) {
-      if (this.isBankAccountExists(dto)) {
+      if (await this.isBankAccountExists(dto)) {
         throw new BankAccountAlreadyExistsException();
       }
     }
@@ -96,8 +111,8 @@ export class BankAccountService {
     id: number,
     updateBankAccountDto: UpdateBankAccountDto,
   ): Promise<BankAccountEntity> {
-    if (this.isBankAccountExists(updateBankAccountDto)) {
-      throw new BankAccountAlreadyExistsException();
+    if (!(await this.isBankAccountExists(updateBankAccountDto))) {
+      throw new BankAccountNotFoundException();
     }
     const existingBankAccount = await this.findOneById(id);
     return this.bankAccountRepository.save({
