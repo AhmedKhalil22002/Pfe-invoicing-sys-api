@@ -49,16 +49,20 @@ export class FirmService {
   }
 
   async findOneByCondition(
-    options: QueryOptionsDto<CreateFirmDto>,
+    options: QueryOptionsDto<FirmEntity>,
   ): Promise<FirmEntity | null> {
     const { select, relations } = getSelectAndRelations(
       await this.firmRepository.getRelatedEntityNames(),
       options,
     );
+    const where = buildWhereClause<FirmEntity>(
+      options.filters,
+      options.strictMatching,
+    );
     const firm = await this.firmRepository.findByCondition({
       select,
       relations,
-      where: { ...options.filters, deletedAt: null },
+      where: { ...where, deletedAt: null },
     });
     if (!firm) return null;
     return firm;

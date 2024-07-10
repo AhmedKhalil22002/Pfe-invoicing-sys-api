@@ -12,10 +12,18 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
+import { CurrencyService } from 'src/modules/currency/services/currency.service';
+import { FirmService } from 'src/modules/firm/services/firm.service';
+import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 
 @Injectable()
 export class QuotationService {
-  constructor(private readonly quotationRepository: QuotationRepository) {}
+  constructor(
+    private readonly quotationRepository: QuotationRepository,
+    private readonly currencyService: CurrencyService,
+    private readonly firmService: FirmService,
+    private readonly interlocutorService: InterlocutorService,
+  ) {}
 
   async findOneById(id: number): Promise<QuotationEntity> {
     const quotation = await this.quotationRepository.findOneById(id);
@@ -67,7 +75,18 @@ export class QuotationService {
   }
 
   async save(createQuotationDto: CreateQuotationDto): Promise<QuotationEntity> {
-    return this.quotationRepository.save(createQuotationDto);
+    const firm = await this.firmService.findOneByCondition({
+      filters: { id: createQuotationDto.firmId },
+      relationSelect: true,
+    });
+    await this.interlocutorService.findOneById(
+      createQuotationDto.interlocutorId,
+    );
+    return this.quotationRepository.save({
+      ...createQuotationDto,
+      firmId: createQuotationDto.firmId,
+      currencyId: firm.currencyId,
+    });
   }
 
   async saveMany(

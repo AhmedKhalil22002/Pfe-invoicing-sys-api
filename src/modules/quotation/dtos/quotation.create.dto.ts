@@ -1,6 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateQuotationDto {
   @ApiProperty({ example: faker.date.anytime() })
@@ -80,4 +86,21 @@ export class CreateQuotationDto {
   @IsOptional()
   @IsInt()
   interlocutorId?: number;
+
+  @ApiProperty({
+    example: faker.hacker.phrase(),
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(1024)
+  notes?: string;
+
+  @ApiProperty({
+    example: '10',
+    type: Number,
+  })
+  @IsOptional()
+  @IsNumber()
+  taxStamp?: number;
 }

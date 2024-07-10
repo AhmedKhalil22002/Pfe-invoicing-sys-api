@@ -69,4 +69,16 @@ export class ResponseQuotationDto {
 
   @ApiProperty({ type: () => ResponseInterlocutorDto })
   interlocutor?: ResponseInterlocutorDto;
+
+  @ApiProperty({
+    example: faker.hacker.phrase(),
+    type: String,
+  })
+  notes?: string;
+
+  @ApiProperty({
+    example: '10',
+    type: Number,
+  })
+  taxStamp?: number;
 }
