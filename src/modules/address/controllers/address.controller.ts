@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { AddressService } from '../services/address.service';
-import { CreateAddressDto } from '../dtos/address.create';
-import { UpdateAddressDto } from '../dtos/address.update';
-import { ResponseAddressDto } from '../dtos/address.response';
+import { CreateAddressDto } from '../dtos/address.create.dto';
+import { UpdateAddressDto } from '../dtos/address.update.dto';
+import { ResponseAddressDto } from '../dtos/address.response.dto';
 
 @ApiTags('address')
 @Controller({
