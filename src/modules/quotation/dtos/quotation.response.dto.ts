@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
+import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
+import { ResponseArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.response.dto';
 import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
 import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 
@@ -33,6 +35,9 @@ export class ResponseQuotationDto {
     type: Number,
   })
   discount?: number;
+
+  @ApiProperty({ example: DISCOUNT_TYPES.PERCENTAGE, enum: DISCOUNT_TYPES })
+  discount_type: DISCOUNT_TYPES;
 
   @ApiProperty({
     example: '125.35',
@@ -81,4 +86,7 @@ export class ResponseQuotationDto {
     type: Number,
   })
   taxStamp?: number;
+
+  @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
+  articles?: ResponseArticleQuotationEntryDto[];
 }

@@ -1,4 +1,6 @@
+import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { ArticleQuotationEntryEntity } from 'src/modules/article-quotation-entry/repositories/entities/article-quotation-entry.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
@@ -8,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('quotation')
@@ -33,10 +36,13 @@ export class QuotationEntity extends EntityHelper {
   @Column({ nullable: true })
   discount: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'enum', enum: DISCOUNT_TYPES, nullable: true })
+  discount_type: DISCOUNT_TYPES;
+
+  @Column({ type: 'float', nullable: true })
   subTotal: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'float', nullable: true })
   total: number;
 
   @ManyToOne(() => CurrencyEntity)
@@ -63,6 +69,11 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   notes: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'float', nullable: true })
   taxStamp: number;
+
+  @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation, {
+    eager: true,
+  })
+  articles: ArticleQuotationEntryEntity[];
 }

@@ -15,12 +15,16 @@ import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
+import { ArticleQuotationEntryService } from 'src/modules/article-quotation-entry/services/article-quotation-entry.service';
+import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
+import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 
 @Injectable()
 export class QuotationService {
   constructor(
     private readonly quotationRepository: QuotationRepository,
     private readonly currencyService: CurrencyService,
+    private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
     private readonly interlocutorService: InterlocutorService,
   ) {}
@@ -75,6 +79,7 @@ export class QuotationService {
   }
 
   async save(createQuotationDto: CreateQuotationDto): Promise<QuotationEntity> {
+    console.log(createQuotationDto.articles);
     const firm = await this.firmService.findOneByCondition({
       filters: { id: createQuotationDto.firmId },
       relationSelect: true,
@@ -82,10 +87,53 @@ export class QuotationService {
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
     );
+
+    await this.currencyService.findOneById(firm.currencyId);
+
+    const articleEntries = await this.articleQuotationEntryService.saveMany(
+      createQuotationDto.articles,
+    );
+
+    const { subTotal, total } =
+      InvoicingCalculationsService.calculateLineItemsTotal(
+        articleEntries.map((entry) => ({
+          quantity: entry.quantity,
+          unit_price: entry.unit_price,
+          discount: entry.discount,
+          discount_type:
+            entry.discount_type == DISCOUNT_TYPES.PERCENTAGE
+              ? 'percentage'
+              : 'amount',
+          taxes: entry.taxes.map((tax) => ({
+            rate: tax.rate,
+          })),
+        })),
+      );
+    console.log(
+      'im here',
+      subTotal,
+      total,
+      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+        total,
+        createQuotationDto.discount,
+        createQuotationDto.discount_type,
+        createQuotationDto.taxStamp || 0,
+        true,
+      ),
+    );
     return this.quotationRepository.save({
       ...createQuotationDto,
       firmId: createQuotationDto.firmId,
       currencyId: firm.currencyId,
+      articles: articleEntries,
+      subTotal: subTotal,
+      total: InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+        total,
+        createQuotationDto.discount,
+        createQuotationDto.discount_type,
+        createQuotationDto.taxStamp || 0,
+        true,
+      ),
     });
   }
 

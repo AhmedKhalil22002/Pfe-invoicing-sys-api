@@ -1,4 +1,4 @@
-import { SOCIAL_TITLES } from 'src/app/constants/social-titles.enum';
+import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
 import { CreateFirmDto } from 'src/modules/firm/dtos/firm.create.dto';
 
 export const firms: CreateFirmDto[] = [

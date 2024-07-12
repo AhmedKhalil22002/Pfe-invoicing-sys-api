@@ -1,12 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
+import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
+import { CreateArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.create.dto';
 
 export class CreateQuotationDto {
   @ApiProperty({ example: faker.date.anytime() })
@@ -49,19 +52,10 @@ export class CreateQuotationDto {
   @IsOptional()
   discount?: number;
 
-  @ApiProperty({
-    example: '125.35',
-    type: Number,
-  })
+  @ApiProperty({ example: DISCOUNT_TYPES.PERCENTAGE, enum: DISCOUNT_TYPES })
   @IsOptional()
-  subTotal?: number;
-
-  @ApiProperty({
-    example: '150.0',
-    type: Number,
-  })
-  @IsOptional()
-  total?: number;
+  @IsEnum(DISCOUNT_TYPES)
+  discount_type: DISCOUNT_TYPES;
 
   @ApiProperty({
     example: '1',
@@ -103,4 +97,8 @@ export class CreateQuotationDto {
   @IsOptional()
   @IsNumber()
   taxStamp?: number;
+
+  @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
+  @IsOptional()
+  articles?: CreateArticleQuotationEntryDto[];
 }
