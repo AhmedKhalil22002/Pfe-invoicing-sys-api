@@ -1,3 +1,5 @@
+import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
+
 export const quotations = [
   {
     date: new Date('2023-07-01T12:00:00Z'),
@@ -6,6 +8,7 @@ export const quotations = [
     generalConditions: 'Payment must be made within 30 days',
     status: 'Pending',
     discount: 0.1,
+    discount_type: DISCOUNT_TYPES.PERCENTAGE,
     subTotal: 125.35,
     total: 150.0,
     currencyId: 1,

@@ -49,16 +49,20 @@ export class FirmService {
   }
 
   async findOneByCondition(
-    options: QueryOptionsDto<CreateFirmDto>,
+    options: QueryOptionsDto<FirmEntity>,
   ): Promise<FirmEntity | null> {
     const { select, relations } = getSelectAndRelations(
       await this.firmRepository.getRelatedEntityNames(),
       options,
     );
+    const where = buildWhereClause<FirmEntity>(
+      options.filters,
+      options.strictMatching,
+    );
     const firm = await this.firmRepository.findByCondition({
       select,
       relations,
-      where: { ...options.filters, deletedAt: null },
+      where: { ...where, deletedAt: null },
     });
     if (!firm) return null;
     return firm;
@@ -158,17 +162,25 @@ export class FirmService {
   }
 
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
-    const firm = await this.findOneById(id);
+    const firm = await this.firmRepository.findByCondition({
+      where: { taxIdNumber: updateFirmDto.taxIdNumber },
+    });
+
+    if (firm) {
+      throw new TaxIdNumberDuplicateException();
+    }
+
+    const existingFirm = await this.findOneById(id);
 
     const interlocutor = await this.interlocutorService.findOneById(
-      firm.mainInterlocutorId,
+      existingFirm.mainInterlocutorId,
     );
 
     const invoicingAddress = await this.addressService.findOneById(
-      firm.invoicingAddressId,
+      existingFirm.invoicingAddressId,
     );
     const deliveryAddress = await this.addressService.findOneById(
-      firm.deliveryAddressId,
+      existingFirm.deliveryAddressId,
     );
 
     await this.activityService.findOneById(updateFirmDto.activityId);
@@ -177,22 +189,22 @@ export class FirmService {
       updateFirmDto.paymentConditionId,
     );
 
-    this.interlocutorService.update(firm.mainInterlocutorId, {
+    this.interlocutorService.update(existingFirm.mainInterlocutorId, {
       ...interlocutor,
       ...updateFirmDto.mainInterlocutor,
     });
 
-    this.addressService.update(firm.invoicingAddressId, {
+    this.addressService.update(existingFirm.invoicingAddressId, {
       ...invoicingAddress,
       ...updateFirmDto.invoicingAddress,
     });
-    this.addressService.update(firm.deliveryAddressId, {
+    this.addressService.update(existingFirm.deliveryAddressId, {
       ...deliveryAddress,
       ...updateFirmDto.deliveryAddress,
     });
 
     return this.firmRepository.save({
-      ...firm,
+      ...existingFirm,
       ...updateFirmDto,
     });
   }

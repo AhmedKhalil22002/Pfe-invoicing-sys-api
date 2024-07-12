@@ -9,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { IsUSTaxIdentificationNumber } from 'src/common/helper/decorators/IsUSTaxIdentificationNumber.decorator';
-import { CreateAddressDto } from 'src/modules/address/dtos/address.create';
+import { CreateAddressDto } from 'src/modules/address/dtos/address.create.dto';
 import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
 
 export class CreateFirmDto {

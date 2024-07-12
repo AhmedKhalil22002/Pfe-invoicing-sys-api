@@ -3,6 +3,10 @@ import { ActivityModule } from 'src/modules/activity/activity.module';
 import { ActivityController } from 'src/modules/activity/controllers/activity.controller';
 import { AddressModule } from 'src/modules/address/address.module';
 import { AddressController } from 'src/modules/address/controllers/address.controller';
+import { ArticleModule } from 'src/modules/article/article.module';
+import { ArticleController } from 'src/modules/article/controllers/article.controller';
+import { BankAccountModule } from 'src/modules/bank-account/bank-account.module';
+import { BankAccountController } from 'src/modules/bank-account/controllers/bank-account.controller';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
 import { CabinetController } from 'src/modules/cabinet/controllers/cabinet.controller';
 import { CountryController } from 'src/modules/country/controllers/country.controller';
@@ -24,6 +28,8 @@ import { TaxModule } from 'src/modules/tax/tax.module';
   controllers: [
     ActivityController,
     AddressController,
+    ArticleController,
+    BankAccountController,
     CabinetController,
     CountryController,
     CurrencyController,
@@ -38,6 +44,8 @@ import { TaxModule } from 'src/modules/tax/tax.module';
   imports: [
     ActivityModule,
     AddressModule,
+    ArticleModule,
+    BankAccountModule,
     CabinetModule,
     CountryModule,
     CurrencyModule,

@@ -1,4 +1,4 @@
-import { SOCIAL_TITLES } from 'src/app/constants/social-titles.enum';
+import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 

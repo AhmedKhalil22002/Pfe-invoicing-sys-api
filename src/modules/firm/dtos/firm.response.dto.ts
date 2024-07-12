@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResponseDtoHelper } from 'src/common/database/dtos/database.response.dto';
 import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response.dto';
-import { ResponseAddressDto } from 'src/modules/address/dtos/address.response';
+import { ResponseAddressDto } from 'src/modules/address/dtos/address.response.dto';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
