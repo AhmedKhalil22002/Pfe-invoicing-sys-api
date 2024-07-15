@@ -7,6 +7,7 @@ import { TaxService } from 'src/modules/tax/services/tax.service';
 import { ArticleService } from 'src/modules/article/services/article.service';
 import { ResponseArticleDto } from 'src/modules/article/dtos/article.response.dto';
 import { UpdateArticleQuotationEntryDto } from '../dtos/article-quotation-entry.update.dto';
+import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
 
 @Injectable()
 export class ArticleQuotationEntryService {
@@ -40,10 +41,22 @@ export class ArticleQuotationEntryService {
         createArticleQuotationEntryDto.article,
       );
 
+    const lineItem = {
+      quantity: createArticleQuotationEntryDto.quantity,
+      unit_price: createArticleQuotationEntryDto.unit_price,
+      discount: createArticleQuotationEntryDto.discount,
+      discount_type: createArticleQuotationEntryDto.discount_type,
+      taxes: createArticleQuotationEntryDto.taxes,
+    };
+
     return this.articleQuotationEntryRepository.save({
       ...createArticleQuotationEntryDto,
       taxes: await Promise.all(taxes),
       articleId: article.id,
+      subTotal:
+        InvoicingCalculationsService.calculateSubTotalForLineItem(lineItem),
+      total:
+        InvoicingCalculationsService.calculateSubTotalForLineItem(lineItem),
     });
   }
 

@@ -17,7 +17,7 @@ import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import { ArticleQuotationEntryService } from 'src/modules/article-quotation-entry/services/article-quotation-entry.service';
 import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
-import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
+import { getSelectAndRelations } from 'src/common/database/utils/selectAndRelations';
 
 @Injectable()
 export class QuotationService {
@@ -38,10 +38,20 @@ export class QuotationService {
   }
 
   async findOneByCondition(
-    options: QueryOptions<ResponseQuotationDto>,
+    options: QueryOptions<QuotationEntity>,
   ): Promise<QuotationEntity | null> {
+    const { select, relations } = getSelectAndRelations(
+      await this.quotationRepository.getRelatedEntityNames(),
+      options,
+    );
+    const where = buildWhereClause<QuotationEntity>(
+      options.filters,
+      options.strictMatching,
+    );
     const quotation = await this.quotationRepository.findByCondition({
-      where: { ...options.filters, deletedAt: null },
+      select,
+      relations,
+      where: { ...where, deletedAt: null },
     });
     if (!quotation) return null;
     return quotation;
@@ -79,7 +89,6 @@ export class QuotationService {
   }
 
   async save(createQuotationDto: CreateQuotationDto): Promise<QuotationEntity> {
-    console.log(createQuotationDto.articles);
     const firm = await this.firmService.findOneByCondition({
       filters: { id: createQuotationDto.firmId },
       relationSelect: true,
@@ -100,27 +109,12 @@ export class QuotationService {
           quantity: entry.quantity,
           unit_price: entry.unit_price,
           discount: entry.discount,
-          discount_type:
-            entry.discount_type == DISCOUNT_TYPES.PERCENTAGE
-              ? 'percentage'
-              : 'amount',
+          discount_type: entry.discount_type,
           taxes: entry.taxes.map((tax) => ({
             rate: tax.rate,
           })),
         })),
       );
-    console.log(
-      'im here',
-      subTotal,
-      total,
-      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
-        total,
-        createQuotationDto.discount,
-        createQuotationDto.discount_type,
-        createQuotationDto.taxStamp || 0,
-        true,
-      ),
-    );
     return this.quotationRepository.save({
       ...createQuotationDto,
       firmId: createQuotationDto.firmId,

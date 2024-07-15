@@ -30,6 +30,12 @@ export class ArticleQuotationEntryEntity extends EntityHelper {
   @Column({ type: 'enum', enum: DISCOUNT_TYPES, nullable: true })
   discount_type: DISCOUNT_TYPES;
 
+  @Column({ type: 'float', nullable: true })
+  subTotal: number;
+
+  @Column({ type: 'float', nullable: true })
+  total: number;
+
   @ManyToOne(() => ArticleEntity, { eager: true })
   @JoinColumn({ name: 'articleId' })
   article: ArticleEntity;

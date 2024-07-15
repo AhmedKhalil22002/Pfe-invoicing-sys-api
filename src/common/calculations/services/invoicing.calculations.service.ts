@@ -8,23 +8,23 @@ type LineItem = {
   quantity: number;
   unit_price: number;
   discount: number;
-  discount_type: 'amount' | 'percentage';
+  discount_type: DISCOUNT_TYPES;
   taxes: Tax[];
 };
 
 export class InvoicingCalculationsService {
-  private static calculateSubTotalForLineItem(lineItem: LineItem) {
+  static calculateSubTotalForLineItem(lineItem: LineItem) {
     const { quantity, unit_price, discount, discount_type } = lineItem;
     let subTotal = quantity * unit_price;
-    if (discount_type === 'amount') {
+    if (discount_type === DISCOUNT_TYPES.AMOUNT) {
       subTotal -= discount;
-    } else if (discount_type === 'percentage') {
+    } else if (discount_type === DISCOUNT_TYPES.PERCENTAGE) {
       subTotal -= (subTotal * discount) / 100;
     }
     return subTotal;
   }
 
-  private static calculateTotalForLineItem(lineItem: LineItem) {
+  static calculateTotalForLineItem(lineItem: LineItem) {
     const { taxes } = lineItem;
     const subTotal = this.calculateSubTotalForLineItem(lineItem);
     let taxAmount = 0;
@@ -46,6 +46,7 @@ export class InvoicingCalculationsService {
     );
     return { subTotal, total };
   }
+
   static calculateTotalDiscountAndTaxStamp(
     total: number,
     discount: number,
@@ -53,11 +54,6 @@ export class InvoicingCalculationsService {
     taxStamp: number,
     applyDiscountAfter: boolean = false,
   ): number {
-    console.log(`Initial total: ${total}`);
-    console.log(`Discount: ${discount}`);
-    console.log(`Discount type: ${discount_type}`);
-    console.log(`Tax Stamp: ${taxStamp}`);
-    console.log(`Apply discount after tax stamp: ${applyDiscountAfter}`);
     let discountAmount = 0;
 
     if (discount_type === DISCOUNT_TYPES.AMOUNT) {

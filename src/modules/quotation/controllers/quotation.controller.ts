@@ -16,6 +16,8 @@ import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-op
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
+import { QueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
+import { QuotationEntity } from '../repositories/entities/quotation.entity';
 
 @ApiTags('quotation')
 @Controller({
@@ -44,8 +46,17 @@ export class QuotationController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<ResponseQuotationDto> {
-    return await this.quotationService.findOneById(id);
+  async findOneById(
+    @Param('id') id: number,
+    @Query() options: QueryOptions<QuotationEntity>,
+  ): Promise<ResponseQuotationDto> {
+    return await this.quotationService.findOneByCondition({
+      ...options,
+      filters: {
+        ...options.filters,
+        id: id,
+      },
+    });
   }
 
   @Post('')
