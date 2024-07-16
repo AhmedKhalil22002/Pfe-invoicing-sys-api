@@ -43,11 +43,9 @@ export class TaxService {
   async findAllPaginated(
     options?: PagingQueryOptions<ResponseTaxDto>,
   ): Promise<PageDto<TaxEntity>> {
-    // console.log(options);
     const { filters, strictMatching, sort, pageOptions } = options;
 
     const where = buildWhereClause(filters, strictMatching);
-    // console.log(where);
     const count = await this.taxRepository.getTotalCount({ where });
     const entities = await this.taxRepository.findAll({
       where,

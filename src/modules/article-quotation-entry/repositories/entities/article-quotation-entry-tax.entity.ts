@@ -1,0 +1,30 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  Column,
+} from 'typeorm';
+import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
+import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
+import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+
+@Entity('article_quotation_entry_tax')
+export class ArticleQuotationEntryTaxEntity extends EntityHelper {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => ArticleQuotationEntryEntity)
+  @JoinColumn({ name: 'articleQuotationEntryId' })
+  articleQuotationEntry: ArticleQuotationEntryEntity;
+
+  @Column({ type: 'int' })
+  articleQuotationEntryId: number;
+
+  @ManyToOne(() => TaxEntity, { eager: true })
+  @JoinColumn({ name: 'taxId' })
+  tax: TaxEntity;
+
+  @Column({ type: 'int' })
+  taxId: number;
+}

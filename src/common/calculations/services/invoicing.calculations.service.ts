@@ -52,7 +52,7 @@ export class InvoicingCalculationsService {
     discount: number,
     discount_type: DISCOUNT_TYPES,
     taxStamp: number,
-    applyDiscountAfter: boolean = false,
+    applyDiscountAfter: boolean = true,
   ): number {
     let discountAmount = 0;
 

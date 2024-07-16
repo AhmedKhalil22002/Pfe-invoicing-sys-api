@@ -18,6 +18,7 @@ import { InterlocutorService } from 'src/modules/interlocutor/services/interlocu
 import { ArticleQuotationEntryService } from 'src/modules/article-quotation-entry/services/article-quotation-entry.service';
 import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
 import { getSelectAndRelations } from 'src/common/database/utils/selectAndRelations';
+import { ArticleQuotationEntryEntity } from 'src/modules/article-quotation-entry/repositories/entities/article-quotation-entry.entity';
 
 @Injectable()
 export class QuotationService {
@@ -29,17 +30,24 @@ export class QuotationService {
     private readonly interlocutorService: InterlocutorService,
   ) {}
 
-  async findOneById(id: number): Promise<QuotationEntity> {
+  async findOneById(id: number): Promise<ResponseQuotationDto> {
     const quotation = await this.quotationRepository.findOneById(id);
     if (!quotation) {
       throw new QuotationNotFoundException();
     }
-    return quotation;
+    return {
+      ...quotation,
+      articles: await Promise.all(
+        quotation.articles.map((entry) =>
+          this.articleQuotationEntryService.findOneById(entry.id),
+        ),
+      ),
+    };
   }
 
   async findOneByCondition(
     options: QueryOptions<QuotationEntity>,
-  ): Promise<QuotationEntity | null> {
+  ): Promise<ResponseQuotationDto | null> {
     const { select, relations } = getSelectAndRelations(
       await this.quotationRepository.getRelatedEntityNames(),
       options,
@@ -54,7 +62,14 @@ export class QuotationService {
       where: { ...where, deletedAt: null },
     });
     if (!quotation) return null;
-    return quotation;
+    return {
+      ...quotation,
+      articles: await Promise.all(
+        quotation.articles.map((entry) =>
+          this.articleQuotationEntryService.findOneById(entry.id),
+        ),
+      ),
+    };
   }
 
   async findAll(): Promise<QuotationEntity[]> {
@@ -89,35 +104,39 @@ export class QuotationService {
   }
 
   async save(createQuotationDto: CreateQuotationDto): Promise<QuotationEntity> {
+    //fetch the firm in order to check its existance and later get its currency
     const firm = await this.firmService.findOneByCondition({
       filters: { id: createQuotationDto.firmId },
       relationSelect: true,
     });
+    //fetch the interlocutor in order to check its existance
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
     );
-
+    //retrieve the currency informations
     await this.currencyService.findOneById(firm.currencyId);
 
-    const articleEntries = await this.articleQuotationEntryService.saveMany(
-      createQuotationDto.articles,
-    );
+    //save article entries
+    const articleEntries: ArticleQuotationEntryEntity[] =
+      await this.articleQuotationEntryService.saveMany(
+        createQuotationDto.articles,
+      );
 
+    // calculate the financial informations of the quotation
     const { subTotal, total } =
       InvoicingCalculationsService.calculateLineItemsTotal(
-        articleEntries.map((entry) => ({
-          quantity: entry.quantity,
-          unit_price: entry.unit_price,
-          discount: entry.discount,
-          discount_type: entry.discount_type,
-          taxes: entry.taxes.map((tax) => ({
-            rate: tax.rate,
-          })),
-        })),
+        createQuotationDto.articles.map((entry) => {
+          return {
+            quantity: entry.quantity,
+            unit_price: entry.unit_price,
+            discount: entry.discount,
+            discount_type: entry.discount_type,
+            taxes: entry.taxes,
+          };
+        }),
       );
     return this.quotationRepository.save({
       ...createQuotationDto,
-      firmId: createQuotationDto.firmId,
       currencyId: firm.currencyId,
       articles: articleEntries,
       subTotal: subTotal,
@@ -126,7 +145,7 @@ export class QuotationService {
         createQuotationDto.discount,
         createQuotationDto.discount_type,
         createQuotationDto.taxStamp || 0,
-        true,
+        //applying discount is set true by default
       ),
     });
   }
@@ -141,10 +160,61 @@ export class QuotationService {
     id: number,
     updateQuotationDto: UpdateQuotationDto,
   ): Promise<QuotationEntity> {
-    const quotation = await this.findOneById(id);
+    console.log(id);
+    //retrieve the quotation that have to be updated
+    const existingQuotation = await this.quotationRepository.findOneById(id);
+    console.log(
+      'im here **********************************************************',
+    );
+    //fetch the firm in order to check its existance and later get its currency
+    const firm = await this.firmService.findOneByCondition({
+      filters: { id: updateQuotationDto.firmId },
+      relationSelect: true,
+    });
+    //fetch the interlocutor in order to check its existance
+    await this.interlocutorService.findOneById(
+      updateQuotationDto.interlocutorId,
+    );
+    //retrieve the currency informations
+    await this.currencyService.findOneById(firm.currencyId);
+
+    //perform soft delete for old entries
+    this.articleQuotationEntryService.softDeleteMany(
+      existingQuotation.articles.map((entry) => entry.id),
+    );
+
+    //save article entries
+    const articleEntries: ArticleQuotationEntryEntity[] =
+      await this.articleQuotationEntryService.saveMany(
+        updateQuotationDto.articles,
+      );
+    console.log(articleEntries);
+    // calculate the financial informations of the quotation
+    const { subTotal, total } =
+      InvoicingCalculationsService.calculateLineItemsTotal(
+        updateQuotationDto.articles.map((entry) => {
+          return {
+            quantity: entry.quantity,
+            unit_price: entry.unit_price,
+            discount: entry.discount,
+            discount_type: entry.discount_type,
+            taxes: entry.taxes,
+          };
+        }),
+      );
     return this.quotationRepository.save({
-      ...quotation,
+      ...existingQuotation,
       ...updateQuotationDto,
+      currencyId: firm.currencyId,
+      articles: articleEntries,
+      subTotal: subTotal,
+      total: InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+        total,
+        updateQuotationDto.discount,
+        updateQuotationDto.discount_type,
+        updateQuotationDto.taxStamp || 0,
+        //applying discount is set true by default
+      ),
     });
   }
 
