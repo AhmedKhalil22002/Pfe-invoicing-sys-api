@@ -163,9 +163,6 @@ export class QuotationService {
     console.log(id);
     //retrieve the quotation that have to be updated
     const existingQuotation = await this.quotationRepository.findOneById(id);
-    console.log(
-      'im here **********************************************************',
-    );
     //fetch the firm in order to check its existance and later get its currency
     const firm = await this.firmService.findOneByCondition({
       filters: { id: updateQuotationDto.firmId },

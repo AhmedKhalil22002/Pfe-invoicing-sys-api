@@ -12,6 +12,7 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
+import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -30,8 +31,8 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   generalConditions: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  status: string;
+  @Column({ type: 'enum', enum: QUOTATION_STATUS, nullable: true })
+  status: QUOTATION_STATUS;
 
   @Column({ nullable: true })
   discount: number;

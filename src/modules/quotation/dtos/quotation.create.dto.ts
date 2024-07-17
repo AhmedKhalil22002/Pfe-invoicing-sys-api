@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { CreateArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.create.dto';
+import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 
 export class CreateQuotationDto {
   @ApiProperty({ example: faker.date.anytime() })
@@ -37,13 +38,12 @@ export class CreateQuotationDto {
   generalConditions?: string;
 
   @ApiProperty({
-    example: 'enum will be inserted here',
-    type: String,
+    example: QUOTATION_STATUS.DRAFT,
+    enum: QUOTATION_STATUS,
   })
   @IsOptional()
-  @IsString()
-  @MaxLength(50)
-  status?: string;
+  @IsEnum(QUOTATION_STATUS)
+  status?: QUOTATION_STATUS;
 
   @ApiProperty({
     example: '0.1',
