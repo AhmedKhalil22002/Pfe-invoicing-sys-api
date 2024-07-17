@@ -4,6 +4,7 @@ import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { ResponseArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.response.dto';
 import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
 import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
+import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: faker.date.anytime(), type: Date })
@@ -23,12 +24,11 @@ export class ResponseQuotationDto {
     type: String,
   })
   generalConditions?: string;
-
   @ApiProperty({
-    example: 'enum will be inserted here',
-    type: String,
+    example: QUOTATION_STATUS.DRAFT,
+    enum: QUOTATION_STATUS,
   })
-  status?: string;
+  status?: QUOTATION_STATUS;
 
   @ApiProperty({
     example: '0.1',

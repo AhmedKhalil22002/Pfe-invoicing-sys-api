@@ -6,12 +6,16 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { InterlocutorService } from '../services/interlocutor.service';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
+import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import { PageDto } from 'src/common/database/dtos/database.page.dto';
 
 @ApiTags('interlocutor')
 @Controller({
@@ -20,6 +24,16 @@ import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
 })
 export class InterlocutorController {
   constructor(private readonly interlocutorService: InterlocutorService) {}
+
+  @Get('/list')
+  @ApiPaginatedResponse(ResponseInterlocutorDto)
+  async findAllPaginated(
+    @Query() options: PagingQueryOptionsDto<ResponseInterlocutorDto>,
+  ): Promise<PageDto<ResponseInterlocutorDto>> {
+    console.log(options);
+
+    return await this.interlocutorService.findAllPaginated(options);
+  }
 
   @Get('/:id')
   @ApiParam({

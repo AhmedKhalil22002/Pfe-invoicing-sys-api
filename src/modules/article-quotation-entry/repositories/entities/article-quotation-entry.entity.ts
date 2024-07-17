@@ -2,16 +2,15 @@ import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { ArticleEntity } from 'src/modules/article/repositories/entities/article.entity';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
-import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
   ManyToOne,
-  ManyToMany,
-  JoinTable,
+  OneToMany,
 } from 'typeorm';
+import { ArticleQuotationEntryTaxEntity } from './article-quotation-entry-tax.entity';
 
 @Entity('article-quotation-entry')
 export class ArticleQuotationEntryEntity extends EntityHelper {
@@ -30,6 +29,12 @@ export class ArticleQuotationEntryEntity extends EntityHelper {
   @Column({ type: 'enum', enum: DISCOUNT_TYPES, nullable: true })
   discount_type: DISCOUNT_TYPES;
 
+  @Column({ type: 'float', nullable: true })
+  subTotal: number;
+
+  @Column({ type: 'float', nullable: true })
+  total: number;
+
   @ManyToOne(() => ArticleEntity, { eager: true })
   @JoinColumn({ name: 'articleId' })
   article: ArticleEntity;
@@ -44,7 +49,11 @@ export class ArticleQuotationEntryEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   quotationId: number;
 
-  @ManyToMany(() => TaxEntity)
-  @JoinTable()
-  taxes: TaxEntity[];
+  @OneToMany(
+    () => ArticleQuotationEntryTaxEntity,
+    (articleQuotationEntryTax) =>
+      articleQuotationEntryTax.articleQuotationEntry,
+    { eager: true },
+  )
+  articleQuotationEntryTaxes: ArticleQuotationEntryTaxEntity[];
 }
