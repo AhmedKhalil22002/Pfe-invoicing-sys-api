@@ -28,7 +28,10 @@ export class InterlocutorController {
   @Get('/list')
   @ApiPaginatedResponse(ResponseInterlocutorDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponseInterlocutorDto>,
+    @Query()
+    options: PagingQueryOptionsDto<ResponseInterlocutorDto> & {
+      firmId: number;
+    },
   ): Promise<PageDto<ResponseInterlocutorDto>> {
     console.log(options);
 

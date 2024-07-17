@@ -8,8 +8,8 @@ import { PagingQueryOptions } from 'src/common/database/interfaces/database.quer
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
-import { getSelectAndRelations } from 'src/common/database/utils/selectAndRelations';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { FindOptionsWhere } from 'typeorm';
 
 @Injectable()
 export class InterlocutorService {
@@ -18,28 +18,32 @@ export class InterlocutorService {
   ) {}
 
   async findAllPaginated(
-    options?: PagingQueryOptions<ResponseInterlocutorDto>,
+    options?: PagingQueryOptions<ResponseInterlocutorDto> & {
+      firmId: number;
+    },
   ): Promise<PageDto<ResponseInterlocutorDto>> {
-    const { filters, strictMatching, sort, pageOptions } = options || {};
+    const { filters, strictMatching, sort, pageOptions, firmId } =
+      options || {};
 
-    const where = buildWhereClause<ResponseInterlocutorDto>(
-      filters,
-      strictMatching,
-    );
-    const count = await this.interlocutorRepository.getTotalCount({ where });
+    const where: FindOptionsWhere<InterlocutorEntity> =
+      buildWhereClause<ResponseInterlocutorDto>(filters, strictMatching);
 
-    const { select, relations } = getSelectAndRelations(
-      await this.interlocutorRepository.getRelatedEntityNames(),
-      options,
-    );
+    const firmWhere = [
+      { mainFirms: { id: firmId } },
+      { firms: { id: firmId } },
+    ];
+
+    const count = await this.interlocutorRepository.getTotalCount({
+      where: firmWhere.map((f) => ({ ...where, ...f })),
+    });
 
     const entities = await this.interlocutorRepository.findAll({
-      select,
-      where,
+      where: firmWhere.map((f) => ({ ...where, ...f })),
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
       order: sort,
-      relations,
+      relations: ['firms', 'mainFirms'],
+      loadRelationIds: true,
     });
 
     const pageMetaDto = new PageMetaDto({

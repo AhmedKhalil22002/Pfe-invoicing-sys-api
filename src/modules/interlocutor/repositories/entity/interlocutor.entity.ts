@@ -1,6 +1,14 @@
 import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  OneToMany,
+  JoinTable,
+} from 'typeorm';
 
 @Entity('interlocutor')
 export class InterlocutorEntity extends EntityHelper {
@@ -21,4 +29,12 @@ export class InterlocutorEntity extends EntityHelper {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
+
+  @ManyToMany(() => FirmEntity, (firm) => firm.interlocutors, { eager: true })
+  @JoinTable()
+  firms: FirmEntity[];
+
+  @OneToMany(() => FirmEntity, (firm) => firm.mainInterlocutor)
+  @JoinTable()
+  mainFirms: FirmEntity[];
 }
