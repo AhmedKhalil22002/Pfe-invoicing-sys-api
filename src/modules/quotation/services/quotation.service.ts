@@ -62,8 +62,10 @@ export class QuotationService {
       where: { ...where, deletedAt: null },
     });
     if (!quotation) return null;
+    const firm = await this.firmService.findOneById(quotation.firmId);
     return {
       ...quotation,
+      firm,
       articles: await Promise.all(
         quotation.articles.map((entry) =>
           this.articleQuotationEntryService.findOneById(entry.id),

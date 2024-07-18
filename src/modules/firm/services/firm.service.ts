@@ -166,7 +166,7 @@ export class FirmService {
       where: { taxIdNumber: updateFirmDto.taxIdNumber },
     });
 
-    if (firm) {
+    if (firm.id !== id) {
       throw new TaxIdNumberDuplicateException();
     }
 
