@@ -25,7 +25,7 @@ export class AddressEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 10, nullable: true })
   zipcode: string;
 
-  @ManyToOne(() => CountryEntity)
+  @ManyToOne(() => CountryEntity, { eager: true })
   @JoinColumn({ name: 'countryId' })
   country: CountryEntity;
 

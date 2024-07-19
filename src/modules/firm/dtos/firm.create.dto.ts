@@ -43,7 +43,7 @@ export class CreateFirmDto {
 
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
   @IsUSTaxIdentificationNumber()
-  taxIdNumber?: string;
+  taxIdNumber: string;
 
   @ApiProperty({ example: 1, type: Number })
   @IsInt()
@@ -87,4 +87,8 @@ export class CreateFirmDto {
   @ApiProperty({ example: 1, nullable: true })
   @IsOptional()
   cabinetId?: number;
+
+  @ApiProperty({ type: Array })
+  @IsOptional()
+  interlocutors?: CreateInterlocutorDto[];
 }

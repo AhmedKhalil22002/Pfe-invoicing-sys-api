@@ -27,7 +27,10 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
 
   public async getRelatedEntityNames(): Promise<string[]> {
     return this.entity.metadata.relations
-      .filter((relation) => relation.isManyToOne)
+      .filter(
+        (relation) =>
+          relation.isManyToOne || relation.isOneToOne || relation.isManyToMany,
+      )
       .map((relation) => relation.propertyName);
   }
 
