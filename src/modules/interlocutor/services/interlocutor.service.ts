@@ -65,7 +65,11 @@ export class InterlocutorService {
   async save(
     createInterlocutorDto: CreateInterlocutorDto,
   ): Promise<InterlocutorEntity> {
-    return this.interlocutorRepository.save(createInterlocutorDto);
+    return this.interlocutorRepository.save({
+      ...createInterlocutorDto,
+      firms: [],
+      mainFirms: [],
+    });
   }
 
   async update(
@@ -76,6 +80,8 @@ export class InterlocutorService {
     return this.interlocutorRepository.save({
       ...address,
       ...updateInterlocutorDto,
+      firms: [],
+      mainFirms: [],
     });
   }
 

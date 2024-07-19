@@ -109,6 +109,7 @@ export class FirmService {
   }
 
   async save(createFirmDto: CreateFirmDto): Promise<FirmEntity> {
+    console.log(createFirmDto);
     let firm = await this.firmRepository.findByCondition({
       where: { name: createFirmDto.name },
     });
@@ -162,26 +163,39 @@ export class FirmService {
   }
 
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
-    const firm = await this.firmRepository.findByCondition({
-      where: { taxIdNumber: updateFirmDto.taxIdNumber },
-    });
-
-    if (firm.id !== id) {
-      throw new TaxIdNumberDuplicateException();
+    if (updateFirmDto.taxIdNumber) {
+      const firm = await this.firmRepository.findByCondition({
+        select: ['id'],
+        where: { taxIdNumber: updateFirmDto.taxIdNumber },
+      });
+      if (firm && firm.id !== id) {
+        throw new TaxIdNumberDuplicateException();
+      }
     }
 
     const existingFirm = await this.findOneById(id);
 
-    const interlocutor = await this.interlocutorService.findOneById(
-      existingFirm.mainInterlocutorId,
-    );
+    const mainInterlocutor = updateFirmDto.mainInterlocutor
+      ? await this.interlocutorService.findOneById(
+          existingFirm.mainInterlocutorId,
+        )
+      : existingFirm.mainInterlocutor;
 
-    const invoicingAddress = await this.addressService.findOneById(
-      existingFirm.invoicingAddressId,
-    );
-    const deliveryAddress = await this.addressService.findOneById(
-      existingFirm.deliveryAddressId,
-    );
+    const updatedInterlocutors = updateFirmDto.interlocutors
+      ? await Promise.all(
+          updateFirmDto.interlocutors.map(async (interlocutor) => {
+            return await this.interlocutorService.findOneById(interlocutor.id);
+          }),
+        )
+      : existingFirm.interlocutors;
+
+    const invoicingAddress = updateFirmDto.invoicingAddress
+      ? await this.addressService.findOneById(existingFirm.invoicingAddressId)
+      : existingFirm.invoicingAddress;
+
+    const deliveryAddress = updateFirmDto.deliveryAddress
+      ? await this.addressService.findOneById(existingFirm.deliveryAddressId)
+      : existingFirm.deliveryAddress;
 
     await this.activityService.findOneById(updateFirmDto.activityId);
     await this.currencyService.findOneById(updateFirmDto.currencyId);
@@ -189,23 +203,32 @@ export class FirmService {
       updateFirmDto.paymentConditionId,
     );
 
-    this.interlocutorService.update(existingFirm.mainInterlocutorId, {
-      ...interlocutor,
-      ...updateFirmDto.mainInterlocutor,
-    });
+    if (updateFirmDto.mainInterlocutor) {
+      await this.interlocutorService.update(existingFirm.mainInterlocutorId, {
+        ...mainInterlocutor,
+        ...updateFirmDto.mainInterlocutor,
+      });
+    }
 
-    this.addressService.update(existingFirm.invoicingAddressId, {
-      ...invoicingAddress,
-      ...updateFirmDto.invoicingAddress,
-    });
-    this.addressService.update(existingFirm.deliveryAddressId, {
-      ...deliveryAddress,
-      ...updateFirmDto.deliveryAddress,
-    });
+    if (updateFirmDto.invoicingAddress) {
+      await this.addressService.update(existingFirm.invoicingAddressId, {
+        ...invoicingAddress,
+        ...updateFirmDto.invoicingAddress,
+      });
+    }
+
+    if (updateFirmDto.deliveryAddress) {
+      await this.addressService.update(existingFirm.deliveryAddressId, {
+        ...deliveryAddress,
+        ...updateFirmDto.deliveryAddress,
+      });
+    }
 
     return this.firmRepository.save({
       ...existingFirm,
       ...updateFirmDto,
+      mainInterlocutor,
+      interlocutors: [...existingFirm.interlocutors, ...updatedInterlocutors],
     });
   }
 

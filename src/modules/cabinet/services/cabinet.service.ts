@@ -74,17 +74,28 @@ export class CabinetService {
     id: number,
     updateCabinetDto: UpdateCabinetDto,
   ): Promise<CabinetEntity> {
+    console.log(updateCabinetDto);
     const cabinet = await this.findOneById(id);
-    const address = await this.addressService.findOneById(cabinet.addressId);
-    await this.activityService.findOneById(updateCabinetDto.activityId);
-    await this.currencyService.findOneById(updateCabinetDto.currencyId);
-    this.addressService.update(cabinet.addressId, {
+
+    let address = await this.addressService.findOneById(cabinet.addressId);
+    const activity = await this.activityService.findOneById(
+      updateCabinetDto.activityId,
+    );
+    const currency = await this.currencyService.findOneById(
+      updateCabinetDto.currencyId,
+    );
+
+    address = await this.addressService.update(cabinet.addressId, {
       ...address,
       ...updateCabinetDto.address,
     });
+
     return this.cabinetRepository.save({
       ...cabinet,
       ...updateCabinetDto,
+      address,
+      currency,
+      activity,
     });
   }
 

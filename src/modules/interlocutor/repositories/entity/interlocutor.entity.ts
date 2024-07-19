@@ -30,11 +30,11 @@ export class InterlocutorEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
 
-  @ManyToMany(() => FirmEntity, (firm) => firm.interlocutors, { eager: true })
+  @ManyToMany(() => FirmEntity, { eager: true })
   @JoinTable()
   firms: FirmEntity[];
 
-  @OneToMany(() => FirmEntity, (firm) => firm.mainInterlocutor)
+  @OneToMany(() => FirmEntity, (firm) => firm.mainInterlocutor, { eager: true })
   @JoinTable()
   mainFirms: FirmEntity[];
 }

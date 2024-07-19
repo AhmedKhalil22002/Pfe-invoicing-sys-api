@@ -5,7 +5,7 @@ import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response
 import { ResponseAddressDto } from 'src/modules/address/dtos/address.response.dto';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
-import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
+import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 import { ResponsePaymentConditionDto } from 'src/modules/payment-condition/dtos/payment-condition.response.dto';
 
 export class ResponseFirmDto extends ResponseDtoHelper {
@@ -69,9 +69,12 @@ export class ResponseFirmDto extends ResponseDtoHelper {
   @ApiProperty({ example: 1, nullable: true })
   cabinetId?: number;
 
-  @ApiProperty({ type: () => CreateInterlocutorDto })
-  mainInterlocutor?: CreateInterlocutorDto;
+  @ApiProperty({ type: () => ResponseInterlocutorDto })
+  mainInterlocutor?: ResponseInterlocutorDto;
 
   @ApiProperty({ example: 1, nullable: true })
   mainInterlocutorId?: number;
+
+  @ApiProperty({ type: Array })
+  interlocutors?: ResponseInterlocutorDto[];
 }

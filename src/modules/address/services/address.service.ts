@@ -30,11 +30,14 @@ export class AddressService {
     id: number,
     updateAddressDto: UpdateAddressDto,
   ): Promise<AddressEntity> {
-    await this.countryService.findOneById(updateAddressDto.countryId);
+    const country = await this.countryService.findOneById(
+      updateAddressDto.countryId,
+    );
     const address = await this.findOneById(id);
     return this.addressRepository.save({
       ...address,
       ...updateAddressDto,
+      country,
     });
   }
 
