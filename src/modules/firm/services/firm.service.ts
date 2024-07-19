@@ -197,9 +197,13 @@ export class FirmService {
       ? await this.addressService.findOneById(existingFirm.deliveryAddressId)
       : existingFirm.deliveryAddress;
 
-    await this.activityService.findOneById(updateFirmDto.activityId);
-    await this.currencyService.findOneById(updateFirmDto.currencyId);
-    await this.paymentConditionService.findOneById(
+    const activity = await this.activityService.findOneById(
+      updateFirmDto.activityId,
+    );
+    const currency = await this.currencyService.findOneById(
+      updateFirmDto.currencyId,
+    );
+    const paymentCondition = await this.paymentConditionService.findOneById(
       updateFirmDto.paymentConditionId,
     );
 
@@ -228,6 +232,9 @@ export class FirmService {
       ...existingFirm,
       ...updateFirmDto,
       mainInterlocutor,
+      activity,
+      currency,
+      paymentCondition,
       interlocutors: [...existingFirm.interlocutors, ...updatedInterlocutors],
     });
   }

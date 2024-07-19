@@ -42,7 +42,6 @@ export class InterlocutorService {
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
       order: sort,
-      relations: ['firms', 'mainFirms'],
       loadRelationIds: true,
     });
 

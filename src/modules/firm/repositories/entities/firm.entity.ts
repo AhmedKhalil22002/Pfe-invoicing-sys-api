@@ -77,7 +77,7 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   cabinetId: number;
 
-  @ManyToMany(() => InterlocutorEntity)
+  @ManyToMany(() => InterlocutorEntity, (interlocutor) => interlocutor.firms)
   @JoinTable()
   interlocutors: InterlocutorEntity[];
 
