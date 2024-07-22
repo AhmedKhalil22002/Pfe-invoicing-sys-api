@@ -125,7 +125,7 @@ export class FirmService {
       throw new TaxIdNumberDuplicateException();
     }
 
-    const interlocutor = await this.interlocutorService.save(
+    const mainInterlocutor = await this.interlocutorService.save(
       createFirmDto.mainInterlocutor,
     );
     const invoicingAddress = await this.addressService.save(
@@ -136,9 +136,9 @@ export class FirmService {
     );
     return this.firmRepository.save({
       ...createFirmDto,
+      mainInterlocutor,
       invoicingAddressId: invoicingAddress.id,
       deliveryAddressId: deliveryAddress.id,
-      mainInterlocutorId: interlocutor.id,
     });
   }
 
