@@ -71,6 +71,7 @@ export class ArticleQuotationEntryService {
     const entry = await this.articleQuotationEntryRepository.save({
       ...createArticleQuotationEntryDto,
       articleId: article.id,
+      article: article,
       subTotal:
         InvoicingCalculationsService.calculateSubTotalForLineItem(lineItem),
       total: InvoicingCalculationsService.calculateTotalForLineItem(lineItem),
@@ -138,6 +139,7 @@ export class ArticleQuotationEntryService {
       ...existingEntry,
       ...updateArticleQuotationEntryDto,
       articleId: article.id,
+      article: article,
     });
     //save the new tax entries for the article entry
     await this.articleQuotationEntryTaxService.saveMany(

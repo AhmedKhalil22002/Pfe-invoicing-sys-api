@@ -30,13 +30,13 @@
     "rollback:cabinet": "nestjs-command rollback:cabinet",
     "rollback:country": "nestjs-command rollback:country",
     "rollback:currency": "nestjs-command rollback:currency",
-    "rollback:firm" : "nestjs-command rollback:firm",
+    "rollback:firm": "nestjs-command rollback:firm",
     "rollback:payment-condition": "nestjs-command rollback:payment-condition",
     "rollback:quotation": "nestjs-command rollback:quotation",
     "rollback:tax": "nestjs-command rollback:tax",
-    "seed:all" : "nestjs-command seed:country && nestjs-command seed:currency && nestjs-command seed:activity && nestjs-command seed:tax && nestjs-command seed:cabinet && nestjs-command seed:payment-condition && nestjs-command seed:firm && nestjs-command seed:quotation",
-    "rollback:all":"nestjs-command rollback:cabinet && nestjs-command rollback:tax && nestjs-command rollback:activity && nestjs-command rollback:currency && nestjs-command rollback:country && nestjs-command rollback:payment-condition && nestjs-command rollback:firm  && nestjs-command rollback:quotation",
-    "drop:all" : "nestjs-command schema:destroy"
+    "seed:all": "nestjs-command seed:country && nestjs-command seed:currency && nestjs-command seed:activity && nestjs-command seed:tax && nestjs-command seed:cabinet && nestjs-command seed:payment-condition && nestjs-command seed:firm && nestjs-command seed:quotation",
+    "rollback:all": "nestjs-command rollback:cabinet && nestjs-command rollback:tax && nestjs-command rollback:activity && nestjs-command rollback:currency && nestjs-command rollback:country && nestjs-command rollback:payment-condition && nestjs-command rollback:firm  && nestjs-command rollback:quotation",
+    "drop:all": "nestjs-command schema:destroy"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

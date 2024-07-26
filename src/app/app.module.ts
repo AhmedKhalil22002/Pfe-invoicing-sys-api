@@ -6,6 +6,9 @@ import configs from 'src/configs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from 'src/common/database/services/database-config.service';
 import { RouterModule } from 'src/routers/router.module';
+import { HeaderResolver, I18nModule } from 'nestjs-i18n';
+import { TranslationConfigService } from 'src/common/translation/services/translation-config.service';
+import { TranslationModule } from 'src/common/translation/translation.module';
 
 @Module({
   controllers: [HelloController],
@@ -22,6 +25,12 @@ import { RouterModule } from 'src/routers/router.module';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    I18nModule.forRootAsync({
+      imports: [TranslationModule],
+      useClass: TranslationConfigService,
+      resolvers: [new HeaderResolver(['x-custom-lang'])],
+    }),
+    TranslationModule,
     CommonModule,
     RouterModule.forRoot(),
   ],

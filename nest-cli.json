@@ -4,9 +4,10 @@
   "compilerOptions": {
     "plugins": ["@nestjs/swagger"],
     "assets": [
-      { 
-        "include": "languages/**/*", 
-        "outDir": "dist" 
+      {
+        "include": "i18n/**/*",
+        "watchAssets": true,
+        "outDir": "dist"
       }
     ],
     "webpack": false,

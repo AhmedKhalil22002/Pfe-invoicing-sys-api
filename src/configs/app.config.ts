@@ -1,5 +1,4 @@
 import { registerAs } from '@nestjs/config';
-import { APP_LANGUAGE } from 'src/app/constants/app.constant';
 import { ENUM_APP_ENVIRONMENT } from 'src/app/constants/app.enum.constant';
 
 export default registerAs(
@@ -7,7 +6,6 @@ export default registerAs(
   (): Record<string, any> => ({
     name: process.env.APP_NAME ?? 'Invoice System API Server',
     env: process.env.APP_ENV ?? ENUM_APP_ENVIRONMENT.DEVELOPMENT,
-    language: process.env.APP_LANGUAGE?.split(',') ?? [APP_LANGUAGE],
 
     globalPrefix: '/api',
     http: {
