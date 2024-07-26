@@ -109,7 +109,6 @@ export class FirmService {
   }
 
   async save(createFirmDto: CreateFirmDto): Promise<FirmEntity> {
-    console.log(createFirmDto);
     let firm = await this.firmRepository.findByCondition({
       where: { name: createFirmDto.name },
     });
@@ -125,9 +124,10 @@ export class FirmService {
       throw new TaxIdNumberDuplicateException();
     }
 
-    const mainInterlocutor = await this.interlocutorService.save(
-      createFirmDto.mainInterlocutor,
-    );
+    const mainInterlocutor = await this.interlocutorService.save({
+      ...createFirmDto.mainInterlocutor,
+      isMainInOneFirm: true,
+    });
     const invoicingAddress = await this.addressService.save(
       createFirmDto.invoicingAddress,
     );
@@ -175,11 +175,14 @@ export class FirmService {
 
     const existingFirm = await this.findOneById(id);
 
-    const mainInterlocutor = updateFirmDto.mainInterlocutor
-      ? await this.interlocutorService.findOneById(
-          existingFirm.mainInterlocutorId,
-        )
-      : existingFirm.mainInterlocutor;
+    const existingMainInterlocutor = await this.interlocutorService.findOneById(
+      existingFirm.mainInterlocutorId,
+    );
+    const mainInterlocutor = {
+      ...existingMainInterlocutor,
+      ...updateFirmDto.mainInterlocutor,
+      isMainInOneFirm: true,
+    };
 
     const updatedInterlocutors = updateFirmDto.interlocutors
       ? await Promise.all(

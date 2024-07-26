@@ -1,6 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
 
 export class CreateInterlocutorDto {
@@ -26,4 +32,9 @@ export class CreateInterlocutorDto {
   @ApiProperty({ example: faker.internet.email(), type: String })
   @IsString()
   email: string;
+
+  @ApiProperty({ example: true, type: Boolean })
+  @IsOptional()
+  @IsBoolean()
+  isMainInOneFirm?: boolean;
 }

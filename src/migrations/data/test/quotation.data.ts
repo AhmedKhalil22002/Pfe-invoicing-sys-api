@@ -7,7 +7,7 @@ export const quotations = [
     dueDate: new Date('2023-07-15T12:00:00Z'),
     object: 'Payment for the supply of office equipment',
     generalConditions: 'Payment must be made within 30 days',
-    status: QUOTATION_STATUS.DRAFT,
+    status: QUOTATION_STATUS.Draft,
     discount: 0.1,
     discount_type: DISCOUNT_TYPES.PERCENTAGE,
     subTotal: 125.35,

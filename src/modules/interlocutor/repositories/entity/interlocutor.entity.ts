@@ -35,6 +35,9 @@ export class InterlocutorEntity extends EntityHelper {
   })
   firms: FirmEntity[];
 
+  @Column({ type: 'boolean', default: false })
+  isMainInOneFirm: boolean;
+
   @OneToMany(() => FirmEntity, (firm) => firm.mainInterlocutor, { eager: true })
   @JoinTable()
   mainFirms: FirmEntity[];

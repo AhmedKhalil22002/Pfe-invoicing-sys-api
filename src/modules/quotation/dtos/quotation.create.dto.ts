@@ -38,7 +38,7 @@ export class CreateQuotationDto {
   generalConditions?: string;
 
   @ApiProperty({
-    example: QUOTATION_STATUS.DRAFT,
+    example: QUOTATION_STATUS.Draft,
     enum: QUOTATION_STATUS,
   })
   @IsOptional()

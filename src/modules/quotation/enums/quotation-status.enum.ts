@@ -1,8 +1,9 @@
 export enum QUOTATION_STATUS {
-  DRAFT = 'Broullion',
-  VALIDATED = 'Validé',
-  CANCELED = 'Annulé',
-  SENT = 'Envoyé',
-  ACCEPTED = 'Accepté',
-  REJECTED = 'Rejeté',
+  Nonexistent = 'quotation.status.non_existent',
+  Expired = 'quotation.status.expired',
+  Draft = 'quotation.status.draft',
+  Validated = 'quotation.status.validated',
+  Sent = 'quotation.status.sent',
+  Accepted = 'quotation.status.accepted',
+  Rejected = 'quotation.status.rejected',
 }
