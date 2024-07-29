@@ -33,8 +33,6 @@ export class InterlocutorController {
       firmId: number;
     },
   ): Promise<PageDto<ResponseInterlocutorDto>> {
-    console.log(options);
-
     return await this.interlocutorService.findAllPaginated(options);
   }
 

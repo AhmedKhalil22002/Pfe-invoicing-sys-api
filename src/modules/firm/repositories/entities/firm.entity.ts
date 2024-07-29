@@ -3,15 +3,15 @@ import { ActivityEntity } from 'src/modules/activity/repositories/entities/activ
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
-import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
+import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
 import { PaymentConditionEntity } from 'src/modules/payment-condition/repositories/entity/payment-condition.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -77,14 +77,9 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   cabinetId: number;
 
-  @ManyToMany(() => InterlocutorEntity, (interlocutor) => interlocutor.firms)
+  @OneToMany(() => FirmInterlocutorEntryEntity, (entry) => entry.firm, {
+    eager: true,
+  })
   @JoinTable()
-  interlocutors: InterlocutorEntity[];
-
-  @ManyToOne(() => InterlocutorEntity)
-  @JoinColumn({ name: 'mainInterlocutorId' })
-  mainInterlocutor: InterlocutorEntity;
-
-  @Column({ type: 'int', nullable: true })
-  mainInterlocutorId: number;
+  interlocutorsToFirm: FirmInterlocutorEntryEntity[];
 }

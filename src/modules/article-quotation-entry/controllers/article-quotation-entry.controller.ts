@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { ArticleQuotationEntryService } from '../services/article-quotation-entry.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('article-quotation-entry.service')
 @Controller({

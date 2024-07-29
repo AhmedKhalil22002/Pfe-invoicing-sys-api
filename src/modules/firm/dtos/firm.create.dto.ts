@@ -79,16 +79,7 @@ export class CreateFirmDto {
   @ApiProperty({ type: () => CreateInterlocutorDto })
   mainInterlocutor?: CreateInterlocutorDto;
 
-  @ApiProperty({ example: 1, type: Number })
-  @IsInt()
-  @IsOptional()
-  mainInterlocutorId?: number;
-
   @ApiProperty({ example: 1, nullable: true })
   @IsOptional()
   cabinetId?: number;
-
-  @ApiProperty({ type: Array })
-  @IsOptional()
-  interlocutors?: CreateInterlocutorDto[];
 }

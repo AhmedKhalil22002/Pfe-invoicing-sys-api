@@ -26,13 +26,13 @@ export const firms: CreateFirmDto[] = [
       region: 'Nihil facere facilis',
       zipcode: '15776',
     },
-    mainInterlocutorId: 1,
     mainInterlocutor: {
       email: 'qujobotim@mailinator.com',
       name: 'Nash Ward',
       phone: '+1 (448) 422-7272',
       surname: 'Johnson',
       title: SOCIAL_TITLES.DR,
+      position: "CEO"
     },
   },
 ];

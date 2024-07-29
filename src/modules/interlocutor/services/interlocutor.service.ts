@@ -28,20 +28,15 @@ export class InterlocutorService {
     const where: FindOptionsWhere<InterlocutorEntity> =
       buildWhereClause<ResponseInterlocutorDto>(filters, strictMatching);
 
-    const firmWhere = [
-      { mainFirms: { id: firmId } },
-      { firms: { id: firmId } },
-    ];
-
     const count = await this.interlocutorRepository.getTotalCount({
-      where: firmWhere.map((f) => ({ ...where, ...f })),
+      where: { ...where, firmsToInterlocutor: { firmId } },
     });
 
     const entities = await this.interlocutorRepository.findAll({
-      where: firmWhere.map((f) => ({ ...where, ...f })),
+      where: { ...where, firmsToInterlocutor: { firmId } },
       skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
       take: pageOptions?.take || 10,
-      order: { ...sort },
+      order: sort,
       loadRelationIds: true,
     });
 
@@ -64,23 +59,20 @@ export class InterlocutorService {
   async save(
     createInterlocutorDto: CreateInterlocutorDto,
   ): Promise<InterlocutorEntity> {
-    return this.interlocutorRepository.save({
-      ...createInterlocutorDto,
-      firms: [],
-      mainFirms: [],
-    });
+    const interlocutor = await this.interlocutorRepository.save(
+      createInterlocutorDto,
+    );
+    return interlocutor;
   }
 
   async update(
     id: number,
     updateInterlocutorDto: UpdateInterlocutorDto,
   ): Promise<InterlocutorEntity> {
-    const address = await this.findOneById(id);
+    const existingInterlocutor = await this.findOneById(id);
     return this.interlocutorRepository.save({
-      ...address,
+      ...existingInterlocutor,
       ...updateInterlocutorDto,
-      firms: [],
-      mainFirms: [],
     });
   }
 

@@ -1,11 +1,10 @@
 import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
+import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
   OneToMany,
   JoinTable,
 } from 'typeorm';
@@ -30,15 +29,7 @@ export class InterlocutorEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
 
-  @ManyToMany(() => FirmEntity, (firm) => firm.interlocutors, {
-    eager: true,
-  })
-  firms: FirmEntity[];
-
-  @Column({ type: 'boolean', default: false })
-  isMainInOneFirm: boolean;
-
-  @OneToMany(() => FirmEntity, (firm) => firm.mainInterlocutor, { eager: true })
+  @OneToMany(() => FirmInterlocutorEntryEntity, (entry) => entry.interlocutor)
   @JoinTable()
-  mainFirms: FirmEntity[];
+  firmsToInterlocutor: FirmInterlocutorEntryEntity[];
 }
