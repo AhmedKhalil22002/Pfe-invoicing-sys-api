@@ -6,10 +6,7 @@ import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { FirmNotFoundException } from '../errors/firm.notfound.error';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
-import { QueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
-import { PagingQueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import {
   FirmAlreadyExistsException,
@@ -19,10 +16,10 @@ import { AddressService } from 'src/modules/address/services/address.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { PaymentConditionService } from 'src/modules/payment-condition/services/payment-condition.service';
-import {
-  arrayToTrueObject,
-  getSelectAndRelations,
-} from 'src/common/database/utils/selectAndRelations';
+import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 
 @Injectable()
 export class FirmService {
@@ -33,14 +30,12 @@ export class FirmService {
     private readonly addressService: AddressService,
     private readonly paymentConditionService: PaymentConditionService,
     private readonly interlocutorService: InterlocutorService,
+    private readonly firmInterlocutorEntryService: FirmInterlocutorEntryService,
   ) {}
 
   async findOneById(id: number): Promise<FirmEntity> {
     const firm = await this.firmRepository.findByCondition({
       where: { id },
-      relations: arrayToTrueObject(
-        await this.firmRepository.getRelatedEntityNames(),
-      ),
     });
     if (!firm) {
       throw new FirmNotFoundException();
@@ -49,59 +44,43 @@ export class FirmService {
   }
 
   async findOneByCondition(
-    options: QueryOptionsDto<FirmEntity>,
-  ): Promise<FirmEntity | null> {
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
+    query: IQueryObject,
+  ): Promise<ResponseFirmDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const firm = await this.firmRepository.findOne(
+      queryOptions as FindOneOptions<FirmEntity>,
     );
-    const where = buildWhereClause<FirmEntity>(
-      options.filters,
-      options.strictMatching,
-    );
-    const firm = await this.firmRepository.findByCondition({
-      select,
-      relations,
-      where: { ...where, deletedAt: null },
-    });
     if (!firm) return null;
     return firm;
   }
 
-  async findAll(
-    options: QueryOptionsDto<ResponseFirmDto>,
-  ): Promise<FirmEntity[]> {
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
+  async findAll(query: IQueryObject): Promise<ResponseFirmDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.firmRepository.findAll(
+      queryOptions as FindManyOptions<FirmEntity>,
     );
-    return await this.firmRepository.findAll({ select, relations });
   }
 
   async findAllPaginated(
-    options?: PagingQueryOptions<ResponseFirmDto>,
+    query: IQueryObject,
   ): Promise<PageDto<ResponseFirmDto>> {
-    const { filters, strictMatching, sort, pageOptions } = options || {};
-
-    const where = buildWhereClause<ResponseFirmDto>(filters, strictMatching);
-    const count = await this.firmRepository.getTotalCount({ where });
-
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
-    );
-
-    const entities = await this.firmRepository.findAll({
-      select,
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-      relations,
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.firmRepository.getTotalCount({
+      where: queryOptions.where,
     });
 
+    const entities = await this.firmRepository.findAll(
+      queryOptions as FindManyOptions<FirmEntity>,
+    );
+
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
       itemCount: count,
     });
 
@@ -124,48 +103,45 @@ export class FirmService {
       throw new TaxIdNumberDuplicateException();
     }
 
-    const mainInterlocutor = await this.interlocutorService.save({
-      ...createFirmDto.mainInterlocutor,
-      isMainInOneFirm: true,
-    });
     const invoicingAddress = await this.addressService.save(
       createFirmDto.invoicingAddress,
     );
     const deliveryAddress = await this.addressService.save(
       createFirmDto.deliveryAddress,
     );
-    return this.firmRepository.save({
+    const savedFirm = await this.firmRepository.save({
       ...createFirmDto,
-      mainInterlocutor,
       invoicingAddressId: invoicingAddress.id,
       deliveryAddressId: deliveryAddress.id,
     });
+
+    const mainInterlocutor = await this.interlocutorService.save(
+      createFirmDto.mainInterlocutor,
+    );
+
+    await this.firmInterlocutorEntryService.save({
+      firmId: savedFirm.id,
+      interlocutorId: mainInterlocutor.id,
+      isMain: true,
+      position: createFirmDto.mainInterlocutor.position,
+    });
+
+    return savedFirm;
   }
 
   async saveMany(createFirmDtos: CreateFirmDto[]): Promise<FirmEntity[]> {
-    let existingFirm: FirmEntity;
+    let savedFirms: FirmEntity[];
     for (const dto of createFirmDtos) {
-      existingFirm = await this.firmRepository.findByCondition({
-        where: { name: dto.name },
-      });
-      if (existingFirm) {
-        throw new FirmAlreadyExistsException();
-      }
-      existingFirm = await this.firmRepository.findByCondition({
-        where: { taxIdNumber: dto.taxIdNumber },
-      });
-      if (existingFirm) {
-        throw new TaxIdNumberDuplicateException();
-      }
-      await this.interlocutorService.save(dto.mainInterlocutor);
+      const savedEntry = await this.save(dto);
+      savedFirms.push(savedEntry);
     }
-    return this.firmRepository.saveMany(createFirmDtos);
+    return savedFirms;
   }
 
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
+    //check if new taxIdNumber already exists & throw error if so
     if (updateFirmDto.taxIdNumber) {
       const firm = await this.firmRepository.findByCondition({
-        select: ['id'],
         where: { taxIdNumber: updateFirmDto.taxIdNumber },
       });
       if (firm && firm.id !== id) {
@@ -173,50 +149,37 @@ export class FirmService {
       }
     }
 
-    const existingFirm = await this.findOneById(id);
+    //find the existing firm
+    const existingFirm = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'interlocutorsToFirm',
+    });
 
-    const existingMainInterlocutor = await this.interlocutorService.findOneById(
-      existingFirm.mainInterlocutorId,
+    // update the main interlocutor by looking up in the firmInterlocutorEntry table
+    const mainInterlocutorId = existingFirm.interlocutorsToFirm.find(
+      (entry) => entry.isMain,
+    ).interlocutorId;
+    console.log(updateFirmDto);
+
+    this.interlocutorService.update(
+      mainInterlocutorId,
+      updateFirmDto.mainInterlocutor,
     );
-    const mainInterlocutor = {
-      ...existingMainInterlocutor,
-      ...updateFirmDto.mainInterlocutor,
-      isMainInOneFirm: true,
-    };
 
-    const updatedInterlocutors = updateFirmDto.interlocutors
-      ? await Promise.all(
-          updateFirmDto.interlocutors.map(async (interlocutor) => {
-            return await this.interlocutorService.findOneById(interlocutor.id);
-          }),
-        )
-      : existingFirm.interlocutors;
+    //update main interlocutor position independently
+    this.firmInterlocutorEntryService.update(
+      existingFirm.interlocutorsToFirm.find((entry) => entry.isMain).id,
+      {
+        position: updateFirmDto.mainInterlocutor.position,
+      },
+    );
 
+    //invoicing address
     const invoicingAddress = updateFirmDto.invoicingAddress
       ? await this.addressService.findOneById(existingFirm.invoicingAddressId)
       : existingFirm.invoicingAddress;
 
-    const deliveryAddress = updateFirmDto.deliveryAddress
-      ? await this.addressService.findOneById(existingFirm.deliveryAddressId)
-      : existingFirm.deliveryAddress;
-
-    const activity = await this.activityService.findOneById(
-      updateFirmDto.activityId,
-    );
-    const currency = await this.currencyService.findOneById(
-      updateFirmDto.currencyId,
-    );
-    const paymentCondition = await this.paymentConditionService.findOneById(
-      updateFirmDto.paymentConditionId,
-    );
-
-    if (updateFirmDto.mainInterlocutor) {
-      await this.interlocutorService.update(existingFirm.mainInterlocutorId, {
-        ...mainInterlocutor,
-        ...updateFirmDto.mainInterlocutor,
-      });
-    }
-
+    //update the invoicing address
     if (updateFirmDto.invoicingAddress) {
       await this.addressService.update(existingFirm.invoicingAddressId, {
         ...invoicingAddress,
@@ -224,6 +187,12 @@ export class FirmService {
       });
     }
 
+    //delivery address
+    const deliveryAddress = updateFirmDto.deliveryAddress
+      ? await this.addressService.findOneById(existingFirm.deliveryAddressId)
+      : existingFirm.deliveryAddress;
+
+    //update the delivery address
     if (updateFirmDto.deliveryAddress) {
       await this.addressService.update(existingFirm.deliveryAddressId, {
         ...deliveryAddress,
@@ -231,21 +200,31 @@ export class FirmService {
       });
     }
 
+    //activity
+    const activity = await this.activityService.findOneById(
+      updateFirmDto.activityId,
+    );
+
+    //currency
+    const currency = await this.currencyService.findOneById(
+      updateFirmDto.currencyId,
+    );
+
+    //payment condition
+    const paymentCondition = await this.paymentConditionService.findOneById(
+      updateFirmDto.paymentConditionId,
+    );
+
     return this.firmRepository.save({
       ...existingFirm,
       ...updateFirmDto,
-      mainInterlocutor,
       activity,
       currency,
       paymentCondition,
-      interlocutors: [...existingFirm.interlocutors, ...updatedInterlocutors],
     });
   }
 
   async softDelete(id: number): Promise<FirmEntity> {
-    const firm = await this.findOneById(id);
-    this.addressService.softDelete(firm.invoicingAddressId);
-    this.addressService.softDelete(firm.deliveryAddressId);
     return this.firmRepository.softDelete(id);
   }
 

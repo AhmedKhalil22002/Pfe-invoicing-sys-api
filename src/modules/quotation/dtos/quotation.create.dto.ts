@@ -9,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { CreateArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.create.dto';
+import { CreateArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.create.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 
 export class CreateQuotationDto {
@@ -100,5 +100,5 @@ export class CreateQuotationDto {
 
   @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
   @IsOptional()
-  articles?: CreateArticleQuotationEntryDto[];
+  articleQuotationEntries?: CreateArticleQuotationEntryDto[];
 }

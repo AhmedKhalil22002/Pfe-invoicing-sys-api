@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ArticleQuotationEntryTaxRepository } from '../repositories/repository/article-quotation-entry-tax.repository';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { CreateArticleQuotationEntryTaxDto } from '../dtos/article-quotation-entry-tax.create.dto';
 import { ArticleQuotationEntryTaxEntity } from '../repositories/entities/article-quotation-entry-tax.entity';
+import { ArticleQuotationEntryTaxRepository } from '../repositories/repository/article-quotation-entry-tax.repository';
 
 @Injectable()
 export class ArticleQuotationEntryTaxService {
@@ -15,11 +15,11 @@ export class ArticleQuotationEntryTaxService {
     createArticleQuotationEntryTaxDto: CreateArticleQuotationEntryTaxDto,
   ): Promise<ArticleQuotationEntryTaxEntity> {
     const tax = await this.taxService.findOneById(
-      createArticleQuotationEntryTaxDto.tax.id,
+      createArticleQuotationEntryTaxDto.taxId,
     );
     const taxEntry = await this.articleQuotationEntryTaxRepository.save({
-      articleQuotationEntry:
-        createArticleQuotationEntryTaxDto.articleQuotationEntry,
+      articleQuotationEntryId:
+        createArticleQuotationEntryTaxDto.articleQuotationEntryId,
       tax,
     });
     return taxEntry;
@@ -41,8 +41,6 @@ export class ArticleQuotationEntryTaxService {
   }
 
   async softDeleteMany(ids: number[]): Promise<void> {
-    for (const id in ids) {
-      await this.softDelete(ids[id]);
-    }
+    ids.forEach(async (id) => await this.softDelete(id));
   }
 }

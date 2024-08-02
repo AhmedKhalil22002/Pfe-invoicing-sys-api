@@ -35,15 +35,9 @@ export class InvoicingCalculationsService {
     return total;
   }
 
-  static calculateLineItemsTotal(lineItems: LineItem[]) {
-    const subTotal = lineItems.reduce(
-      (total, lineItem) => total + this.calculateSubTotalForLineItem(lineItem),
-      0,
-    );
-    const total = lineItems.reduce(
-      (total, lineItem) => total + this.calculateTotalForLineItem(lineItem),
-      0,
-    );
+  static calculateLineItemsTotal(totals: number[], subTotals: number[]) {
+    const subTotal = totals.reduce((total, current) => total + current, 0);
+    const total = subTotals.reduce((total, current) => total + current, 0);
     return { subTotal, total };
   }
 

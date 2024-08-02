@@ -21,8 +21,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         : this.configService.get('database.synchronize', { infer: true }),
       dropSchema: false,
       keepConnectionAlive: true,
-      logging:
-        this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
+      logging: false,
+      // this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
       entities: [
         __dirname + '/../../**/*.entity{.ts,.js}',
         __dirname + '/../../../modules/**/*.entity{.ts,.js}',

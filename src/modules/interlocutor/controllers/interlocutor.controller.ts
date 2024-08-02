@@ -14,8 +14,8 @@ import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('interlocutor')
 @Controller({
@@ -25,17 +25,19 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 export class InterlocutorController {
   constructor(private readonly interlocutorService: InterlocutorService) {}
 
+  @Get('/all')
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponseInterlocutorDto[]> {
+    return await this.interlocutorService.findAll(options);
+  }
+
   @Get('/list')
   @ApiPaginatedResponse(ResponseInterlocutorDto)
   async findAllPaginated(
-    @Query()
-    options: PagingQueryOptionsDto<ResponseInterlocutorDto> & {
-      firmId: number;
-    },
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseInterlocutorDto>> {
-    console.log(options);
-
-    return await this.interlocutorService.findAllPaginated(options);
+    return await this.interlocutorService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -44,8 +46,14 @@ export class InterlocutorController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<ResponseInterlocutorDto> {
-    return await this.interlocutorService.findOneById(id);
+  async findOneById(
+    @Param('id') id: number,
+    @Query() query: IQueryObject,
+  ): Promise<ResponseInterlocutorDto> {
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.interlocutorService.findOneByCondition(query);
   }
 
   @Post('')

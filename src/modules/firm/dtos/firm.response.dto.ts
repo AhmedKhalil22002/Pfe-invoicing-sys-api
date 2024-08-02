@@ -5,7 +5,7 @@ import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response
 import { ResponseAddressDto } from 'src/modules/address/dtos/address.response.dto';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
-import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
+import { ResponseFirmInterlocutorEntryDto } from 'src/modules/firm-interlocutor-entry/dtos/firm-interlocutor-entry.response.dto';
 import { ResponsePaymentConditionDto } from 'src/modules/payment-condition/dtos/payment-condition.response.dto';
 
 export class ResponseFirmDto extends ResponseDtoHelper {
@@ -20,6 +20,9 @@ export class ResponseFirmDto extends ResponseDtoHelper {
     type: String,
   })
   website?: string;
+
+  @ApiProperty({ example: faker.phone.number(), type: String })
+  phone: string;
 
   @ApiProperty({
     example: 'Notes',
@@ -69,12 +72,6 @@ export class ResponseFirmDto extends ResponseDtoHelper {
   @ApiProperty({ example: 1, nullable: true })
   cabinetId?: number;
 
-  @ApiProperty({ type: () => ResponseInterlocutorDto })
-  mainInterlocutor?: ResponseInterlocutorDto;
-
-  @ApiProperty({ example: 1, nullable: true })
-  mainInterlocutorId?: number;
-
   @ApiProperty({ type: Array })
-  interlocutors?: ResponseInterlocutorDto[];
+  interlocutorsToFirm: ResponseFirmInterlocutorEntryDto[];
 }

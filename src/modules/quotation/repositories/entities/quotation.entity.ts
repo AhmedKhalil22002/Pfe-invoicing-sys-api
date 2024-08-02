@@ -1,6 +1,5 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { ArticleQuotationEntryEntity } from 'src/modules/article-quotation-entry/repositories/entities/article-quotation-entry.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
@@ -13,6 +12,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
+import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -73,8 +73,6 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'float', nullable: true })
   taxStamp: number;
 
-  @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation, {
-    eager: true,
-  })
-  articles: ArticleQuotationEntryEntity[];
+  @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation)
+  articleQuotationEntries: ArticleQuotationEntryEntity[];
 }

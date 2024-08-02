@@ -4,18 +4,26 @@ import { QuotationRepositoryModule } from './repositories/quotation.repository.m
 import { CurrencyModule } from '../currency/currency.module';
 import { FirmModule } from '../firm/firm.module';
 import { InterlocutorModule } from '../interlocutor/Interlocutor.module';
-import { ArticleQuotationEntryModule } from '../article-quotation-entry/article-quotation-entry.module';
+import { ArticleQuotationEntryService } from './services/article-quotation-entry.service';
+import { ArticleQuotationEntryTaxService } from './services/article-quotation-entry-tax.service';
+import { TaxModule } from '../tax/tax.module';
+import { ArticleModule } from '../article/article.module';
 
 @Module({
   controllers: [],
-  providers: [QuotationService],
+  providers: [
+    QuotationService,
+    ArticleQuotationEntryService,
+    ArticleQuotationEntryTaxService,
+  ],
   exports: [QuotationService],
   imports: [
-    ArticleQuotationEntryModule,
     QuotationRepositoryModule,
+    ArticleModule,
     CurrencyModule,
     FirmModule,
     InterlocutorModule,
+    TaxModule,
   ],
 })
 export class QuotationModule {}

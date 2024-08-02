@@ -27,6 +27,10 @@ export class CreateFirmDto {
   @MaxLength(255)
   website?: string;
 
+  @ApiProperty({ example: faker.phone.number(), type: String })
+  @IsString()
+  phone: string;
+
   @ApiProperty({
     example: 'dummy note',
     type: String,
@@ -79,16 +83,7 @@ export class CreateFirmDto {
   @ApiProperty({ type: () => CreateInterlocutorDto })
   mainInterlocutor?: CreateInterlocutorDto;
 
-  @ApiProperty({ example: 1, type: Number })
-  @IsInt()
-  @IsOptional()
-  mainInterlocutorId?: number;
-
   @ApiProperty({ example: 1, nullable: true })
   @IsOptional()
   cabinetId?: number;
-
-  @ApiProperty({ type: Array })
-  @IsOptional()
-  interlocutors?: CreateInterlocutorDto[];
 }

@@ -11,6 +11,7 @@ export const firms: CreateFirmDto[] = [
     paymentConditionId: 3,
     taxIdNumber: '124-25-6552',
     website: 'https://www.beroxywy.org.uk',
+    phone: '+216 25 856 999',
     deliveryAddress: {
       address: 'Optio voluptatum ne',
       address2: 'Molestiae elit illu',
@@ -26,13 +27,13 @@ export const firms: CreateFirmDto[] = [
       region: 'Nihil facere facilis',
       zipcode: '15776',
     },
-    mainInterlocutorId: 1,
     mainInterlocutor: {
       email: 'qujobotim@mailinator.com',
       name: 'Nash Ward',
       phone: '+1 (448) 422-7272',
       surname: 'Johnson',
       title: SOCIAL_TITLES.DR,
+      position: 'CEO',
     },
   },
 ];

@@ -6,6 +6,7 @@ import { AddressModule } from '../address/address.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { ActivityModule } from '../activity/activity.module';
 import { PaymentConditionModule } from '../payment-condition/payment-condition.module';
+import { FirmInterlocutorEntryModule } from '../firm-interlocutor-entry/firm-interlocutor-entry.module';
 
 @Module({
   controllers: [],
@@ -18,6 +19,7 @@ import { PaymentConditionModule } from '../payment-condition/payment-condition.m
     CurrencyModule,
     InterlocutorModule,
     PaymentConditionModule,
+    FirmInterlocutorEntryModule,
   ],
 })
 export class FirmModule {}
