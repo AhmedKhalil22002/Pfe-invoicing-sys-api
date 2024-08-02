@@ -35,6 +35,9 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: false })
   notes: string;
 
+  @Column({ type: 'varchar', length: 25, nullable: true })
+  phone: string;
+
   @ManyToOne(() => ActivityEntity)
   @JoinColumn({ name: 'activityId' })
   activity: ActivityEntity;
@@ -77,9 +80,7 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   cabinetId: number;
 
-  @OneToMany(() => FirmInterlocutorEntryEntity, (entry) => entry.firm, {
-    eager: true,
-  })
+  @OneToMany(() => FirmInterlocutorEntryEntity, (entry) => entry.firm)
   @JoinTable()
   interlocutorsToFirm: FirmInterlocutorEntryEntity[];
 }

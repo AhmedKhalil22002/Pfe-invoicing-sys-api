@@ -12,12 +12,10 @@ import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { QuotationService } from '../services/quotation.service';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { ResponseQuotationDto } from '../dtos/quotation.response.dto';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
-import { QueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
-import { QuotationEntity } from '../repositories/entities/quotation.entity';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('quotation')
 @Controller({
@@ -27,17 +25,19 @@ import { QuotationEntity } from '../repositories/entities/quotation.entity';
 export class QuotationController {
   constructor(private readonly quotationService: QuotationService) {}
 
+  @Get('/all')
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponseQuotationDto[]> {
+    return await this.quotationService.findAll(options);
+  }
+
   @Get('/list')
   @ApiPaginatedResponse(ResponseQuotationDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponseQuotationDto>,
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseQuotationDto>> {
-    return await this.quotationService.findAllPaginated(options);
-  }
-
-  @Get('/all')
-  async findAll(): Promise<ResponseQuotationDto[]> {
-    return await this.quotationService.findAll();
+    return await this.quotationService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -48,15 +48,12 @@ export class QuotationController {
   })
   async findOneById(
     @Param('id') id: number,
-    @Query() options: QueryOptions<QuotationEntity>,
+    @Query() query: IQueryObject,
   ): Promise<ResponseQuotationDto> {
-    return await this.quotationService.findOneByCondition({
-      ...options,
-      filters: {
-        ...options.filters,
-        id: id,
-      },
-    });
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.quotationService.findOneByCondition(query);
   }
 
   @Post('')

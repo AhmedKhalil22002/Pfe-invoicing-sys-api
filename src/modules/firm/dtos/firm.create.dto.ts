@@ -27,6 +27,10 @@ export class CreateFirmDto {
   @MaxLength(255)
   website?: string;
 
+  @ApiProperty({ example: faker.phone.number(), type: String })
+  @IsString()
+  phone: string;
+
   @ApiProperty({
     example: 'dummy note',
     type: String,

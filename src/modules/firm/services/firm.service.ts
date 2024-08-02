@@ -6,10 +6,7 @@ import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { FirmNotFoundException } from '../errors/firm.notfound.error';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
-import { QueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
-import { PagingQueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import {
   FirmAlreadyExistsException,
@@ -19,11 +16,10 @@ import { AddressService } from 'src/modules/address/services/address.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { PaymentConditionService } from 'src/modules/payment-condition/services/payment-condition.service';
-import {
-  arrayToTrueObject,
-  getSelectAndRelations,
-} from 'src/common/database/utils/selectAndRelations';
 import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 
 @Injectable()
 export class FirmService {
@@ -40,9 +36,6 @@ export class FirmService {
   async findOneById(id: number): Promise<FirmEntity> {
     const firm = await this.firmRepository.findByCondition({
       where: { id },
-      relations: arrayToTrueObject(
-        await this.firmRepository.getRelatedEntityNames(),
-      ),
     });
     if (!firm) {
       throw new FirmNotFoundException();
@@ -51,59 +44,43 @@ export class FirmService {
   }
 
   async findOneByCondition(
-    options: QueryOptionsDto<FirmEntity>,
-  ): Promise<FirmEntity | null> {
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
+    query: IQueryObject,
+  ): Promise<ResponseFirmDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const firm = await this.firmRepository.findOne(
+      queryOptions as FindOneOptions<FirmEntity>,
     );
-    const where = buildWhereClause<FirmEntity>(
-      options.filters,
-      options.strictMatching,
-    );
-    const firm = await this.firmRepository.findByCondition({
-      select,
-      relations,
-      where: { ...where, deletedAt: null },
-    });
     if (!firm) return null;
     return firm;
   }
 
-  async findAll(
-    options: QueryOptionsDto<ResponseFirmDto>,
-  ): Promise<FirmEntity[]> {
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
+  async findAll(query: IQueryObject): Promise<ResponseFirmDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.firmRepository.findAll(
+      queryOptions as FindManyOptions<FirmEntity>,
     );
-    return await this.firmRepository.findAll({ select, relations });
   }
 
   async findAllPaginated(
-    options?: PagingQueryOptions<ResponseFirmDto>,
+    query: IQueryObject,
   ): Promise<PageDto<ResponseFirmDto>> {
-    const { filters, strictMatching, sort, pageOptions } = options || {};
-
-    const where = buildWhereClause<ResponseFirmDto>(filters, strictMatching);
-    const count = await this.firmRepository.getTotalCount({ where });
-
-    const { select, relations } = getSelectAndRelations(
-      await this.firmRepository.getRelatedEntityNames(),
-      options,
-    );
-
-    const entities = await this.firmRepository.findAll({
-      select,
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-      relations,
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.firmRepository.getTotalCount({
+      where: queryOptions.where,
     });
 
+    const entities = await this.firmRepository.findAll(
+      queryOptions as FindManyOptions<FirmEntity>,
+    );
+
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
       itemCount: count,
     });
 
@@ -173,12 +150,16 @@ export class FirmService {
     }
 
     //find the existing firm
-    const existingFirm = await this.findOneById(id);
+    const existingFirm = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'interlocutorsToFirm',
+    });
 
     // update the main interlocutor by looking up in the firmInterlocutorEntry table
     const mainInterlocutorId = existingFirm.interlocutorsToFirm.find(
       (entry) => entry.isMain,
     ).interlocutorId;
+    console.log(updateFirmDto);
 
     this.interlocutorService.update(
       mainInterlocutorId,

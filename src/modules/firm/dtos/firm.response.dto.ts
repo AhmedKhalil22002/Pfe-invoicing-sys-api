@@ -21,6 +21,9 @@ export class ResponseFirmDto extends ResponseDtoHelper {
   })
   website?: string;
 
+  @ApiProperty({ example: faker.phone.number(), type: String })
+  phone: string;
+
   @ApiProperty({
     example: 'Notes',
     type: String,

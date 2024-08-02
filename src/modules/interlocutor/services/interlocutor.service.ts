@@ -4,12 +4,12 @@ import { InterlocutorNotFoundException } from '../errors/interlocutor.notfound.e
 import { InterlocutorEntity } from '../repositories/entity/interlocutor.entity';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
-import { PagingQueryOptions } from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import { FindOptionsWhere } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 
 @Injectable()
 export class InterlocutorService {
@@ -17,31 +17,44 @@ export class InterlocutorService {
     private readonly interlocutorRepository: InterlocutorRepository,
   ) {}
 
+  async findOneByCondition(
+    query: IQueryObject,
+  ): Promise<ResponseInterlocutorDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const interlocutor = await this.interlocutorRepository.findOne(
+      queryOptions as FindOneOptions<InterlocutorEntity>,
+    );
+    if (!interlocutor) return null;
+    return interlocutor;
+  }
+
+  async findAll(query: IQueryObject): Promise<ResponseInterlocutorDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.interlocutorRepository.findAll(
+      queryOptions as FindManyOptions<InterlocutorEntity>,
+    );
+  }
+
   async findAllPaginated(
-    options?: PagingQueryOptions<ResponseInterlocutorDto> & {
-      firmId: number;
-    },
+    query: IQueryObject,
   ): Promise<PageDto<ResponseInterlocutorDto>> {
-    const { filters, strictMatching, sort, pageOptions, firmId } =
-      options || {};
-
-    const where: FindOptionsWhere<InterlocutorEntity> =
-      buildWhereClause<ResponseInterlocutorDto>(filters, strictMatching);
-
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
     const count = await this.interlocutorRepository.getTotalCount({
-      where: { ...where, firmsToInterlocutor: { firmId } },
+      where: queryOptions.where,
     });
 
-    const entities = await this.interlocutorRepository.findAll({
-      where: { ...where, firmsToInterlocutor: { firmId } },
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-      loadRelationIds: true,
-    });
+    const entities = await this.interlocutorRepository.findAll(
+      queryOptions as FindManyOptions<InterlocutorEntity>,
+    );
 
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
       itemCount: count,
     });
 

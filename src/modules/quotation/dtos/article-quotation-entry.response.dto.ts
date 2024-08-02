@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsNumber, IsOptional } from 'class-validator';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { CreateArticleDto } from 'src/modules/article/dtos/article.create.dto';
-import { ResponseTaxDto } from 'src/modules/tax/dtos/tax.response.dto';
 
 export class ResponseArticleQuotationEntryDto {
   @ApiProperty({ example: 1, type: Number })
@@ -42,7 +41,7 @@ export class ResponseArticleQuotationEntryDto {
   @IsInt()
   quotationId?: number;
 
-  @ApiProperty({ type: [ResponseTaxDto], required: false })
+  @ApiProperty({ required: false })
   @IsOptional()
-  taxes?: ResponseTaxDto[];
+  articleQuotationEntryTaxes?: ResponseArticleQuotationEntryDto[];
 }

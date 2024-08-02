@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { ResponseArticleQuotationEntryDto } from 'src/modules/article-quotation-entry/dtos/article-quotation-entry.response.dto';
+import { ResponseArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.response.dto';
 import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
 import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
@@ -88,5 +88,5 @@ export class ResponseQuotationDto {
   taxStamp?: number;
 
   @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
-  articles?: ResponseArticleQuotationEntryDto[];
+  articleQuotationEntries?: ResponseArticleQuotationEntryDto[];
 }

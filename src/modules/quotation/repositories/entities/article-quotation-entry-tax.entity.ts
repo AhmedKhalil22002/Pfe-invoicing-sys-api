@@ -21,7 +21,7 @@ export class ArticleQuotationEntryTaxEntity extends EntityHelper {
   @Column({ type: 'int' })
   articleQuotationEntryId: number;
 
-  @ManyToOne(() => TaxEntity, { eager: true })
+  @ManyToOne(() => TaxEntity)
   @JoinColumn({ name: 'taxId' })
   tax: TaxEntity;
 

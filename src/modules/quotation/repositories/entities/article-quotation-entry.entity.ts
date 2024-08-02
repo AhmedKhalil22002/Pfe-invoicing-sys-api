@@ -53,7 +53,6 @@ export class ArticleQuotationEntryEntity extends EntityHelper {
     () => ArticleQuotationEntryTaxEntity,
     (articleQuotationEntryTax) =>
       articleQuotationEntryTax.articleQuotationEntry,
-    { eager: true },
   )
   articleQuotationEntryTaxes: ArticleQuotationEntryTaxEntity[];
 }
