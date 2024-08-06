@@ -5,8 +5,12 @@ import { ResponseArticleQuotationEntryDto } from 'src/modules/quotation/dtos/art
 import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
 import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
+import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 
 export class ResponseQuotationDto {
+  @ApiProperty({ example: 1, type: Number })
+  id: number;
+
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;
 
@@ -74,6 +78,15 @@ export class ResponseQuotationDto {
 
   @ApiProperty({ type: () => ResponseInterlocutorDto })
   interlocutor?: ResponseInterlocutorDto;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  cabinetId?: number;
+
+  @ApiProperty({ type: () => ResponseFirmDto })
+  cabinet?: ResponseCabinetDto;
 
   @ApiProperty({
     example: faker.hacker.phrase(),

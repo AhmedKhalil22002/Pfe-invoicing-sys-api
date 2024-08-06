@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { QuotationRepository } from '../repositories/repository/quotation.repository';
 import { QuotationEntity } from '../repositories/entities/quotation.entity';
 import { QuotationNotFoundException } from '../errors/quotation.notfound.error';
@@ -16,16 +16,54 @@ import { QueryBuilder } from 'src/common/database/services/databse-query-options
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
 import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
+import { PdfService } from 'src/common/pdf/services/pdf.service';
+import { format } from 'date-fns';
 
 @Injectable()
 export class QuotationService {
   constructor(
+    //quotation repository
     private readonly quotationRepository: QuotationRepository,
+    //other entity services
     private readonly currencyService: CurrencyService,
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
     private readonly interlocutorService: InterlocutorService,
+    //pdf service
+    private readonly pdfService: PdfService,
   ) {}
+
+  async downloadPdf(id: number): Promise<StreamableFile> {
+    const quotation = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: new String().concat(
+        'cabinet,',
+        'cabinet.address,',
+        'firm,',
+        'firm.invoicingAddress,',
+        'firm.deliveryAddress,',
+        'articleQuotationEntries',
+      ),
+    });
+    if (quotation) {
+      console.log(quotation);
+      const data = {
+        meta: {
+          type: 'DEVIS',
+        },
+        quotation: {
+          ...quotation,
+          date: format(quotation.date, 'dd/MM/yyyy'),
+          dueDate: format(quotation.dueDate, 'dd/MM/yyyy'),
+        },
+      };
+
+      const pdfBuffer = await this.pdfService.generatePdf(data);
+      return new StreamableFile(pdfBuffer);
+    } else {
+      throw new QuotationNotFoundException();
+    }
+  }
 
   async findOneById(id: number): Promise<ResponseQuotationDto> {
     const quotation = await this.quotationRepository.findOneById(id);

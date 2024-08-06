@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
+import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -63,6 +64,13 @@ export class QuotationEntity extends EntityHelper {
   @ManyToOne(() => InterlocutorEntity)
   @JoinColumn({ name: 'interlocutorId' })
   interlocutor: InterlocutorEntity;
+
+  @ManyToOne(() => CabinetEntity)
+  @JoinColumn({ name: 'cabinetId' })
+  cabinet: CabinetEntity;
+
+  @Column({ type: 'int', default: 1 })
+  cabinetId: number;
 
   @Column({ type: 'int' })
   interlocutorId: number;

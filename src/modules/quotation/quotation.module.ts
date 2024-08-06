@@ -8,6 +8,7 @@ import { ArticleQuotationEntryService } from './services/article-quotation-entry
 import { ArticleQuotationEntryTaxService } from './services/article-quotation-entry-tax.service';
 import { TaxModule } from '../tax/tax.module';
 import { ArticleModule } from '../article/article.module';
+import { PdfModule } from 'src/common/pdf/pdf.module';
 
 @Module({
   controllers: [],
@@ -24,6 +25,7 @@ import { ArticleModule } from '../article/article.module';
     FirmModule,
     InterlocutorModule,
     TaxModule,
+    PdfModule,
   ],
 })
 export class QuotationModule {}

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   Post,
   Put,
@@ -54,6 +55,13 @@ export class QuotationController {
       ? (query.filter += `,id||$eq||${id}`)
       : (query.filter = `id||$eq||${id}`);
     return await this.quotationService.findOneByCondition(query);
+  }
+
+  @Get('/:id/download')
+  @Header('Content-Type', 'application/json')
+  @Header('Content-Disposition', 'attachment; filename="quotation.pdf"')
+  async generatePdf(@Param('id') id: number) {
+    return this.quotationService.downloadPdf(id);
   }
 
   @Post('')

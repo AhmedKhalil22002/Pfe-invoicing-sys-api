@@ -1,0 +1,198 @@
+<html>
+
+<head>
+    <style>
+        body {
+            background: #ccc;
+            padding: 1cm;
+        }
+
+        .container {
+            min-height: 29.7cm;
+        }
+
+        .invoice {
+            background: #fff;
+            width: 100%;
+            margin-top: 1cm;
+        }
+
+        .logo {
+            width: 2.5cm;
+        }
+
+        .document-type {
+            text-align: right;
+            color: #444;
+        }
+
+        .conditions {
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .bottom-page {
+            font-size: 0.7em;
+        }
+
+        .caps {
+            text-transform: uppercase;
+        }
+
+        th,
+        td {
+            font-size: 0.7rem;
+        }
+
+        p,
+        span,
+        strong {
+            font-size: 0.8rem;
+        }
+    </style>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="invoice">
+            <div class="row">
+                <div class="col-7">
+                    <img src="" class="logo">
+                    <p>
+                        <strong>
+                            <%= quotation.cabinet.enterpriseName %>
+                        </strong><br>
+                        <%= quotation.cabinet.address.address %><br>
+                            <%= quotation.cabinet.address.zipcode %>
+                                <%= quotation.cabinet.address.region %>
+                                    <%= quotation.cabinet.address.country.name %>
+                    </p>
+                </div>
+                <div class="col-5 text-right">
+                    <h1 class="document-type display-4">
+                        <%= meta.type %>
+                    </h1>
+                    <span><strong>N° <%= quotation.id %></strong></span><br>
+                    <span><strong>Date :</strong>
+                        <%= quotation.date %>
+                    </span><br>
+                    <span><strong>Échéance :</strong>
+                        <%= quotation.dueDate %>
+                    </span><br>
+                    <span><strong>Objet :</strong>
+                        <%= quotation.object %>
+                    </span>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <strong>Envoyer à :</strong><br>
+                <h6>
+                    <strong class="caps mt-5">
+                        <%= quotation.firm.name %>
+                    </strong><br>
+                    <p><%= quotation.firm.taxIdNumber %></p>
+                </h6>
+                <div class="row">
+                    <div class="col-6">
+                        <span><strong>Adresse de Livraison</strong></span><br>
+                        <p>
+                            <%= quotation.firm.deliveryAddress.address %>
+                                <br><span>
+                                    <%= quotation.firm.deliveryAddress.zipcode %>
+                                        <%= quotation.firm.deliveryAddress.region %>
+                                            <%= quotation.firm.deliveryAddress.country.name %>
+                                </span>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <span><strong>Adresse de Facturation</strong></span><br>
+                        <p>
+                            <%= quotation.firm.invoicingAddress.address %>
+                                <br> <span>
+                                    <%= quotation.firm.invoicingAddress.zipcode %>
+                                        <%= quotation.firm.invoicingAddress.region %>
+                                            <%= quotation.firm.invoicingAddress.country.name %>
+                                </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Quantité</th>
+                        <th>Unité</th>
+                        <th>PU HT</th>
+                        <th>TVA</th>
+                        <th>Total HT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Audits et rapports mensuels</td>
+                        <td>1</td>
+                        <td>Jour</td>
+                        <td class="text-right">500,00€</td>
+                        <td>20%</td>
+                        <td class="text-right">500,00€</td>
+                    </tr>
+                    <tr>
+                        <td>Génération des rapports d'activité</td>
+                        <td>4</td>
+                        <td>Rapport</td>
+                        <td class="text-right">800,00€</td>
+                        <td>20%</td>
+                        <td class="text-right">3 200,00€</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-8">
+                </div>
+                <div class="col-4">
+                    <table class="table table-sm text-right">
+                        <tr>
+                            <td>Total HT</td>
+                            <td class="text-right">3 700,00€</td>
+                        </tr>
+                        <tr>
+                            <td>TVA 20%</td>
+                            <td class="text-right">740,00€</td>
+                        </tr>
+                        <tr>
+                            <td>Total TTC</td>
+                            <td class="text-right">4 440,00€</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <p class="conditions">
+                <%= quotation.generalConditions %>
+            </p>
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <p class="bottom-page text-right">
+                <%= quotation.cabinet.enterpriseName %> - TIN <%= quotation.cabinet.taxIdNumber %><br>
+                        <%= quotation.cabinet.address.address %>
+                            <%= quotation.cabinet.address.zipcode %>
+                                <%= quotation.cabinet.address.region %>
+                                    <%= quotation.cabinet.address.country.name %> - <%= quotation.cabinet.phone %> - <%=
+                                                quotation.cabinet.email %><br>
+                                                IBAN - SWIFT
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
