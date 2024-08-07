@@ -1,21 +1,15 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
+import { LineItem } from '../interfaces/line-item.interface';
+import { Injectable } from '@nestjs/common';
 
-type Tax = {
-  rate: number;
-};
-
-type LineItem = {
-  quantity: number;
-  unit_price: number;
-  discount: number;
-  discount_type: DISCOUNT_TYPES;
-  taxes: Tax[];
-};
-
+@Injectable()
 export class InvoicingCalculationsService {
-  static calculateSubTotalForLineItem(lineItem: LineItem) {
+  constructor() {}
+  //calulate subtotal for a line item
+  calculateSubTotalForLineItem(lineItem: LineItem) {
     const { quantity, unit_price, discount, discount_type } = lineItem;
     let subTotal = quantity * unit_price;
+    console.log('subTotal', subTotal);
     if (discount_type === DISCOUNT_TYPES.AMOUNT) {
       subTotal -= discount;
     } else if (discount_type === DISCOUNT_TYPES.PERCENTAGE) {
@@ -24,24 +18,28 @@ export class InvoicingCalculationsService {
     return subTotal;
   }
 
-  static calculateTotalForLineItem(lineItem: LineItem) {
+  //calculate total for a line item
+  calculateTotalForLineItem(lineItem: LineItem) {
     const { taxes } = lineItem;
     const subTotal = this.calculateSubTotalForLineItem(lineItem);
     let taxAmount = 0;
+    let specialTaxAmount = 0;
     for (const tax of taxes) {
-      taxAmount += (subTotal * tax.rate) / 100;
+      if (tax.isSpecial) specialTaxAmount += tax.rate;
+      else taxAmount += tax.rate;
     }
-    const total = subTotal + taxAmount;
+    const total = subTotal * (1 + taxAmount) * (1 + specialTaxAmount);
     return total;
   }
 
-  static calculateLineItemsTotal(totals: number[], subTotals: number[]) {
-    const subTotal = totals.reduce((total, current) => total + current, 0);
-    const total = subTotals.reduce((total, current) => total + current, 0);
+  //calculate subtotal and total for a line items after individual line items are calculated
+  calculateLineItemsTotal(totals: number[], subTotals: number[]) {
+    const subTotal = subTotals.reduce((total, current) => total + current, 0);
+    const total = totals.reduce((total, current) => total + current, 0);
     return { subTotal, total };
   }
 
-  static calculateTotalDiscountAndTaxStamp(
+  calculateTotalDiscountAndTaxStamp(
     total: number,
     discount: number,
     discount_type: DISCOUNT_TYPES,

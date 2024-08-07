@@ -28,6 +28,7 @@ export class QuotationService {
     private readonly currencyService: CurrencyService,
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
+    private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
     //pdf service
     private readonly pdfService: PdfService,
@@ -37,16 +38,20 @@ export class QuotationService {
     const quotation = await this.findOneByCondition({
       filter: `id||$eq||${id}`,
       join: new String().concat(
-        'cabinet,',
-        'cabinet.address,',
         'firm,',
-        'firm.invoicingAddress,',
+        'cabinet,',
+        'currency,',
+        'cabinet.address,',
         'firm.deliveryAddress,',
-        'articleQuotationEntries',
+        'firm.invoicingAddress,',
+        'articleQuotationEntries,',
+        'articleQuotationEntries.article,',
+        'articleQuotationEntries.articleQuotationEntryTaxes,',
+        'articleQuotationEntries.articleQuotationEntryTaxes.tax',
       ),
     });
     if (quotation) {
-      console.log(quotation);
+      console.log(quotation.articleQuotationEntries[0]);
       const data = {
         meta: {
           type: 'DEVIS',
@@ -138,14 +143,14 @@ export class QuotationService {
 
     // calculate the financial informations of the quotation
     const { subTotal, total } =
-      InvoicingCalculationsService.calculateLineItemsTotal(
+      this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
 
     // apply taxstamp and general discount
     const totalAfterGeneralDiscountAndTaxStamp =
-      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+      this.calculationsService.calculateTotalDiscountAndTaxStamp(
         total,
         createQuotationDto.discount,
         createQuotationDto.discount_type,
@@ -203,12 +208,12 @@ export class QuotationService {
 
     // calculate the financial informations of the quotation
     const { subTotal, total } =
-      InvoicingCalculationsService.calculateLineItemsTotal(
+      this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
     const totalAfterGeneralDiscountAndTaxStamp =
-      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+      this.calculationsService.calculateTotalDiscountAndTaxStamp(
         total,
         updateQuotationDto.discount,
         updateQuotationDto.discount_type,

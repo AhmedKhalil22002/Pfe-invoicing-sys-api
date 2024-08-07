@@ -41,7 +41,7 @@
 
         th,
         td {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
         }
 
         p,
@@ -91,7 +91,9 @@
                     <strong class="caps mt-5">
                         <%= quotation.firm.name %>
                     </strong><br>
-                    <p><%= quotation.firm.taxIdNumber %></p>
+                    <p>
+                        <%= quotation.firm.taxIdNumber %>
+                    </p>
                 </h6>
                 <div class="row">
                     <div class="col-6">
@@ -120,36 +122,68 @@
             </div>
             <br>
             <br>
-            <br>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th>Quantité</th>
-                        <th>Unité</th>
-                        <th>PU HT</th>
-                        <th>TVA</th>
-                        <th>Total HT</th>
+                        <th style="width: 10%;">Nom</th>
+                        <th style="width: 20%;">Description</th>
+                        <th style="width: 10%;">Quantité</th>
+                        <th style="width: 10%;">P.U</th>
+                        <th style="width: 10%;">Remise</th>
+                        <th style="width: 10%;">HT</th>
+                        <th style="width: 20%;">Taxes</th>
+                        <th style="width: 10%;">TTC</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Audits et rapports mensuels</td>
-                        <td>1</td>
-                        <td>Jour</td>
-                        <td class="text-right">500,00€</td>
-                        <td>20%</td>
-                        <td class="text-right">500,00€</td>
-                    </tr>
-                    <tr>
-                        <td>Génération des rapports d'activité</td>
-                        <td>4</td>
-                        <td>Rapport</td>
-                        <td class="text-right">800,00€</td>
-                        <td>20%</td>
-                        <td class="text-right">3 200,00€</td>
-                    </tr>
+                    <% quotation.articleQuotationEntries.forEach(function(entry) { %>
+                        <tr>
+                            <td>
+                                <%= entry.article.title %>
+                            </td>
+                            <td>
+                                <%= entry.article.description %>
+                            </td>
+                            <td>
+                                <%= entry.quantity %>
+                            </td>
+                            <td>
+                                <%= entry.unit_price %>
+                                    <%= quotation.currency.symbol %>
+                            </td>
+                            <td>
+                                <%= entry.discount %>
+                                    <% if (entry.discount_type=="PERCENTAGE" ) { %>
+                                        <span>%</span>
+                                        <% } else { %>
+                                            <span>
+                                                <%= quotation.currency.symbol %>
+                                            </span>
+                                            <% } %>
+                            </td>
+                            <td>
+                                <%= entry.subTotal %>
+                                    <%= quotation.currency.symbol %>
+                            </td>
+
+                            <td>
+                                <ul>
+                                    <% entry.articleQuotationEntryTaxes.forEach(function(taxEntry) { %>
+                                        <li>
+                                            <%= taxEntry.tax.label %>
+                                                (<%= taxEntry.tax.rate * 100 %> %)
+                                        </li>
+                                        <% }); %>
+                                </ul>
+                            </td>
+                            <td>
+                                <%= entry.total %>
+                                    <%= quotation.currency.symbol %>
+                            </td>
+                        </tr>
+                        <% }); %>
+
+
                 </tbody>
             </table>
             <div class="row">
@@ -158,21 +192,44 @@
                 <div class="col-4">
                     <table class="table table-sm text-right">
                         <tr>
-                            <td>Total HT</td>
-                            <td class="text-right">3 700,00€</td>
+                            <td><strong>Total HT</strong></td>
+                            <td class="text-right">
+                                <%= quotation.subTotal %>
+                                    <%= quotation.currency.symbol %>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>TVA 20%</td>
-                            <td class="text-right">740,00€</td>
-                        </tr>
-                        <tr>
-                            <td>Total TTC</td>
-                            <td class="text-right">4 440,00€</td>
-                        </tr>
+                        <% if (quotation.taxStamp) { %>
+                            <tr>
+                                <td><strong>Timbre Fiscale </strong></td>
+                                <td class="text-right">
+                                    <%= quotation.taxStamp %>
+                                        <%= quotation.currency.symbol %>
+                                </td>
+                            </tr>
+                            <% }%>
+                                <tr>
+                                    <td><strong>Remise</strong></td>
+                                    <td class="text-right">
+                                        <%= quotation.discount %>
+                                            <% if (quotation.discount_type=="PERCENTAGE" ) { %>
+                                                %
+                                                <% } else { %>
+                                                    <%= quotation.currency.symbol %>
+                                                        <% } %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total TTC</strong></td>
+                                    <td class="text-right">
+                                        <%= quotation.total %>
+                                            <%= quotation.currency.symbol %>
+                                    </td>
+                                </tr>
                     </table>
                 </div>
             </div>
 
+            <p> <strong>Conditions Générales</strong></p>
             <p class="conditions">
                 <%= quotation.generalConditions %>
             </p>
@@ -189,7 +246,6 @@
                                 <%= quotation.cabinet.address.region %>
                                     <%= quotation.cabinet.address.country.name %> - <%= quotation.cabinet.phone %> - <%=
                                                 quotation.cabinet.email %><br>
-                                                IBAN - SWIFT
             </p>
         </div>
     </div>

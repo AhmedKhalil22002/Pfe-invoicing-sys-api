@@ -9,6 +9,7 @@ import { ArticleQuotationEntryTaxService } from './services/article-quotation-en
 import { TaxModule } from '../tax/tax.module';
 import { ArticleModule } from '../article/article.module';
 import { PdfModule } from 'src/common/pdf/pdf.module';
+import { CalculationsModule } from 'src/common/calculations/calculations.module';
 
 @Module({
   controllers: [],
@@ -26,6 +27,7 @@ import { PdfModule } from 'src/common/pdf/pdf.module';
     InterlocutorModule,
     TaxModule,
     PdfModule,
+    CalculationsModule,
   ],
 })
 export class QuotationModule {}

@@ -35,7 +35,7 @@ export class ArticleQuotationEntryEntity extends EntityHelper {
   @Column({ type: 'float', nullable: true })
   total: number;
 
-  @ManyToOne(() => ArticleEntity, { eager: true })
+  @ManyToOne(() => ArticleEntity)
   @JoinColumn({ name: 'articleId' })
   article: ArticleEntity;
 
