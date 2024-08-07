@@ -34,7 +34,7 @@ export class QuotationService {
     private readonly pdfService: PdfService,
   ) {}
 
-  async downloadPdf(id: number): Promise<StreamableFile> {
+  async downloadPdf(id: number, template: string): Promise<StreamableFile> {
     const quotation = await this.findOneByCondition({
       filter: `id||$eq||${id}`,
       join: new String().concat(
@@ -51,7 +51,6 @@ export class QuotationService {
       ),
     });
     if (quotation) {
-      console.log(quotation.articleQuotationEntries[0]);
       const data = {
         meta: {
           type: 'DEVIS',
@@ -63,7 +62,7 @@ export class QuotationService {
         },
       };
 
-      const pdfBuffer = await this.pdfService.generatePdf(data);
+      const pdfBuffer = await this.pdfService.generatePdf(data, template);
       return new StreamableFile(pdfBuffer);
     } else {
       throw new QuotationNotFoundException();

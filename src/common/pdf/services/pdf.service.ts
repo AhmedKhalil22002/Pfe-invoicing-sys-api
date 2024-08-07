@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 
 @Injectable()
 export class PdfService {
-  async generatePdf(data: any): Promise<Buffer> {
+  async generatePdf(data: any, templateName: string): Promise<Buffer> {
     const templatePath = join(
       __dirname,
       '..',
@@ -14,7 +14,7 @@ export class PdfService {
       '..',
       'assets',
       'templates',
-      'template.ejs',
+      `${templateName}.ejs`,
     );
     const template = await fs.readFile(templatePath, 'utf8');
 

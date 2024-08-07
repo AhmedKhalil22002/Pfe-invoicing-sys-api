@@ -60,8 +60,11 @@ export class QuotationController {
   @Get('/:id/download')
   @Header('Content-Type', 'application/json')
   @Header('Content-Disposition', 'attachment; filename="quotation.pdf"')
-  async generatePdf(@Param('id') id: number) {
-    return this.quotationService.downloadPdf(id);
+  async generatePdf(
+    @Param('id') id: number,
+    @Query() query: { template: string },
+  ) {
+    return this.quotationService.downloadPdf(id, query.template);
   }
 
   @Post('')
