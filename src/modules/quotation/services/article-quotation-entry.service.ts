@@ -18,6 +18,7 @@ export class ArticleQuotationEntryService {
     private readonly articleQuotationEntryTaxService: ArticleQuotationEntryTaxService,
     private readonly articleService: ArticleService,
     private readonly taxService: TaxService,
+    private readonly calculationsService: InvoicingCalculationsService,
   ) {}
 
   async findOneById(id: number): Promise<ResponseArticleQuotationEntryDto> {
@@ -57,9 +58,8 @@ export class ArticleQuotationEntryService {
       ...createArticleQuotationEntryDto,
       articleId: article.id,
       article: article,
-      subTotal:
-        InvoicingCalculationsService.calculateSubTotalForLineItem(lineItem),
-      total: InvoicingCalculationsService.calculateTotalForLineItem(lineItem),
+      subTotal: this.calculationsService.calculateSubTotalForLineItem(lineItem),
+      total: this.calculationsService.calculateTotalForLineItem(lineItem),
     });
 
     await this.articleQuotationEntryTaxService.saveMany(
@@ -135,9 +135,8 @@ export class ArticleQuotationEntryService {
       ...updateArticleQuotationEntryDto,
       articleId: article.id,
       article: article,
-      subTotal:
-        InvoicingCalculationsService.calculateSubTotalForLineItem(lineItem),
-      total: InvoicingCalculationsService.calculateTotalForLineItem(lineItem),
+      subTotal: this.calculationsService.calculateSubTotalForLineItem(lineItem),
+      total: this.calculationsService.calculateTotalForLineItem(lineItem),
     });
     //save the new tax entries for the article entry
     await this.articleQuotationEntryTaxService.saveMany(

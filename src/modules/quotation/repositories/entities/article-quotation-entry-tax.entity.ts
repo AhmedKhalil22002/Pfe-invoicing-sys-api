@@ -9,7 +9,7 @@ import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 
-@Entity('article_quotation_entry_tax')
+@Entity('article-quotation-entry-tax')
 export class ArticleQuotationEntryTaxEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

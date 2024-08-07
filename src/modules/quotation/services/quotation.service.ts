@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { QuotationRepository } from '../repositories/repository/quotation.repository';
 import { QuotationEntity } from '../repositories/entities/quotation.entity';
 import { QuotationNotFoundException } from '../errors/quotation.notfound.error';
@@ -16,16 +16,58 @@ import { QueryBuilder } from 'src/common/database/services/databse-query-options
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
 import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
+import { PdfService } from 'src/common/pdf/services/pdf.service';
+import { format } from 'date-fns';
 
 @Injectable()
 export class QuotationService {
   constructor(
+    //quotation repository
     private readonly quotationRepository: QuotationRepository,
+    //other entity services
     private readonly currencyService: CurrencyService,
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
+    private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
+    //pdf service
+    private readonly pdfService: PdfService,
   ) {}
+
+  async downloadPdf(id: number, template: string): Promise<StreamableFile> {
+    const quotation = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: new String().concat(
+        'firm,',
+        'cabinet,',
+        'currency,',
+        'cabinet.address,',
+        'firm.deliveryAddress,',
+        'firm.invoicingAddress,',
+        'articleQuotationEntries,',
+        'articleQuotationEntries.article,',
+        'articleQuotationEntries.articleQuotationEntryTaxes,',
+        'articleQuotationEntries.articleQuotationEntryTaxes.tax',
+      ),
+    });
+    if (quotation) {
+      const data = {
+        meta: {
+          type: 'DEVIS',
+        },
+        quotation: {
+          ...quotation,
+          date: format(quotation.date, 'dd/MM/yyyy'),
+          dueDate: format(quotation.dueDate, 'dd/MM/yyyy'),
+        },
+      };
+
+      const pdfBuffer = await this.pdfService.generatePdf(data, template);
+      return new StreamableFile(pdfBuffer);
+    } else {
+      throw new QuotationNotFoundException();
+    }
+  }
 
   async findOneById(id: number): Promise<ResponseQuotationDto> {
     const quotation = await this.quotationRepository.findOneById(id);
@@ -100,14 +142,14 @@ export class QuotationService {
 
     // calculate the financial informations of the quotation
     const { subTotal, total } =
-      InvoicingCalculationsService.calculateLineItemsTotal(
+      this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
 
     // apply taxstamp and general discount
     const totalAfterGeneralDiscountAndTaxStamp =
-      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+      this.calculationsService.calculateTotalDiscountAndTaxStamp(
         total,
         createQuotationDto.discount,
         createQuotationDto.discount_type,
@@ -165,12 +207,12 @@ export class QuotationService {
 
     // calculate the financial informations of the quotation
     const { subTotal, total } =
-      InvoicingCalculationsService.calculateLineItemsTotal(
+      this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
     const totalAfterGeneralDiscountAndTaxStamp =
-      InvoicingCalculationsService.calculateTotalDiscountAndTaxStamp(
+      this.calculationsService.calculateTotalDiscountAndTaxStamp(
         total,
         updateQuotationDto.discount,
         updateQuotationDto.discount_type,
