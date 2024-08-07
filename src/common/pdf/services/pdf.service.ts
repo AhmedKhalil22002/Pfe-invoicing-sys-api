@@ -19,7 +19,10 @@ export class PdfService {
     const template = await fs.readFile(templatePath, 'utf8');
 
     const html = ejs.render(template, data);
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      ignoreDefaultArgs: ['--disable-extensions'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     await page.setContent(html);
     await page.addStyleTag({
