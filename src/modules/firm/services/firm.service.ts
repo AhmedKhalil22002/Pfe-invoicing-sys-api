@@ -159,7 +159,6 @@ export class FirmService {
     const mainInterlocutorId = existingFirm.interlocutorsToFirm.find(
       (entry) => entry.isMain,
     ).interlocutorId;
-    console.log(updateFirmDto);
 
     this.interlocutorService.update(
       mainInterlocutorId,

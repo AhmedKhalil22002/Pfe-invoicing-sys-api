@@ -9,7 +9,6 @@ export class InvoicingCalculationsService {
   calculateSubTotalForLineItem(lineItem: LineItem) {
     const { quantity, unit_price, discount, discount_type } = lineItem;
     let subTotal = quantity * unit_price;
-    console.log('subTotal', subTotal);
     if (discount_type === DISCOUNT_TYPES.AMOUNT) {
       subTotal -= discount;
     } else if (discount_type === DISCOUNT_TYPES.PERCENTAGE) {

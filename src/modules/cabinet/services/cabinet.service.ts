@@ -74,7 +74,6 @@ export class CabinetService {
     id: number,
     updateCabinetDto: UpdateCabinetDto,
   ): Promise<CabinetEntity> {
-    console.log(updateCabinetDto);
     const cabinet = await this.findOneById(id);
 
     let address = await this.addressService.findOneById(cabinet.addressId);
