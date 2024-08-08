@@ -1,153 +1,123 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
+    <% 
+    function getBreaks(n) {
+        if (n > 1 && n < 5) return { break1: false, break2: false };
+        else if (n === 6) return { break1: false, break2: true };
+        else if (n === 7) return { break1: true, break2: true };
+        else if (n === 8 || n === 9) return { break1: true, break2: false };
+        else {
+            n = n - 9;
+            if (n % 14 < 11) return { break1: false, break2: false };
+            else if (n % 14 === 11) return { break1: false, break2: true };
+            else if (n % 14 === 12) return { break1: true, break2: true };
+            else return { break1: true, break2: false };
+        }
+    }
+    
+    const {break1 ,break2} = getBreaks(quotation.articleQuotationEntries.length);
+    %>
 <head>
-    <style>
-        body {
-            background: #ccc;
-            padding: 1cm;
-        }
+    <!-- require stylesheet : bootstrap.css -->
+    <link rel="stylesheet" href="bootstrap.css">
+    <!-- require stylesheet : template2.css -->
+    <link rel="stylesheet" href="template2.css">
 
-        .container {
-            min-height: 29.7cm;
-        }
-
-        .invoice {
-            background: #fff;
-            width: 100%;
-            margin-top: 1cm;
-        }
-
-        .logo {
-            width: 2.5cm;
-        }
-
-        .document-type {
-            text-align: right;
-            color: #444;
-        }
-
-        .conditions {
-            font-size: 0.7em;
-            color: #666;
-        }
-
-        .bottom-page {
-            font-size: 0.7em;
-        }
-
-        .caps {
-            text-transform: uppercase;
-        }
-
-        th,
-        td {
-            font-size: 0.65rem;
-        }
-
-        p,
-        span,
-        strong {
-            font-size: 0.8rem;
-        }
-    </style>
-    <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="invoice">
-            <div class="row">
-                <div class="col-7">
-                    <img src="" class="logo">
-                    <p>
-                        <strong>
-                            <%= quotation.cabinet.enterpriseName %>
-                        </strong><br>
-                        <%= quotation.cabinet.address.address %><br>
-                            <%= quotation.cabinet.address.zipcode %>
-                                <%= quotation.cabinet.address.region %>
-                                    <%= quotation.cabinet.address.country.name %>
-                    </p>
-                </div>
-                <div class="col-5 text-right">
-                    <h1 class="document-type display-4">
-                        <%= meta.type %> 2
-                    </h1>
-                    <span><strong>N° <%= quotation.id %></strong></span><br>
-                    <span><strong>Date :</strong>
-                        <%= quotation.date %>
-                    </span><br>
-                    <span><strong>Échéance :</strong>
-                        <%= quotation.dueDate %>
-                    </span><br>
-                    <span><strong>Objet :</strong>
-                        <%= quotation.object %>
-                    </span>
-                </div>
+    <header class="clearfix">
+        <div id="logo">
+            <img src="<%= logo %>">
+        </div>
+        <div id="company">
+            <h2 class="name">
+                <%= quotation.cabinet.enterpriseName %>
+            </h2>
+            <div>
+                <%= quotation.cabinet.address.address %>, <%= quotation.cabinet.address.zipcode %>
+                        <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.name %>
             </div>
-            <div class="row mt-5">
-                <strong>Envoyer à :</strong><br>
-                <h6>
-                    <strong class="caps mt-5">
-                        <%= quotation.firm.name %>
-                    </strong><br>
-                    <p>
-                        <%= quotation.firm.taxIdNumber %>
-                    </p>
-                </h6>
-                <div class="row">
-                    <div class="col-6">
-                        <span><strong>Adresse de Livraison</strong></span><br>
-                        <p>
-                            <%= quotation.firm.deliveryAddress.address %>
-                                <br><span>
-                                    <%= quotation.firm.deliveryAddress.zipcode %>
-                                        <%= quotation.firm.deliveryAddress.region %>
-                                            <%= quotation.firm.deliveryAddress.country.name %>
-                                </span>
-                        </p>
-                    </div>
-                    <div class="col-6">
-                        <span><strong>Adresse de Facturation</strong></span><br>
-                        <p>
-                            <%= quotation.firm.invoicingAddress.address %>
-                                <br> <span>
-                                    <%= quotation.firm.invoicingAddress.zipcode %>
-                                        <%= quotation.firm.invoicingAddress.region %>
-                                            <%= quotation.firm.invoicingAddress.country.name %>
-                                </span>
-                        </p>
-                    </div>
-                </div>
+            <div>
+                <%= quotation.cabinet.phone %>
             </div>
-            <br>
-            <br>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">Nom</th>
-                        <th style="width: 20%;">Description</th>
-                        <th style="width: 10%;">Quantité</th>
-                        <th style="width: 10%;">P.U</th>
-                        <th style="width: 10%;">Remise</th>
-                        <th style="width: 10%;">HT</th>
-                        <th style="width: 20%;">Taxes</th>
-                        <th style="width: 10%;">TTC</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div><a href="mailto:<%= quotation.cabinet.email %>">
+                    <%= quotation.cabinet.email %>
+                </a></div>
+        </div>
+        </div>
+    </header>
+    <main>
+        <div id="details" class="clearfix">
+            <div id="client">
+                <h2>
+                    <%= quotation.firm.name %>
+                </h2>
+                <p>
+                    <strong>Adresse de Livraison</strong><br>
+                    <%= quotation.firm.deliveryAddress.address %>
+                        <br><span>
+                            <%= quotation.firm.deliveryAddress.zipcode %>
+                                <%= quotation.firm.deliveryAddress.region %>
+                                    <%= quotation.firm.deliveryAddress.country.name %>
+                        </span>
+                </p>
+                <p>
+                    <strong>Adresse de Facturation</strong><br>
+                    <%= quotation.firm.invoicingAddress.address %>
+                        <br> <span>
+                            <%= quotation.firm.invoicingAddress.zipcode %>
+                                <%= quotation.firm.invoicingAddress.region %>
+                                    <%= quotation.firm.invoicingAddress.country.name %>
+                        </span>
+                </p>
+            </div>
+            <div id="invoice">
+                <h1 id="document-type">
+                    <%= meta.type %> N° <%= quotation.id %>
+                </h1>
+                <div><strong>Date: </strong>
+                    <%= quotation.date %>
+                </div>
+                <div><strong>Échéance:</strong>
+                    <%= quotation.dueDate %>
+                </div>
+                <div><strong>Objet :</strong>
+                    <%= quotation.object %>
+                </div>
+
+            </div>
+        </div>
+        <table class="table table-striped" border="0" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 10%;">Nom</th>
+                    <th style="width: 15%;">Description</th>
+                    <th style="width: 10%;">Quantité</th>
+                    <th style="width: 10%;">P.U</th>
+                    <th style="width: 10%;">Remise</th>
+                    <th style="width: 10%;">HT</th>
+                    <th style="width: 20%;">Taxes</th>
+                    <th style="width: 10%;">TTC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let counter=1; %>
                     <% quotation.articleQuotationEntries.forEach(function(entry) { %>
                         <tr>
+                            <td class="no"># <%= counter %>
+                            </td>
                             <td>
                                 <%= entry.article.title %>
                             </td>
                             <td>
                                 <%= entry.article.description %>
                             </td>
-                            <td>
+                            <td class="qty">
                                 <%= entry.quantity %>
                             </td>
-                            <td>
+                            <td class="unit">
                                 <%= entry.unit_price %>
                                     <%= quotation.currency.symbol %>
                             </td>
@@ -176,79 +146,77 @@
                                         <% }); %>
                                 </ul>
                             </td>
-                            <td>
+                            <td class="total">
                                 <%= entry.total %>
                                     <%= quotation.currency.symbol %>
                             </td>
                         </tr>
-                        <% }); %>
-
-
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-8">
-                </div>
-                <div class="col-4">
-                    <table class="table table-sm text-right">
+                        <% counter++; %>
+                            <% }); %>
+            </tbody>
+        </table>
+        <% if (break1) { %>
+            <div class="page-break"></div>
+            <% } %>
+                <table class="table table striped synth">
+                    <tr>
+                        <td></td>
+                        <td>Total HT</td>
+                        <td class="text-right">
+                            <%= quotation.subTotal %>
+                                <%= quotation.currency.symbol %>
+                        </td>
+                    </tr>
+                    <% if (quotation.taxStamp) { %>
                         <tr>
-                            <td><strong>Total HT</strong></td>
+                            <td></td>
+                            <td>Timbre Fiscale </td>
                             <td class="text-right">
-                                <%= quotation.subTotal %>
+                                <%= quotation.taxStamp %>
                                     <%= quotation.currency.symbol %>
                             </td>
                         </tr>
-                        <% if (quotation.taxStamp) { %>
+                        <% }%>
                             <tr>
-                                <td><strong>Timbre Fiscale </strong></td>
+                                <td></td>
+                                <td>Remise</td>
                                 <td class="text-right">
-                                    <%= quotation.taxStamp %>
+                                    <%= quotation.discount %>
+                                        <% if (quotation.discount_type=="PERCENTAGE" ) { %>
+                                            %
+                                            <% } else { %>
+                                                <%= quotation.currency.symbol %>
+                                                    <% } %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Montant à payer</td>
+                                <td class="text-right">
+                                    <%= quotation.total %>
                                         <%= quotation.currency.symbol %>
                                 </td>
                             </tr>
-                            <% }%>
-                                <tr>
-                                    <td><strong>Remise</strong></td>
-                                    <td class="text-right">
-                                        <%= quotation.discount %>
-                                            <% if (quotation.discount_type=="PERCENTAGE" ) { %>
-                                                %
-                                                <% } else { %>
-                                                    <%= quotation.currency.symbol %>
-                                                        <% } %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Total TTC</strong></td>
-                                    <td class="text-right">
-                                        <%= quotation.total %>
-                                            <%= quotation.currency.symbol %>
-                                    </td>
-                                </tr>
-                    </table>
-                </div>
-            </div>
+                </table>
+                <% if (break2) { %>
+                    <div class="page-break"></div>
+                    <% } %>
+                        <div class="row mt-5 ">
+                            <div id="notices" class="col-8">
+                                <h4>Conditions Générales:</h4>
+                                <div class="notice">
+                                    <%= quotation.generalConditions %>
+                                </div>
+                            </div>
 
-            <p> <strong>Conditions Générales</strong></p>
-            <p class="conditions">
-                <%= quotation.generalConditions %>
-            </p>
-
-            <br>
-            <br>
-            <br>
-            <br>
-
-            <p class="bottom-page text-right">
-                <%= quotation.cabinet.enterpriseName %> - TIN <%= quotation.cabinet.taxIdNumber %><br>
-                        <%= quotation.cabinet.address.address %>
-                            <%= quotation.cabinet.address.zipcode %>
-                                <%= quotation.cabinet.address.region %>
-                                    <%= quotation.cabinet.address.country.name %> - <%= quotation.cabinet.phone %> - <%=
-                                                quotation.cabinet.email %><br>
-            </p>
-        </div>
-    </div>
+                            <div class="col-4 border h-10 text-center" id="signature">
+                                <strong>Cachet & Signature</strong>
+                            </div>
+                        </div>
+    </main>
+    <footer>
+        Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
 </body>
 
 </html>

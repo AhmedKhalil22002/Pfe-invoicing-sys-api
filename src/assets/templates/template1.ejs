@@ -1,56 +1,12 @@
 <html>
 
 <head>
-    <style>
-        body {
-            background: #ccc;
-            padding: 1cm;
-        }
-
-        .container {
-            min-height: 29.7cm;
-        }
-
-        .invoice {
-            background: #fff;
-            width: 100%;
-            margin-top: 1cm;
-        }
-
-        .logo {
-            width: 2.5cm;
-        }
-
-        .document-type {
-            text-align: right;
-            color: #444;
-        }
-
-        .conditions {
-            font-size: 0.7em;
-            color: #666;
-        }
-
-        .bottom-page {
-            font-size: 0.7em;
-        }
-
-        .caps {
-            text-transform: uppercase;
-        }
-
-        th,
-        td {
-            font-size: 0.65rem;
-        }
-
-        p,
-        span,
-        strong {
-            font-size: 0.8rem;
-        }
-    </style>
-    <link rel="stylesheet" href="../css/bootstrap.css">
+    <!-- require stylesheet : bootstrap.css -->
+    <link rel="stylesheet" href="bootstrap.css">
+    <!-- require stylesheet : template1.css -->
+    <link rel="stylesheet" href="template1.css">
+    <!-- require stylesheet : print.css -->
+    <link rel="stylesheet" href="print.css" media="print">
 </head>
 
 <body>
@@ -71,7 +27,7 @@
                 </div>
                 <div class="col-5 text-right">
                     <h1 class="document-type display-4">
-                        <%= meta.type %> 1
+                        <%= meta.type %>
                     </h1>
                     <span><strong>N° <%= quotation.id %></strong></span><br>
                     <span><strong>Date :</strong>
@@ -85,7 +41,10 @@
                     </span>
                 </div>
             </div>
-            <div class="row mt-5">
+            <!-- Page Break After Header -->
+            <div class="page-break"></div>
+
+            <div class="row mt-5 no-page-break">
                 <strong>Envoyer à :</strong><br>
                 <h6>
                     <strong class="caps mt-5">
@@ -111,7 +70,7 @@
                         <span><strong>Adresse de Facturation</strong></span><br>
                         <p>
                             <%= quotation.firm.invoicingAddress.address %>
-                                <br> <span>
+                                <br><span>
                                     <%= quotation.firm.invoicingAddress.zipcode %>
                                         <%= quotation.firm.invoicingAddress.region %>
                                             <%= quotation.firm.invoicingAddress.country.name %>
@@ -120,9 +79,10 @@
                     </div>
                 </div>
             </div>
-            <br>
-            <br>
-            <table class="table table-striped">
+
+            <div class="page-break"></div>
+
+            <table class="table table-striped no-page-break">
                 <thead>
                     <tr>
                         <th style="width: 10%;">Nom</th>
@@ -165,7 +125,6 @@
                                 <%= entry.subTotal %>
                                     <%= quotation.currency.symbol %>
                             </td>
-
                             <td>
                                 <ul>
                                     <% entry.articleQuotationEntryTaxes.forEach(function(taxEntry) { %>
@@ -182,10 +141,11 @@
                             </td>
                         </tr>
                         <% }); %>
-
-
                 </tbody>
             </table>
+
+            <div class="page-break"></div>
+
             <div class="row">
                 <div class="col-8">
                 </div>
@@ -200,13 +160,13 @@
                         </tr>
                         <% if (quotation.taxStamp) { %>
                             <tr>
-                                <td><strong>Timbre Fiscale </strong></td>
+                                <td><strong>Timbre Fiscale</strong></td>
                                 <td class="text-right">
                                     <%= quotation.taxStamp %>
                                         <%= quotation.currency.symbol %>
                                 </td>
                             </tr>
-                            <% }%>
+                            <% } %>
                                 <tr>
                                     <td><strong>Remise</strong></td>
                                     <td class="text-right">
@@ -229,15 +189,14 @@
                 </div>
             </div>
 
+            <div class="page-break"></div>
+
             <p> <strong>Conditions Générales</strong></p>
-            <p class="conditions">
+            <p class="conditions no-page-break">
                 <%= quotation.generalConditions %>
             </p>
 
-            <br>
-            <br>
-            <br>
-            <br>
+            <div class="page-break"></div>
 
             <p class="bottom-page text-right">
                 <%= quotation.cabinet.enterpriseName %> - TIN <%= quotation.cabinet.taxIdNumber %><br>
@@ -249,6 +208,9 @@
             </p>
         </div>
     </div>
+    <footer>
+        Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
 </body>
 
 </html>
