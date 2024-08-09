@@ -18,7 +18,7 @@ body {
   font-size: 14px;
   font-family: SourceSansPro;
   position: relative;
-  min-height: 95vh;
+  min-height: 90vh;
   max-height: 99vh;
 }
 
@@ -91,7 +91,6 @@ table td {
   background: #eeeeee;
   border-bottom: 1px solid #ffffff;
 }
-
 table th {
   white-space: nowrap;
   font-weight: normal;

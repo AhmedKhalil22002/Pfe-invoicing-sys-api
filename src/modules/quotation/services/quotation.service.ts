@@ -41,6 +41,7 @@ export class QuotationService {
         'firm,',
         'cabinet,',
         'currency,',
+        'interlocutor,',
         'cabinet.address,',
         'firm.deliveryAddress,',
         'firm.invoicingAddress,',
@@ -130,7 +131,7 @@ export class QuotationService {
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
     );
-    //retrieve the currency informations
+    //retrieve the currency information
     await this.currencyService.findOneById(firm.currencyId);
 
     //save article entries

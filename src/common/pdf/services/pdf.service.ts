@@ -50,12 +50,17 @@ export class PdfService {
     return pdfBuffer;
   }
 
-  async getStylesheets(html: string) {
+  async getStylesheets(html: string): Promise<string[]> {
     const $ = cheerio.load(html);
     const stylesheets: string[] = [];
     $('link[rel="stylesheet"]').each((i, elem) => {
       const href = $(elem).attr('href');
-      if (href) {
+      if (
+        href &&
+        !href.startsWith('http') &&
+        !href.startsWith('https') &&
+        !href.startsWith('//')
+      ) {
         stylesheets.push(href);
       }
     });
