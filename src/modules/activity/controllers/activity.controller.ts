@@ -15,7 +15,7 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('activity')
 @Controller({
@@ -25,17 +25,19 @@ import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-op
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
 
+  @Get('/all')
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponseActivityDto[]> {
+    return await this.activityService.findAll(options);
+  }
+
   @Get('/list')
   @ApiPaginatedResponse(ResponseActivityDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponseActivityDto>,
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseActivityDto>> {
-    return await this.activityService.findAllPaginated(options);
-  }
-
-  @Get('/all')
-  async findAll(): Promise<ResponseActivityDto[]> {
-    return await this.activityService.findAll();
+    return await this.activityService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -44,8 +46,14 @@ export class ActivityController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<ResponseActivityDto> {
-    return await this.activityService.findOneById(id);
+  async findOneById(
+    @Param('id') id: number,
+    @Query() query: IQueryObject,
+  ): Promise<ResponseActivityDto> {
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.activityService.findOneByCondition(query);
   }
 
   @Post('')
