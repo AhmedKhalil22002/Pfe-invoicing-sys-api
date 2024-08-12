@@ -16,8 +16,9 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+
 @ApiTags('tax')
 @Controller({
   version: '1',
@@ -26,17 +27,17 @@ import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginate
 export class TaxController {
   constructor(private readonly taxService: TaxService) {}
 
+  @Get('/all')
+  async findAll(@Query() options: IQueryObject): Promise<ResponseTaxDto[]> {
+    return await this.taxService.findAll(options);
+  }
+
   @Get('/list')
   @ApiPaginatedResponse(ResponseTaxDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponseTaxDto>,
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseTaxDto>> {
-    return await this.taxService.findAllPaginated(options);
-  }
-
-  @Get('/all')
-  async findAll(): Promise<ResponseTaxDto[]> {
-    return await this.taxService.findAll();
+    return await this.taxService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -45,18 +46,20 @@ export class TaxController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<ResponseTaxDto> {
-    const tax = await this.taxService.findOneById(id);
-    if (!tax) {
-      throw new NotFoundException(`Tax with ID ${id} not found`);
-    }
-    return tax;
+  async findOneById(
+    @Param('id') id: number,
+    @Query() query: IQueryObject,
+  ): Promise<ResponseTaxDto> {
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.taxService.findOneByCondition(query);
   }
 
   @Post('')
   async save(@Body() createTaxDto: CreateTaxDto): Promise<ResponseTaxDto> {
     const activity = await this.taxService.findOneByCondition({
-      filters: { label: createTaxDto.label },
+      filter: `label||$eq||${createTaxDto.label}`,
     });
     if (activity) {
       throw new ConflictException(
