@@ -11,11 +11,11 @@ import {
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PaymentConditionService } from '../services/payment-condition.service';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.dto';
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('payment-condition')
 @Controller({
@@ -28,16 +28,18 @@ export class PaymentConditionController {
   ) {}
 
   @Get('/all')
-  async findAll(): Promise<ResponsePaymentConditionDto[]> {
-    return await this.paymentConditionService.findAll();
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponsePaymentConditionDto[]> {
+    return await this.paymentConditionService.findAll(options);
   }
 
   @Get('/list')
   @ApiPaginatedResponse(ResponsePaymentConditionDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponsePaymentConditionDto>,
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponsePaymentConditionDto>> {
-    return await this.paymentConditionService.findAllPaginated(options);
+    return await this.paymentConditionService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -48,8 +50,12 @@ export class PaymentConditionController {
   })
   async findOneById(
     @Param('id') id: number,
+    @Query() query: IQueryObject,
   ): Promise<ResponsePaymentConditionDto> {
-    return await this.paymentConditionService.findOneById(id);
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.paymentConditionService.findOneByCondition(query);
   }
 
   @Post('')

@@ -23,6 +23,7 @@ export class ActivityService {
     }
     return activity;
   }
+
   async findOneByCondition(
     query: IQueryObject,
   ): Promise<ResponseActivityDto | null> {

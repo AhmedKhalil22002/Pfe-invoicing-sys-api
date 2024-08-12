@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {
-  PagingQueryOptions,
-  QueryOptions,
-} from 'src/common/database/interfaces/database.query-options.interface';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
-import { Not } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Not } from 'typeorm';
 import { PaymentConditionEntity } from '../repositories/entity/payment-condition.entity';
 import { PaymentConditionRepository } from '../repositories/repository/payment-condition.repository';
 import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.dto';
@@ -15,6 +10,8 @@ import { PaymentConditionNotFoundException } from '../errors/payment-condition.n
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { PaymentConditionAlreadyExistsException } from '../errors/payment-condition.alreadyexists.error';
 import { PaymentConditionRestrictedDeleteException } from '../errors/payment-condition.restricted-delete.error';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 
 @Injectable()
 export class PaymentConditionService {
@@ -31,52 +28,60 @@ export class PaymentConditionService {
     return paymentCondition;
   }
 
-  async findAll(): Promise<PaymentConditionEntity[]> {
-    return this.paymentConditionRepository.findAll();
-  }
-
   async findOneByCondition(
-    options: QueryOptions<ResponsePaymentConditionDto>,
-  ): Promise<PaymentConditionEntity | null> {
-    const paymentCondition =
-      await this.paymentConditionRepository.findByCondition({
-        where: { ...options.filters, deletedAt: null },
-      });
+    query: IQueryObject,
+  ): Promise<ResponsePaymentConditionDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const paymentCondition = await this.paymentConditionRepository.findOne(
+      queryOptions as FindOneOptions<PaymentConditionEntity>,
+    );
     if (!paymentCondition) return null;
     return paymentCondition;
+  }
+
+  async findAll(query: IQueryObject): Promise<ResponsePaymentConditionDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.paymentConditionRepository.findAll(
+      queryOptions as FindManyOptions<PaymentConditionEntity>,
+    );
+  }
+
+  async findAllPaginated(
+    query: IQueryObject,
+  ): Promise<PageDto<ResponsePaymentConditionDto>> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.paymentConditionRepository.getTotalCount({
+      where: queryOptions.where,
+    });
+
+    const entities = await this.paymentConditionRepository.findAll(
+      queryOptions as FindManyOptions<PaymentConditionEntity>,
+    );
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
+      itemCount: count,
+    });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async findOneByLabel(
     label: string,
   ): Promise<ResponsePaymentConditionDto | null> {
-    const paymentCondition = await this.findOneByCondition({
-      filters: { label },
+    const activity = await this.paymentConditionRepository.findByCondition({
+      where: { label },
     });
-    if (!paymentCondition) {
+    if (!activity) {
       return null;
     }
-    return paymentCondition;
-  }
-
-  async findAllPaginated(
-    options?: PagingQueryOptions<ResponsePaymentConditionDto>,
-  ): Promise<PageDto<PaymentConditionEntity>> {
-    const { filters, strictMatching, sort, pageOptions } = options;
-    const where = buildWhereClause(filters, strictMatching);
-    const count = await this.paymentConditionRepository.getTotalCount({
-      where,
-    });
-    const entities = await this.paymentConditionRepository.findAll({
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-    });
-    const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
-      itemCount: count,
-    });
-    return new PageDto(entities, pageMetaDto);
+    return activity;
   }
 
   async save(
