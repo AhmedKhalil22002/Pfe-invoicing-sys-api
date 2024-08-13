@@ -8,11 +8,9 @@ import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ActivityNotFoundException } from '../errors/activity.notfound.error';
 import { ActivityAlreadyExistsException } from '../errors/activity.alreadyexists.error';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
-import {
-  PagingQueryOptions,
-  QueryOptions,
-} from 'src/common/database/interfaces/database.query-options.interface';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class ActivityService {
@@ -27,46 +25,57 @@ export class ActivityService {
   }
 
   async findOneByCondition(
-    options: QueryOptions<ResponseActivityDto>,
-  ): Promise<ActivityEntity | null> {
-    const activity = await this.activityRepository.findByCondition({
-      where: { ...options.filters, deletedAt: null },
-    });
+    query: IQueryObject,
+  ): Promise<ResponseActivityDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const activity = await this.activityRepository.findOne(
+      queryOptions as FindOneOptions<ActivityEntity>,
+    );
     if (!activity) return null;
     return activity;
   }
 
+  async findAll(query: IQueryObject): Promise<ResponseActivityDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.activityRepository.findAll(
+      queryOptions as FindManyOptions<ActivityEntity>,
+    );
+  }
+
+  async findAllPaginated(
+    query: IQueryObject,
+  ): Promise<PageDto<ResponseActivityDto>> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.activityRepository.getTotalCount({
+      where: queryOptions.where,
+    });
+
+    const entities = await this.activityRepository.findAll(
+      queryOptions as FindManyOptions<ActivityEntity>,
+    );
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
+      itemCount: count,
+    });
+
+    return new PageDto(entities, pageMetaDto);
+  }
+
   async findOneByLabel(label: string): Promise<ActivityEntity | null> {
-    const activity = await this.findOneByCondition({
-      filters: { label },
+    const activity = await this.activityRepository.findByCondition({
+      where: { label },
     });
     if (!activity) {
       return null;
     }
     return activity;
-  }
-
-  async findAll(): Promise<ActivityEntity[]> {
-    return await this.activityRepository.findAll();
-  }
-
-  async findAllPaginated(
-    options?: PagingQueryOptions<ResponseActivityDto>,
-  ): Promise<PageDto<ActivityEntity>> {
-    const { filters, strictMatching, sort, pageOptions } = options;
-    const where = buildWhereClause(filters, strictMatching);
-    const count = await this.activityRepository.getTotalCount({ where });
-    const entities = await this.activityRepository.findAll({
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-    });
-    const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
-      itemCount: count,
-    });
-    return new PageDto(entities, pageMetaDto);
   }
 
   async save(createActivityDto: CreateActivityDto): Promise<ActivityEntity> {

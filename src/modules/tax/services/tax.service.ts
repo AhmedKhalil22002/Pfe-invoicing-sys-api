@@ -5,14 +5,12 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
-import {
-  PagingQueryOptions,
-  QueryOptions,
-} from 'src/common/database/interfaces/database.query-options.interface';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { TaxNotFoundException } from '../errors/tax.notfound.error';
 import { TaxAlreadyExistsException } from '../errors/tax.alreadyexists.error';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class TaxService {
@@ -27,35 +25,43 @@ export class TaxService {
   }
 
   async findOneByCondition(
-    options: QueryOptions<ResponseTaxDto>,
-  ): Promise<TaxEntity> {
-    const tax = await this.taxRepository.findByCondition({
-      where: { ...options.filters, deletedAt: null },
-    });
+    query: IQueryObject,
+  ): Promise<ResponseTaxDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const tax = await this.taxRepository.findOne(
+      queryOptions as FindOneOptions<TaxEntity>,
+    );
     if (!tax) return null;
     return tax;
   }
 
-  async findAll(): Promise<TaxEntity[]> {
-    return await this.taxRepository.findAll();
+  async findAll(query: IQueryObject): Promise<ResponseTaxDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.taxRepository.findAll(
+      queryOptions as FindManyOptions<TaxEntity>,
+    );
   }
 
   async findAllPaginated(
-    options?: PagingQueryOptions<ResponseTaxDto>,
-  ): Promise<PageDto<TaxEntity>> {
-    const { filters, strictMatching, sort, pageOptions } = options;
-
-    const where = buildWhereClause(filters, strictMatching);
-    const count = await this.taxRepository.getTotalCount({ where });
-    const entities = await this.taxRepository.findAll({
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
+    query: IQueryObject,
+  ): Promise<PageDto<ResponseTaxDto>> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.taxRepository.getTotalCount({
+      where: queryOptions.where,
     });
 
+    const entities = await this.taxRepository.findAll(
+      queryOptions as FindManyOptions<TaxEntity>,
+    );
+
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
       itemCount: count,
     });
 
