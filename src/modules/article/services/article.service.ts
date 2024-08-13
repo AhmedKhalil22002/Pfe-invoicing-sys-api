@@ -90,6 +90,6 @@ export class ArticleService {
   }
 
   async getTotal(): Promise<number> {
-    return this.articleRepository.getTotalCount({});
+    return this.articleRepository.getTotalCount();
   }
 }

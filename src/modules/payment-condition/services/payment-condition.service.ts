@@ -144,7 +144,7 @@ export class PaymentConditionService {
   }
 
   async getTotal(): Promise<number> {
-    return this.paymentConditionRepository.getTotalCount({});
+    return this.paymentConditionRepository.getTotalCount();
   }
 
   async deleteAll() {

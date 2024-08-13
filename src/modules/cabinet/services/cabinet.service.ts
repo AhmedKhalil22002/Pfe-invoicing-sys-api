@@ -108,6 +108,6 @@ export class CabinetService {
   }
 
   async getTotal(): Promise<number> {
-    return this.cabinetRepository.getTotalCount({});
+    return this.cabinetRepository.getTotalCount();
   }
 }

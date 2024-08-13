@@ -123,6 +123,6 @@ export class ActivityService {
   }
 
   async getTotal(): Promise<number> {
-    return this.activityRepository.getTotalCount({});
+    return this.activityRepository.getTotalCount();
   }
 }

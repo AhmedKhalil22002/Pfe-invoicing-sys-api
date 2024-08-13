@@ -241,6 +241,6 @@ export class QuotationService {
   }
 
   async getTotal(): Promise<number> {
-    return this.quotationRepository.getTotalCount({});
+    return this.quotationRepository.getTotalCount();
   }
 }
