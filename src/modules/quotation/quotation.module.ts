@@ -10,11 +10,14 @@ import { TaxModule } from '../tax/tax.module';
 import { ArticleModule } from '../article/article.module';
 import { PdfModule } from 'src/common/pdf/pdf.module';
 import { CalculationsModule } from 'src/common/calculations/calculations.module';
+import { AppConfigModule } from 'src/common/app-config/app-config.module';
+import { QuotationSequenceService } from './services/quotation-sequence.service';
 
 @Module({
   controllers: [],
   providers: [
     QuotationService,
+    QuotationSequenceService,
     ArticleQuotationEntryService,
     ArticleQuotationEntryTaxService,
   ],
@@ -22,6 +25,7 @@ import { CalculationsModule } from 'src/common/calculations/calculations.module'
   imports: [
     QuotationRepositoryModule,
     ArticleModule,
+    AppConfigModule,
     CurrencyModule,
     FirmModule,
     InterlocutorModule,

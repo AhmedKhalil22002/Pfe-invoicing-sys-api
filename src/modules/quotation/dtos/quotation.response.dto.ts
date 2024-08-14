@@ -11,6 +11,12 @@ export class ResponseQuotationDto {
   @ApiProperty({ example: 1, type: Number })
   id: number;
 
+  @ApiProperty({
+    example: faker.finance.transactionDescription(),
+    type: String,
+  })
+  sequential: string;
+
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;
 

@@ -31,7 +31,7 @@ export class MigrationSequentialSeed {
     try {
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 0;');
       await this.appConfigService.deleteManyByName(
-        sequential.map((s) => s.name),
+        sequential.map((s) => s.key),
       );
       await this.connection.query('SET FOREIGN_KEY_CHECKS = 1;');
     } catch (err: any) {

@@ -6,7 +6,7 @@ export class ResponseAppConfigDto {
   id: number;
 
   @ApiProperty({ example: faker.database.engine(), type: String })
-  name: string;
+  key: string;
 
   @ApiProperty({ example: faker.database.engine(), type: Object })
   value: any;

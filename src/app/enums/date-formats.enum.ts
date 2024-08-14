@@ -1,5 +1,5 @@
-export enum DATE_FORMATS {
-  YYYY = 'YYYY',
-  YY_MM = 'YY-MM',
-  YYYY_MM = 'YYYY-MM',
+export enum DATE_FORMAT {
+  yyyy = 'yyyy',
+  yy_MM = 'yy-MM',
+  yyyy_MM = 'yyyy-MM',
 }

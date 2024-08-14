@@ -7,7 +7,7 @@ export class AppConfigEntity extends EntityHelper {
   id: number;
 
   @Column({ type: 'varchar', length: 255, unique: true })
-  name: string;
+  key: string;
 
   @Column({ type: 'json', nullable: true })
   value: any;

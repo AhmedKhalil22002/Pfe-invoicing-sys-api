@@ -6,12 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { AppConfigService } from '../services/app-config.service';
 import { ResponseAppConfigDto } from '../dtos/app-config.response';
 import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('app-config')
 @Controller({
@@ -22,8 +24,10 @@ export class AppConfigController {
   constructor(private readonly appConfigService: AppConfigService) {}
 
   @Get('/all')
-  async findAll(): Promise<ResponseAppConfigDto[]> {
-    return await this.appConfigService.findAll();
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponseAppConfigDto[]> {
+    return await this.appConfigService.findAll(options);
   }
 
   @Get('/:id')

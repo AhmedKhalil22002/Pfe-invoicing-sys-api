@@ -6,6 +6,9 @@ import { ResponseAppConfigDto } from '../dtos/app-config.response';
 import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { AppConfigAlreadyExistsException } from '../errors/app-config.alreadyexists.error';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { FindManyOptions } from 'typeorm';
 
 @Injectable()
 export class AppConfigService {
@@ -19,13 +22,17 @@ export class AppConfigService {
     return config;
   }
 
-  async findAll(): Promise<ResponseAppConfigDto[]> {
-    return this.appConfigRepository.findAll();
+  async findAll(query: IQueryObject): Promise<ResponseAppConfigDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.appConfigRepository.findAll(
+      queryOptions as FindManyOptions<AppConfigEntity>,
+    );
   }
 
-  async findOneByName(name: string): Promise<AppConfigEntity | null> {
+  async findOneByName(key: string): Promise<AppConfigEntity | null> {
     const config = await this.appConfigRepository.findByCondition({
-      where: { name },
+      where: { key },
     });
     if (!config) {
       return null;
@@ -34,7 +41,7 @@ export class AppConfigService {
   }
 
   async save(createAppConfigDto: CreateAppConfigDto): Promise<AppConfigEntity> {
-    const config = await this.findOneByName(createAppConfigDto.name);
+    const config = await this.findOneByName(createAppConfigDto.key);
     if (config) {
       throw new AppConfigAlreadyExistsException();
     }
@@ -45,7 +52,7 @@ export class AppConfigService {
     createAppConfigDtos: CreateAppConfigDto[],
   ): Promise<AppConfigEntity[]> {
     for (const config of createAppConfigDtos) {
-      const existingConfig = await this.findOneByName(config.name);
+      const existingConfig = await this.findOneByName(config.key);
       if (existingConfig) {
         throw new AppConfigAlreadyExistsException();
       }
