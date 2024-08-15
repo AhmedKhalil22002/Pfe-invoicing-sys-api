@@ -22,9 +22,8 @@ export class EventsGateway
   server: Server;
 
   constructor() {}
-  afterInit(server: any) {
-    console.log(server.path);
-  }
+  afterInit() {}
+
   async handleConnection(client: Socket, ...args: any[]) {
     console.log('connected with args : ', args);
     if (false) {

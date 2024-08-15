@@ -6,7 +6,7 @@ export const sequential = [
     value: {
       label: 'quotation',
       prefix: 'QUO',
-      dynamic_sequence: DATE_FORMAT.yyyy_MM,
+      dynamicSequence: DATE_FORMAT.yyyy_MM,
       next: 1,
     },
   },
@@ -15,7 +15,7 @@ export const sequential = [
     value: {
       label: 'invoice',
       prefix: 'INV',
-      dynamic_sequence: DATE_FORMAT.yyyy_MM,
+      dynamicSequence: DATE_FORMAT.yyyy_MM,
       next: 1,
     },
   },

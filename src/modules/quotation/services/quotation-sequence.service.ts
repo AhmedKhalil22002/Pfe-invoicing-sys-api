@@ -37,7 +37,7 @@ export class QuotationSequenceService {
     });
     return `${sequence.value.prefix}-${format(
       new Date(),
-      sequence.value.dynamic_sequence,
+      sequence.value.dynamicSequence,
     )}-${sequence.value.next}`;
   }
 }
