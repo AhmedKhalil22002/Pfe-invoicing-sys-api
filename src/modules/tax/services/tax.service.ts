@@ -100,6 +100,6 @@ export class TaxService {
   }
 
   async getTotal(): Promise<number> {
-    return this.taxRepository.getTotalCount({});
+    return this.taxRepository.getTotalCount();
   }
 }

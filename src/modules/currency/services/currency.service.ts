@@ -36,7 +36,7 @@ export class CurrencyService {
   }
 
   async getTotal(): Promise<number> {
-    return this.currencyRepository.getTotalCount({});
+    return this.currencyRepository.getTotalCount();
   }
 
   async deleteAll() {

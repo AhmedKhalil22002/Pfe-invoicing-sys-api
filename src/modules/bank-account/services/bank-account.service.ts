@@ -131,6 +131,6 @@ export class BankAccountService {
   }
 
   async getTotal(): Promise<number> {
-    return this.bankAccountRepository.getTotalCount({});
+    return this.bankAccountRepository.getTotalCount();
   }
 }

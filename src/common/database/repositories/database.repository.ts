@@ -81,7 +81,7 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     return await this.entity.preload(entityLike);
   }
 
-  public async getTotalCount(options: FindOneOptions<T>): Promise<number> {
+  public async getTotalCount(options: FindOneOptions<T> = {}): Promise<number> {
     return this.entity.count(options);
   }
 

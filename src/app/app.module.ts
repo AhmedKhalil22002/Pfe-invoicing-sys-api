@@ -30,8 +30,8 @@ import { TranslationModule } from 'src/common/translation/translation.module';
       useClass: TranslationConfigService,
       resolvers: [new HeaderResolver(['x-custom-lang'])],
     }),
-    TranslationModule,
     CommonModule,
+    TranslationModule,
     RouterModule.forRoot(),
   ],
 })

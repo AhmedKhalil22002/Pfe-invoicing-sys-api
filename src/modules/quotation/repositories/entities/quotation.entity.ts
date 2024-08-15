@@ -20,6 +20,9 @@ export class QuotationEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar', length: 25, unique: true })
+  sequential: string;
+
   @Column({ nullable: true })
   date: Date;
 

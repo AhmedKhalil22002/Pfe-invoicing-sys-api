@@ -232,6 +232,6 @@ export class FirmService {
   }
 
   async getTotal(): Promise<number> {
-    return this.firmRepository.getTotalCount({});
+    return this.firmRepository.getTotalCount();
   }
 }

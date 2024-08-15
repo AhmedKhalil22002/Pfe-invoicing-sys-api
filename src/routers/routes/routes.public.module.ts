@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { AppConfigModule } from 'src/common/app-config/app-config.module';
+import { AppConfigController } from 'src/common/app-config/controllers/app-config.controller';
 import { ActivityModule } from 'src/modules/activity/activity.module';
 import { ActivityController } from 'src/modules/activity/controllers/activity.controller';
 import { AddressModule } from 'src/modules/address/address.module';
@@ -31,6 +33,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     ActivityController,
     AddressController,
     ArticleController,
+    AppConfigController,
     BankAccountController,
     CabinetController,
     CountryController,
@@ -48,6 +51,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     ActivityModule,
     AddressModule,
     ArticleModule,
+    AppConfigModule,
     BankAccountModule,
     CabinetModule,
     CountryModule,

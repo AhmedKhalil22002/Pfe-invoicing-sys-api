@@ -54,7 +54,7 @@ export class CountryService {
   }
 
   async getTotal(): Promise<number> {
-    return this.countryRepository.getTotalCount({});
+    return this.countryRepository.getTotalCount();
   }
 
   async deleteAll() {

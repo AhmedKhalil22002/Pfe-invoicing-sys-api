@@ -21,11 +21,14 @@ import { MigrationQuotationSeed } from './seeders/test/migration.quotation.seed'
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
 import { FirmModule } from 'src/modules/firm/firm.module';
 import { MigrationFirmSeed } from './seeders/test/migration.firm.seed';
+import { AppConfigModule } from 'src/common/app-config/app-config.module';
+import { MigrationSequentialSeed } from './seeders/migration.sequential.seed';
 
 @Module({
   imports: [
     CommandModule,
     ActivityModule,
+    AppConfigModule,
     CabinetModule,
     CountryModule,
     CurrencyModule,
@@ -55,6 +58,7 @@ import { MigrationFirmSeed } from './seeders/test/migration.firm.seed';
     MigrationTaxSeed,
     MigrationQuotationSeed,
     MigrationSchemaCommand,
+    MigrationSequentialSeed,
   ],
   exports: [],
 })

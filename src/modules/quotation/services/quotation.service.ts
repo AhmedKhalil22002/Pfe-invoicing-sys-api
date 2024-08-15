@@ -18,6 +18,7 @@ import { ArticleQuotationEntryService } from './article-quotation-entry.service'
 import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
 import { PdfService } from 'src/common/pdf/services/pdf.service';
 import { format } from 'date-fns';
+import { QuotationSequenceService } from './quotation-sequence.service';
 
 @Injectable()
 export class QuotationService {
@@ -30,6 +31,7 @@ export class QuotationService {
     private readonly firmService: FirmService,
     private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
+    private readonly quotationSequenceService: QuotationSequenceService,
     //pdf service
     private readonly pdfService: PdfService,
   ) {}
@@ -157,8 +159,11 @@ export class QuotationService {
         createQuotationDto.taxStamp || 0,
       );
 
+    const sequential = await this.quotationSequenceService.getSequential();
+
     return this.quotationRepository.save({
       ...createQuotationDto,
+      sequential,
       currencyId: firm.currencyId,
       articleQuotationEntries: articleEntries,
       subTotal: subTotal,
@@ -169,7 +174,12 @@ export class QuotationService {
   async saveMany(
     createQuotationDtos: CreateQuotationDto[],
   ): Promise<QuotationEntity[]> {
-    return this.quotationRepository.saveMany(createQuotationDtos);
+    const quotations = [];
+    for (const createQuotationDto of createQuotationDtos) {
+      const quotation = await this.save(createQuotationDto);
+      quotations.push(quotation);
+    }
+    return quotations;
   }
 
   async update(
@@ -241,6 +251,6 @@ export class QuotationService {
   }
 
   async getTotal(): Promise<number> {
-    return this.quotationRepository.getTotalCount({});
+    return this.quotationRepository.getTotalCount();
   }
 }
