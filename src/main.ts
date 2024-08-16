@@ -1,4 +1,9 @@
-import { NestApplication, NestFactory, Reflector } from '@nestjs/core';
+import {
+  HttpAdapterHost,
+  NestApplication,
+  NestFactory,
+  Reflector,
+} from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import {
@@ -9,6 +14,8 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import { useContainer } from 'class-validator';
+import * as Sentry from '@sentry/node';
+import { SentryFilter } from './filters/sentry.filter';
 
 async function bootstrap() {
   const app: NestApplication = await NestFactory.create(AppModule);
@@ -29,6 +36,8 @@ async function bootstrap() {
   const docDesc: string = configService.get<string>('doc.description');
   const docVersion: string = configService.get<string>('doc.version');
   const docPrefix: string = configService.get<string>('doc.prefix');
+
+  const sentryDSN: string = configService.get<string>('sentry.dsn');
 
   const documentBuild = new DocumentBuilder()
     .setTitle(docName)
@@ -68,12 +77,22 @@ async function bootstrap() {
     customSiteTitle: docName,
   });
 
+  // Initialize Sentry by passing the DNS included in the .env
+  Sentry.init({
+    dsn: sentryDSN,
+  });
+
+  // Import the filter globally, capturing all exceptions on all routes
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new SentryFilter(httpAdapter));
+
   // logger.log(`==========================================================`);
   // logger.log(`Environment Variable`, 'NestApplication');
   // logger.log(JSON.parse(JSON.stringify(process.env)), 'NestApplication');
   // logger.log(`==========================================================`);
   await app.listen(port);
   logger.log(`==========================================================`);
+  logger.log(`Sentry is Enabled ${sentryDSN}`);
   logger.log(`Http Server running on ${await app.getUrl()}`, 'NestApplication');
   logger.log(`==========================================================`);
 }
