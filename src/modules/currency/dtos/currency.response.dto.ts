@@ -20,4 +20,7 @@ export class ResponseCurrencyDto extends ResponseDtoHelper {
     type: Number,
   })
   symbol?: string;
+
+  @ApiProperty({ example: 2, type: Number })
+  digitAfterComma: number;
 }

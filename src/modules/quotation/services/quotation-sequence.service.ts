@@ -15,7 +15,7 @@ export class QuotationSequenceService {
 
   async get(): Promise<AppConfigEntity> {
     const sequence =
-      await this.appConfigService.findOneByName('quotation-sequence');
+      await this.appConfigService.findOneByName('quotation_sequence');
     if (!sequence) {
       throw new QuotationSequentialNotFoundException();
     }
