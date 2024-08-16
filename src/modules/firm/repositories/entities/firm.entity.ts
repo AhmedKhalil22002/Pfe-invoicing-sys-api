@@ -29,7 +29,7 @@ export class FirmEntity extends EntityHelper {
   @Column({ type: 'boolean', default: true })
   isPerson: boolean;
 
-  @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   taxIdNumber: string;
 
   @Column({ type: 'varchar', length: 1024, nullable: false })

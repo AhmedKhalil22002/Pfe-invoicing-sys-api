@@ -95,12 +95,16 @@ export class FirmService {
       throw new FirmAlreadyExistsException();
     }
 
-    firm = await this.firmRepository.findByCondition({
-      where: { taxIdNumber: createFirmDto.taxIdNumber },
-    });
+    if (!createFirmDto.isPerson) {
+      firm = await this.firmRepository.findByCondition({
+        where: { taxIdNumber: createFirmDto.taxIdNumber },
+      });
 
-    if (firm) {
-      throw new TaxIdNumberDuplicateException();
+      if (firm) {
+        throw new TaxIdNumberDuplicateException();
+      }
+    } else {
+      delete createFirmDto.taxIdNumber;
     }
 
     const invoicingAddress = await this.addressService.save(
