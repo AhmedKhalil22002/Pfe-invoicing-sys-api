@@ -40,4 +40,8 @@ export class CreateCurrencyDto {
   @IsString()
   @MaxLength(10)
   symbol?: string;
+
+  @ApiProperty({ example: 2, type: Number })
+  @IsInt()
+  digitAfterComma: number;
 }

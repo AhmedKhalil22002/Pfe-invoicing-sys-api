@@ -12,6 +12,7 @@ import { PdfModule } from 'src/common/pdf/pdf.module';
 import { CalculationsModule } from 'src/common/calculations/calculations.module';
 import { AppConfigModule } from 'src/common/app-config/app-config.module';
 import { QuotationSequenceService } from './services/quotation-sequence.service';
+import { GatewaysModule } from 'src/common/gateways/gateways.module';
 
 @Module({
   controllers: [],
@@ -25,6 +26,7 @@ import { QuotationSequenceService } from './services/quotation-sequence.service'
   imports: [
     QuotationRepositoryModule,
     ArticleModule,
+    GatewaysModule,
     AppConfigModule,
     CurrencyModule,
     FirmModule,

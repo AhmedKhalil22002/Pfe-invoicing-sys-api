@@ -7,20 +7,19 @@ export class InvoicingCalculationsService {
   constructor() {}
   //calulate subtotal for a line item
   calculateSubTotalForLineItem(lineItem: LineItem) {
-    const { quantity, unit_price, discount, discount_type } = lineItem;
-    let subTotal = quantity * unit_price;
+    const { quantity, unit_price } = lineItem;
+    return quantity * unit_price;
+  }
+
+  //calculate total for a line item
+  calculateTotalForLineItem(lineItem: LineItem) {
+    const { taxes, discount, discount_type } = lineItem;
+    let subTotal = this.calculateSubTotalForLineItem(lineItem);
     if (discount_type === DISCOUNT_TYPES.AMOUNT) {
       subTotal -= discount;
     } else if (discount_type === DISCOUNT_TYPES.PERCENTAGE) {
       subTotal -= (subTotal * discount) / 100;
     }
-    return subTotal;
-  }
-
-  //calculate total for a line item
-  calculateTotalForLineItem(lineItem: LineItem) {
-    const { taxes } = lineItem;
-    const subTotal = this.calculateSubTotalForLineItem(lineItem);
     let taxAmount = 0;
     let specialTaxAmount = 0;
     for (const tax of taxes) {

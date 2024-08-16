@@ -14,4 +14,7 @@ export class CurrencyEntity extends EntityHelper {
 
   @Column({ type: 'varchar', length: 10, nullable: true })
   symbol: string;
+
+  @Column({ type: 'int', nullable: true })
+  digitAfterComma: number;
 }

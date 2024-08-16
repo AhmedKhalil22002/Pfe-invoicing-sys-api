@@ -20,14 +20,14 @@ export class CurrencyService {
     return this.currencyRepository.findAll();
   }
 
-  async save(createCountryDto: CreateCurrencyDto): Promise<CurrencyEntity> {
-    return this.currencyRepository.save(createCountryDto);
+  async save(createCurrencyDto: CreateCurrencyDto): Promise<CurrencyEntity> {
+    return this.currencyRepository.save(createCurrencyDto);
   }
 
   async saveMany(
-    createCountryDto: CreateCurrencyDto[],
+    createCurrencyDtos: CreateCurrencyDto[],
   ): Promise<CurrencyEntity[]> {
-    return this.currencyRepository.saveMany(createCountryDto);
+    return this.currencyRepository.saveMany(createCurrencyDtos);
   }
 
   async softDelete(id: number): Promise<CurrencyEntity> {

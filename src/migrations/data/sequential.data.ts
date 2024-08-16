@@ -2,7 +2,7 @@ import { DATE_FORMAT } from 'src/app/enums/date-formats.enum';
 
 export const sequential = [
   {
-    key: 'quotation-sequence',
+    key: 'quotation_sequence',
     value: {
       label: 'quotation',
       prefix: 'QUO',
@@ -11,7 +11,7 @@ export const sequential = [
     },
   },
   {
-    key: 'invoice-sequence',
+    key: 'invoice_sequence',
     value: {
       label: 'invoice',
       prefix: 'INV',

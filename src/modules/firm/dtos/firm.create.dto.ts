@@ -8,7 +8,6 @@ import {
   Length,
   MaxLength,
 } from 'class-validator';
-import { IsUSTaxIdentificationNumber } from 'src/common/helper/decorators/IsUSTaxIdentificationNumber.decorator';
 import { CreateAddressDto } from 'src/modules/address/dtos/address.create.dto';
 import { CreateInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.create.dto';
 
@@ -46,7 +45,6 @@ export class CreateFirmDto {
   isPerson?: boolean;
 
   @ApiProperty({ example: faker.finance.routingNumber(), type: String })
-  @IsUSTaxIdentificationNumber()
   taxIdNumber: string;
 
   @ApiProperty({ example: 1, type: Number })
