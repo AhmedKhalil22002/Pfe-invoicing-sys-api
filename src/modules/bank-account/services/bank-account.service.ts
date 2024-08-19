@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import {
-  PagingQueryOptions,
-  QueryOptions,
-} from 'src/common/database/interfaces/database.query-options.interface';
-import { buildWhereClause } from 'src/common/database/utils/buildWhereClause';
 import { BankAccountRepository } from '../repositories/repository/bank-account.repository';
 import { BankAccountEntity } from '../repositories/entities/bank-account.entity';
 import { BankAccountNotFoundException } from '../errors/bank-account.notfound.error';
@@ -13,21 +8,67 @@ import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { BankAccountAlreadyExistsException } from '../errors/bank-account.alreadyexists.error';
-import { getSelectAndRelations } from 'src/common/database/utils/selectAndRelations';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class BankAccountService {
   constructor(private readonly bankAccountRepository: BankAccountRepository) {}
 
   async findOneById(id: number): Promise<BankAccountEntity> {
-    const bankAccount = await this.bankAccountRepository.findOneById(id);
-    if (!bankAccount) {
+    const account = await this.bankAccountRepository.findOneById(id);
+    if (!account) {
       throw new BankAccountNotFoundException();
     }
-    return bankAccount;
+    return account;
   }
 
-  async isBankAccountExists(
+  async findOneByCondition(
+    query: IQueryObject,
+  ): Promise<ResponseBankAccountDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const account = await this.bankAccountRepository.findOne(
+      queryOptions as FindOneOptions<BankAccountEntity>,
+    );
+    if (!account) return null;
+    return account;
+  }
+
+  async findAll(query: IQueryObject): Promise<ResponseBankAccountDto[]> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    return await this.bankAccountRepository.findAll(
+      queryOptions as FindManyOptions<BankAccountEntity>,
+    );
+  }
+
+  async findAllPaginated(
+    query: IQueryObject,
+  ): Promise<PageDto<ResponseBankAccountDto>> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.bankAccountRepository.getTotalCount({
+      where: queryOptions.where,
+    });
+
+    const entities = await this.bankAccountRepository.findAll(
+      queryOptions as FindManyOptions<BankAccountEntity>,
+    );
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
+      itemCount: count,
+    });
+
+    return new PageDto(entities, pageMetaDto);
+  }
+
+  async doesBankAccountExist(
     bankAccount: Partial<BankAccountEntity>,
   ): Promise<boolean> {
     const existingBankAccount = await this.bankAccountRepository.findOne({
@@ -40,57 +81,10 @@ export class BankAccountService {
     return !!existingBankAccount;
   }
 
-  async findOneByCondition(
-    options: QueryOptions<ResponseBankAccountDto>,
-  ): Promise<BankAccountEntity | null> {
-    const bankAccount = await this.bankAccountRepository.findByCondition({
-      where: { ...options.filters, deletedAt: null },
-    });
-    if (!bankAccount) return null;
-    return bankAccount;
-  }
-
-  async findAll(): Promise<BankAccountEntity[]> {
-    return await this.bankAccountRepository.findAll();
-  }
-
-  async findAllPaginated(
-    options?: PagingQueryOptions<ResponseBankAccountDto>,
-  ): Promise<PageDto<BankAccountEntity>> {
-    const { filters, strictMatching, sort, pageOptions } = options || {};
-
-    const where = buildWhereClause<ResponseBankAccountDto>(
-      filters,
-      strictMatching,
-    );
-    const count = await this.bankAccountRepository.getTotalCount({ where });
-
-    const { select, relations } = getSelectAndRelations(
-      await this.bankAccountRepository.getRelatedEntityNames(),
-      options,
-    );
-
-    const entities = await this.bankAccountRepository.findAll({
-      select,
-      where,
-      skip: pageOptions?.page ? (pageOptions.page - 1) * pageOptions.take : 0,
-      take: pageOptions?.take || 10,
-      order: sort,
-      relations,
-    });
-
-    const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: pageOptions,
-      itemCount: count,
-    });
-
-    return new PageDto(entities, pageMetaDto);
-  }
-
   async save(
     createBankAccountDto: CreateBankAccountDto,
   ): Promise<BankAccountEntity> {
-    if (await this.isBankAccountExists(createBankAccountDto)) {
+    if (await this.doesBankAccountExist(createBankAccountDto)) {
       throw new BankAccountAlreadyExistsException();
     }
     return this.bankAccountRepository.save(createBankAccountDto);
@@ -100,7 +94,7 @@ export class BankAccountService {
     createBankAccountDto: CreateBankAccountDto[],
   ): Promise<BankAccountEntity[]> {
     for (const dto of createBankAccountDto) {
-      if (await this.isBankAccountExists(dto)) {
+      if (await this.doesBankAccountExist(dto)) {
         throw new BankAccountAlreadyExistsException();
       }
     }
@@ -111,7 +105,7 @@ export class BankAccountService {
     id: number,
     updateBankAccountDto: UpdateBankAccountDto,
   ): Promise<BankAccountEntity> {
-    if (!(await this.isBankAccountExists(updateBankAccountDto))) {
+    if (!(await this.doesBankAccountExist(updateBankAccountDto))) {
       throw new BankAccountNotFoundException();
     }
     const existingBankAccount = await this.findOneById(id);

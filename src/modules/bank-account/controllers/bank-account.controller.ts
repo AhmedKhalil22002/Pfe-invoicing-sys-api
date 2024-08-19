@@ -11,11 +11,11 @@ import {
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PagingQueryOptionsDto } from 'src/common/database/dtos/databse.query-options.dto';
 import { BankAccountService } from '../services/bank-account.service';
 import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 
 @ApiTags('bank-account')
 @Controller({
@@ -25,17 +25,19 @@ import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
+  @Get('/all')
+  async findAll(
+    @Query() options: IQueryObject,
+  ): Promise<ResponseBankAccountDto[]> {
+    return await this.bankAccountService.findAll(options);
+  }
+
   @Get('/list')
   @ApiPaginatedResponse(ResponseBankAccountDto)
   async findAllPaginated(
-    @Query() options: PagingQueryOptionsDto<ResponseBankAccountDto>,
+    @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseBankAccountDto>> {
-    return await this.bankAccountService.findAllPaginated(options);
-  }
-
-  @Get('/all')
-  async findAll(): Promise<ResponseBankAccountDto[]> {
-    return await this.bankAccountService.findAll();
+    return await this.bankAccountService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -44,8 +46,14 @@ export class BankAccountController {
     type: 'number',
     required: true,
   })
-  async findOneById(@Param('id') id: number): Promise<ResponseBankAccountDto> {
-    return await this.bankAccountService.findOneById(id);
+  async findOneById(
+    @Param('id') id: number,
+    @Query() query: IQueryObject,
+  ): Promise<ResponseBankAccountDto> {
+    query.filter
+      ? (query.filter += `,id||$eq||${id}`)
+      : (query.filter = `id||$eq||${id}`);
+    return await this.bankAccountService.findOneByCondition(query);
   }
 
   @Post('')
