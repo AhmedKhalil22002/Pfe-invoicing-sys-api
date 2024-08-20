@@ -11,7 +11,7 @@ import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto'
 import { PaymentConditionAlreadyExistsException } from '../errors/payment-condition.alreadyexists.error';
 import { PaymentConditionRestrictedDeleteException } from '../errors/payment-condition.restricted-delete.error';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class PaymentConditionService {

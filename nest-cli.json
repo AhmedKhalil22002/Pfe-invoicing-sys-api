@@ -13,6 +13,11 @@
         "include": "assets/**/*",
         "watchAssets": true,
         "outDir": "dist"
+      },
+      {
+        "include": "migrations/sql/*",
+        "watchAssets": true,
+        "outDir": "dist"
       }
     ],
     "webpack": false,

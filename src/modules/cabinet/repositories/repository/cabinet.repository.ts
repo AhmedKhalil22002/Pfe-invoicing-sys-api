@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { CabinetEntity } from '../entities/cabinet.entity';
-import { DatabaseAbstractRepostitory } from 'src/common/database/repositories/database.repository';
+import { DatabaseAbstractRepostitory } from 'src/common/database/utils/database.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 

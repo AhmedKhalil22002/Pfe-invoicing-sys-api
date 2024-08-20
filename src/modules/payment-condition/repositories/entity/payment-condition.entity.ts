@@ -1,7 +1,7 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('payment-condition')
+@Entity('payment_condition')
 export class PaymentConditionEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

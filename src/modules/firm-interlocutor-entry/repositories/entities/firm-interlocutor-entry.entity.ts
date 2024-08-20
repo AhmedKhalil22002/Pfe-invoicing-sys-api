@@ -9,7 +9,7 @@ import { EntityHelper } from 'src/common/database/interfaces/database.entity.int
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 
-@Entity('firm-interlocutor-entry')
+@Entity('firm_interlocutor_entry')
 export class FirmInterlocutorEntryEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

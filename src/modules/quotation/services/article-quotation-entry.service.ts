@@ -42,7 +42,7 @@ export class ArticleQuotationEntryService {
 
     const article =
       (await this.articleService.findOneByCondition({
-        filters: { title: createArticleQuotationEntryDto.article.title },
+        filter: `title||$eq||${createArticleQuotationEntryDto.article.title}`,
       })) ||
       (await this.articleService.save(createArticleQuotationEntryDto.article));
 
@@ -113,7 +113,7 @@ export class ArticleQuotationEntryService {
     let article: ResponseArticleDto;
     try {
       article = await this.articleService.findOneByCondition({
-        filters: { title: updateArticleQuotationEntryDto.article.title },
+        filter: `title||$eq||${updateArticleQuotationEntryDto.article.title}`,
       });
     } catch (error) {
       article = await this.articleService.save(
