@@ -1,7 +1,7 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('app-config')
+@Entity('app_config')
 export class AppConfigEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

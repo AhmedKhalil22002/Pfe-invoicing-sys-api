@@ -19,7 +19,7 @@ import { PaymentConditionService } from 'src/modules/payment-condition/services/
 import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class FirmService {

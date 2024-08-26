@@ -9,8 +9,8 @@ import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { BankAccountAlreadyExistsException } from '../errors/bank-account.alreadyexists.error';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class BankAccountService {

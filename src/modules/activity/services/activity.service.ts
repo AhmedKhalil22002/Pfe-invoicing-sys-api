@@ -9,8 +9,8 @@ import { ActivityNotFoundException } from '../errors/activity.notfound.error';
 import { ActivityAlreadyExistsException } from '../errors/activity.alreadyexists.error';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class ActivityService {

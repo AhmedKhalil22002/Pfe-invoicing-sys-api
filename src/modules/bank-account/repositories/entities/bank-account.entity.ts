@@ -8,7 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-@Entity('bank-account')
+@Entity('bank_account')
 export class BankAccountEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

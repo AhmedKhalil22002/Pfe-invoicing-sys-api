@@ -7,7 +7,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    const isMigration = this.isMigrationOrSeedCommand();
     return {
       type: this.configService.get('database.type', { infer: true }),
       url: this.configService.get('database.url', { infer: true }),
@@ -16,22 +15,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get('database.username', { infer: true }),
       password: this.configService.get('database.password', { infer: true }),
       database: this.configService.get('database.name', { infer: true }),
-      synchronize: isMigration
-        ? false
-        : this.configService.get('database.synchronize', { infer: true }),
+      synchronize: false,
       dropSchema: false,
       keepConnectionAlive: true,
       logging: false,
-      // this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
       entities: [
         __dirname + '/../../**/*.entity{.ts,.js}',
         __dirname + '/../../../modules/**/*.entity{.ts,.js}',
       ],
-      migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-      cli: {
-        entitiesDir: 'src',
-        subscribersDir: 'subscriber',
-      },
       extra: {
         ssl: this.configService.get('database.sslEnabled', { infer: true })
           ? {

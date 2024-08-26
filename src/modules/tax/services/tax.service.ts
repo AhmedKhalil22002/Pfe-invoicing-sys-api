@@ -9,8 +9,8 @@ import { ResponseTaxDto } from '../dtos/tax.response.dto';
 import { TaxNotFoundException } from '../errors/tax.notfound.error';
 import { TaxAlreadyExistsException } from '../errors/tax.alreadyexists.error';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class TaxService {

@@ -12,13 +12,13 @@ import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/services/databse-query-options.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
 import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
 import { PdfService } from 'src/common/pdf/services/pdf.service';
 import { format } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 
 @Injectable()
 export class QuotationService {
