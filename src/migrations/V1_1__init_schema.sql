@@ -287,3 +287,4 @@ CREATE TABLE
         CONSTRAINT `FK_articleQuotationEntry_article-quotation-entry-tax` FOREIGN KEY (`articleQuotationEntryId`) REFERENCES `article-quotation-entry` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_tax_article-quotation-entry-tax` FOREIGN KEY (`taxId`) REFERENCES `tax` (`id`) ON DELETE CASCADE
     );
+    
