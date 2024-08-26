@@ -92,7 +92,7 @@ async function bootstrap() {
 
   //Migrations ==========================================================
   const migrationService = app.get(MigrationService);
-  const migrationPath = join(__dirname, 'migrations/sql');
+  const migrationPath = join(__dirname, 'migrations');
   try {
     // Create migrations table if it does not exist
     await migrationService.createMigrationsTableIfNotExists();
