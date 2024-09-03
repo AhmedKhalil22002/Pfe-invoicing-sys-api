@@ -38,24 +38,29 @@
                 <h2>
                     <%= quotation.firm.name %>
                 </h2>
-                <p>
-                    <strong>Adresse de Livraison</strong><br>
-                    <%= quotation.firm.deliveryAddress.address %>
-                        <br><span>
-                            <%= quotation.firm.deliveryAddress.zipcode %>
-                                <%= quotation.firm.deliveryAddress.region %>
-                                    <%= quotation.firm.deliveryAddress.country.name %>
-                        </span>
-                </p>
-                <p>
-                    <strong>Adresse de Facturation</strong><br>
-                    <%= quotation.firm.invoicingAddress.address %>
-                        <br> <span>
-                            <%= quotation.firm.invoicingAddress.zipcode %>
-                                <%= quotation.firm.invoicingAddress.region %>
-                                    <%= quotation.firm.invoicingAddress.country.name %>
-                        </span>
-                </p>
+                <% if (meta.showDeliveryAddress ) { %>
+                    <p>
+                        <strong>Adresse de Livraison</strong><br>
+                        <%= quotation.firm.deliveryAddress.address %>
+                            <br><span>
+                                <%= quotation.firm.deliveryAddress.zipcode %>
+                                    <%= quotation.firm.deliveryAddress.region %>
+                                        <%= quotation.firm.deliveryAddress.country.name %>
+                            </span>
+                    </p>
+                    <% } %>
+                        <% if (meta.showInvoiceAddress ) { %>
+
+                            <p>
+                                <strong>Adresse de Facturation</strong><br>
+                                <%= quotation.firm.invoicingAddress.address %>
+                                    <br> <span>
+                                        <%= quotation.firm.invoicingAddress.zipcode %>
+                                            <%= quotation.firm.invoicingAddress.region %>
+                                                <%= quotation.firm.invoicingAddress.country.name %>
+                                    </span>
+                            </p>
+                            <% } %>
             </div>
             <div id="invoice">
                 <h1 id="document-type">
@@ -150,25 +155,25 @@
         </table>
         <table class="table table striped synth no-page-break">
             <tr>
-                <td></td>
                 <td>Total HT</td>
                 <td class="text-right">
                     <%= quotation.subTotal %>
                         <%= quotation.currency.symbol %>
                 </td>
             </tr>
-            <% if (quotation.taxStamp) { %>
+            <% quotation.taxSummaury.forEach(function(tax) { %>
                 <tr>
-                    <td></td>
-                    <td>Timbre Fiscale </td>
+                    <td>
+                        <%= tax.label %> (<%= tax.rate %> %)
+                    </td>
                     <td class="text-right">
-                        <%= quotation.taxStamp %>
+                        <%= tax.amount.toFixed(quotation.currency.digitAfterComma) %>
                             <%= quotation.currency.symbol %>
                     </td>
                 </tr>
-                <% }%>
+                <% }) %>
+
                     <tr>
-                        <td></td>
                         <td>Remise</td>
                         <td class="text-right">
                             <%= quotation.discount %>
@@ -179,14 +184,22 @@
                                             <% } %>
                         </td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td>Montant à payer</td>
-                        <td class="text-right">
-                            <%= quotation.total %>
-                                <%= quotation.currency.symbol %>
-                        </td>
-                    </tr>
+                    <% if (quotation.taxStamp) { %>
+                        <tr>
+                            <td>Timbre Fiscale</td>
+                            <td class="text-right">
+                                <%= quotation.taxStamp %>
+                                    <%= quotation.currency.symbol %>
+                            </td>
+                        </tr>
+                        <% }%>
+                            <tr>
+                                <td>Montant à payer</td>
+                                <td class="text-right">
+                                    <%= quotation.total %>
+                                        <%= quotation.currency.symbol %>
+                                </td>
+                            </tr>
         </table>
         <div class="row mt-5 no-page-break">
             <div id="notices" class="col-8">
@@ -202,7 +215,6 @@
         </div>
     </main>
     <footer>
-        Invoice was created on a computer and is valid without the signature and seal.
     </footer>
 </body>
 

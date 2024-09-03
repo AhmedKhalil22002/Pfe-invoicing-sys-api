@@ -7,6 +7,7 @@ import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocu
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseQuotationMetaDataDto } from './quotation-meta-data.response.dto';
+import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: 1, type: Number })
@@ -61,6 +62,9 @@ export class ResponseQuotationDto {
     type: Number,
   })
   total?: number;
+
+  @ApiProperty({ type: () => ResponseCurrencyDto })
+  currency?: ResponseCurrencyDto;
 
   @ApiProperty({
     example: '1',

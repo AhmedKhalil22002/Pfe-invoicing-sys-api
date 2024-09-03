@@ -36,6 +36,7 @@ import { QuotationMetaDataService } from './services/quotation-meta-data.service
     TaxModule,
     PdfModule,
     CalculationsModule,
+    TaxModule,
   ],
 })
 export class QuotationModule {}

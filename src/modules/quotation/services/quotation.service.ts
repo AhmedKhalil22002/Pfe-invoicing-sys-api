@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
+import { TaxService } from 'src/modules/tax/services/tax.service';
 
 @Injectable()
 export class QuotationService {
@@ -30,6 +31,7 @@ export class QuotationService {
     private readonly currencyService: CurrencyService,
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
+    private readonly taxService: TaxService,
     private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
     private readonly quotationSequenceService: QuotationSequenceService,
@@ -48,7 +50,7 @@ export class QuotationService {
         'currency,',
         'interlocutor,',
         'cabinet.address,',
-        'quotationMetaData',
+        'quotationMetaData,',
         'firm.deliveryAddress,',
         'firm.invoicingAddress,',
         'articleQuotationEntries,',
@@ -57,15 +59,20 @@ export class QuotationService {
         'articleQuotationEntries.articleQuotationEntryTaxes.tax',
       ),
     });
+    const digitsAferComma = quotation.currency.digitAfterComma;
     if (quotation) {
       const data = {
         meta: {
+          ...quotation.quotationMetaData,
           type: 'DEVIS',
         },
         quotation: {
           ...quotation,
           date: format(quotation.date, 'dd/MM/yyyy'),
           dueDate: format(quotation.dueDate, 'dd/MM/yyyy'),
+          taxSummaury: quotation.quotationMetaData.taxSummary,
+          subTotal: quotation.subTotal.toFixed(digitsAferComma),
+          total: quotation.total.toFixed(digitsAferComma),
         },
       };
 
@@ -170,7 +177,18 @@ export class QuotationService {
       );
 
     // calculate tax summary
-    const taxSummary = this.calculationsService.calculateTaxSummary(lineItems);
+    const taxSummary = await Promise.all(
+      this.calculationsService
+        .calculateTaxSummary(lineItems)
+        .map(async (item) => {
+          const tax = await this.taxService.findOneById(item.taxId);
+          return {
+            ...item,
+            label: tax.label,
+            rate: tax.rate * 100,
+          };
+        }),
+    );
 
     //gte the latest sequential
     const sequential = await this.quotationSequenceService.getSequential();
@@ -260,7 +278,18 @@ export class QuotationService {
       );
 
     // calculate tax summary
-    const taxSummary = this.calculationsService.calculateTaxSummary(lineItems);
+    const taxSummary = await Promise.all(
+      this.calculationsService
+        .calculateTaxSummary(lineItems)
+        .map(async (item) => {
+          const tax = await this.taxService.findOneById(item.taxId);
+          return {
+            ...item,
+            label: tax.label,
+            rate: tax.rate * 100,
+          };
+        }),
+    );
 
     //save quotation metadata
     const quotationMetaData = await this.quotationMetaDataService.save({
