@@ -1,7 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateAppConfigDto {
-  @ApiProperty({ example: faker.database.engine(), type: Object })
+  @ApiProperty({ example: {}, type: Object })
   value: any;
 }

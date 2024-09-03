@@ -10,6 +10,10 @@ import { ResponseArticleQuotationEntryDto } from '../dtos/article-quotation-entr
 import { ArticleQuotationEntryRepository } from '../repositories/repository/article-quotation-entry.repository';
 import { ArticleQuotationEntryTaxService } from './article-quotation-entry-tax.service';
 import { ArticleQuotationEntryNotFoundException } from '../errors/article-quotation-entry.notfound.error';
+import { LineItem } from 'src/common/calculations/interfaces/line-item.interface';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class ArticleQuotationEntryService {
@@ -21,12 +25,52 @@ export class ArticleQuotationEntryService {
     private readonly calculationsService: InvoicingCalculationsService,
   ) {}
 
+  async findOneByCondition(
+    query: IQueryObject,
+  ): Promise<ResponseArticleQuotationEntryDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const entry = await this.articleQuotationEntryRepository.findOne(
+      queryOptions as FindOneOptions<ArticleQuotationEntryEntity>,
+    );
+    if (!entry) return null;
+    return entry;
+  }
+
   async findOneById(id: number): Promise<ResponseArticleQuotationEntryDto> {
     const entry = await this.articleQuotationEntryRepository.findOneById(id);
     if (!entry) {
       throw new ArticleQuotationEntryNotFoundException();
     }
     return entry;
+  }
+
+  async findOneAsLineItem(id: number): Promise<LineItem> {
+    const entry = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'articleQuotationEntryTaxes',
+    });
+    const taxes = entry.articleQuotationEntryTaxes
+      ? await Promise.all(
+          entry.articleQuotationEntryTaxes.map((taxEntry) =>
+            this.taxService.findOneById(taxEntry.taxId),
+          ),
+        )
+      : [];
+    return {
+      quantity: entry.quantity,
+      unit_price: entry.unit_price,
+      discount: entry.discount,
+      discount_type: entry.discount_type,
+      taxes: taxes,
+    };
+  }
+
+  async findManyAsLineItem(ids: number[]): Promise<LineItem[]> {
+    const lineItems = await Promise.all(
+      ids.map((id) => this.findOneAsLineItem(id)),
+    );
+    return lineItems;
   }
 
   async save(
@@ -53,7 +97,6 @@ export class ArticleQuotationEntryService {
       discount_type: createArticleQuotationEntryDto.discount_type,
       taxes: taxes,
     };
-
     const entry = await this.articleQuotationEntryRepository.save({
       ...createArticleQuotationEntryDto,
       articleId: article.id,

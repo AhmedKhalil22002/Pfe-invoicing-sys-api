@@ -1,6 +1,7 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 
 export interface Tax {
+  id: number;
   rate: number;
   isSpecial: boolean;
 }

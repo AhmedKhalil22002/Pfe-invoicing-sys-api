@@ -10,10 +10,12 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
+import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -86,4 +88,8 @@ export class QuotationEntity extends EntityHelper {
 
   @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation)
   articleQuotationEntries: ArticleQuotationEntryEntity[];
+
+  @OneToOne(() => QuotationMetaDataEntity)
+  @JoinColumn()
+  quotationMetaData: QuotationMetaDataEntity;
 }

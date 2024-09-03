@@ -8,6 +8,6 @@ export class CreateAppConfigDto {
   @MinLength(3)
   key: string;
 
-  @ApiProperty({ example: faker.database.engine(), type: Object })
+  @ApiProperty({ example: {}, type: Object })
   value: any;
 }

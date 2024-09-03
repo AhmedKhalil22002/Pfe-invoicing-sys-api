@@ -19,6 +19,8 @@ import { PdfService } from 'src/common/pdf/services/pdf.service';
 import { format } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QuotationMetaDataService } from './quotation-meta-data.service';
+import { TaxService } from 'src/modules/tax/services/tax.service';
 
 @Injectable()
 export class QuotationService {
@@ -29,9 +31,12 @@ export class QuotationService {
     private readonly currencyService: CurrencyService,
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
     private readonly firmService: FirmService,
+    private readonly taxService: TaxService,
     private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
     private readonly quotationSequenceService: QuotationSequenceService,
+    private readonly quotationMetaDataService: QuotationMetaDataService,
+
     //pdf service
     private readonly pdfService: PdfService,
   ) {}
@@ -45,6 +50,7 @@ export class QuotationService {
         'currency,',
         'interlocutor,',
         'cabinet.address,',
+        'quotationMetaData,',
         'firm.deliveryAddress,',
         'firm.invoicingAddress,',
         'articleQuotationEntries,',
@@ -53,15 +59,20 @@ export class QuotationService {
         'articleQuotationEntries.articleQuotationEntryTaxes.tax',
       ),
     });
+    const digitsAferComma = quotation.currency.digitAfterComma;
     if (quotation) {
       const data = {
         meta: {
+          ...quotation.quotationMetaData,
           type: 'DEVIS',
         },
         quotation: {
           ...quotation,
           date: format(quotation.date, 'dd/MM/yyyy'),
           dueDate: format(quotation.dueDate, 'dd/MM/yyyy'),
+          taxSummaury: quotation.quotationMetaData.taxSummary,
+          subTotal: quotation.subTotal.toFixed(digitsAferComma),
+          total: quotation.total.toFixed(digitsAferComma),
         },
       };
 
@@ -86,7 +97,7 @@ export class QuotationService {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const quotation = await this.quotationRepository.findOne(
-      queryOptions as FindOneOptions<ResponseQuotationDto>,
+      queryOptions as FindOneOptions<QuotationEntity>,
     );
     if (!quotation) return null;
     return quotation;
@@ -159,13 +170,42 @@ export class QuotationService {
         createQuotationDto.taxStamp || 0,
       );
 
+    // format articleEntries for calculation
+    const lineItems =
+      await this.articleQuotationEntryService.findManyAsLineItem(
+        articleEntries.map((entry) => entry.id),
+      );
+
+    // calculate tax summary
+    const taxSummary = await Promise.all(
+      this.calculationsService
+        .calculateTaxSummary(lineItems)
+        .map(async (item) => {
+          const tax = await this.taxService.findOneById(item.taxId);
+          return {
+            ...item,
+            label: tax.label,
+            rate: tax.rate * 100,
+          };
+        }),
+    );
+
+    //gte the latest sequential
     const sequential = await this.quotationSequenceService.getSequential();
 
+    //save quotation metadata
+    const quotationMetaData = await this.quotationMetaDataService.save({
+      ...createQuotationDto.quotationMetaData,
+      taxSummary,
+    });
+
+    //save quotation
     return this.quotationRepository.save({
       ...createQuotationDto,
       sequential,
       currencyId: firm.currencyId,
       articleQuotationEntries: articleEntries,
+      quotationMetaData,
       subTotal: subTotal,
       total: totalAfterGeneralDiscountAndTaxStamp,
     });
@@ -189,7 +229,7 @@ export class QuotationService {
     //retrieve the quotation that have to be updated
     const existingQuotation = await this.findOneByCondition({
       filter: `id||$eq||${id}`,
-      join: 'articleQuotationEntries',
+      join: 'articleQuotationEntries,quotationMetaData',
     });
 
     //fetch the firm in order to check its existance and later get its currency
@@ -231,11 +271,39 @@ export class QuotationService {
         //applying discount is set true by default
       );
 
+    // format articleEntries for calculation
+    const lineItems =
+      await this.articleQuotationEntryService.findManyAsLineItem(
+        articleEntries.map((entry) => entry.id),
+      );
+
+    // calculate tax summary
+    const taxSummary = await Promise.all(
+      this.calculationsService
+        .calculateTaxSummary(lineItems)
+        .map(async (item) => {
+          const tax = await this.taxService.findOneById(item.taxId);
+          return {
+            ...item,
+            label: tax.label,
+            rate: tax.rate * 100,
+          };
+        }),
+    );
+
+    //save quotation metadata
+    const quotationMetaData = await this.quotationMetaDataService.save({
+      ...existingQuotation.quotationMetaData,
+      ...updateQuotationDto.quotationMetaData,
+      taxSummary,
+    });
+
     return this.quotationRepository.save({
       ...existingQuotation,
       ...updateQuotationDto,
       currencyId: firm.currencyId,
       articleQuotationEntries: articleEntries,
+      quotationMetaData,
       subTotal: subTotal,
       total: totalAfterGeneralDiscountAndTaxStamp,
     });

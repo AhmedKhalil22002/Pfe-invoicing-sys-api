@@ -13,11 +13,13 @@ import { CalculationsModule } from 'src/common/calculations/calculations.module'
 import { AppConfigModule } from 'src/common/app-config/app-config.module';
 import { QuotationSequenceService } from './services/quotation-sequence.service';
 import { GatewaysModule } from 'src/common/gateways/gateways.module';
+import { QuotationMetaDataService } from './services/quotation-meta-data.service';
 
 @Module({
   controllers: [],
   providers: [
     QuotationService,
+    QuotationMetaDataService,
     QuotationSequenceService,
     ArticleQuotationEntryService,
     ArticleQuotationEntryTaxService,
@@ -34,6 +36,7 @@ import { GatewaysModule } from 'src/common/gateways/gateways.module';
     TaxModule,
     PdfModule,
     CalculationsModule,
+    TaxModule,
   ],
 })
 export class QuotationModule {}

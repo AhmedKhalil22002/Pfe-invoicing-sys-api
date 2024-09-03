@@ -209,6 +209,19 @@ CREATE TABLE
     );
 
 CREATE TABLE
+    IF NOT EXISTS `quotation_meta_data` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `showInvoiceAddress` boolean DEFAULT TRUE,
+        `showDeliveryAddress` boolean DEFAULT TRUE,
+        `taxSummary` json DEFAULT NULL,
+        `createdAt` TIMESTAMP DEFAULT NOW (),
+        `updatedAt` TIMESTAMP DEFAULT NOW (),
+        `deletedAt` TIMESTAMP DEFAULT NULL,
+        `isDeletionRestricted` BOOLEAN DEFAULT FALSE,
+        PRIMARY KEY (`id`)
+    );
+
+CREATE TABLE
     IF NOT EXISTS `quotation` (
         `id` int NOT NULL AUTO_INCREMENT,
         `sequential` varchar(25) NOT NULL UNIQUE,
@@ -233,6 +246,7 @@ CREATE TABLE
         `firmId` int NOT NULL,
         `interlocutorId` int NOT NULL,
         `cabinetId` int NOT NULL,
+        `quotationMetaDataId` int NOT NULL,
         `notes` varchar(1024) DEFAULT NULL,
         `taxStamp` float DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT NOW (),
@@ -244,10 +258,12 @@ CREATE TABLE
         KEY `FK_firm_quotation` (`firmId`),
         KEY `FK_interlocutor_quotation` (`interlocutorId`),
         KEY `FK_cabinet_quotation` (`cabinetId`),
+        KEY `FK_quotation_meta_data_quotation` (`quotationMetaDataId`),
         CONSTRAINT `FK_currency_quotation` FOREIGN KEY (`currencyId`) REFERENCES `currency` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_firm_quotation` FOREIGN KEY (`firmId`) REFERENCES `firm` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_interlocutor_quotation` FOREIGN KEY (`interlocutorId`) REFERENCES `interlocutor` (`id`) ON DELETE CASCADE,
-        CONSTRAINT `FK_cabinet_quotation` FOREIGN KEY (`cabinetId`) REFERENCES `cabinet` (`id`) ON DELETE CASCADE
+        CONSTRAINT `FK_cabinet_quotation` FOREIGN KEY (`cabinetId`) REFERENCES `cabinet` (`id`) ON DELETE CASCADE,
+        CONSTRAINT `FK_quotation_meta_data_quotation` FOREIGN KEY (`quotationMetaDataId`) REFERENCES `quotation_meta_data` (`id`) ON DELETE CASCADE
     );
 
 CREATE TABLE
@@ -287,4 +303,3 @@ CREATE TABLE
         CONSTRAINT `FK_articleQuotationEntry_article-quotation-entry-tax` FOREIGN KEY (`articleQuotationEntryId`) REFERENCES `article-quotation-entry` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_tax_article-quotation-entry-tax` FOREIGN KEY (`taxId`) REFERENCES `tax` (`id`) ON DELETE CASCADE
     );
-    
