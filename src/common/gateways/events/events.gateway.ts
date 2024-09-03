@@ -25,14 +25,14 @@ export class EventsGateway
   afterInit() {}
 
   async handleConnection(client: Socket, ...args: any[]) {
-    console.log('connected with args : ', args);
+    // console.log('connected with args : ', args);
     if (false) {
       client.disconnect(true);
     }
   }
 
   handleDisconnect(client: Socket): any {
-    console.log(client);
+    // console.log(client);
     console.log('disconnected');
   }
 }

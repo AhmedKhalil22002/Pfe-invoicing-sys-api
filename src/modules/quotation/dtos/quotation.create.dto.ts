@@ -11,6 +11,7 @@ import {
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { CreateArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.create.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
+import { CreateQuotationMetaDataDto } from './quotation-meta-data.create.dto';
 
 export class CreateQuotationDto {
   @ApiProperty({ example: faker.date.anytime() })
@@ -101,4 +102,8 @@ export class CreateQuotationDto {
   @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
   @IsOptional()
   articleQuotationEntries?: CreateArticleQuotationEntryDto[];
+
+  @ApiProperty({ type: () => CreateQuotationMetaDataDto })
+  @IsOptional()
+  quotationMetaData?: CreateQuotationMetaDataDto;
 }

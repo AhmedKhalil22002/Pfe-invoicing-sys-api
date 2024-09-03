@@ -6,21 +6,26 @@ import { ArticleQuotationEntryRepository } from './repository/article-quotation-
 import { ArticleQuotationEntryEntity } from './entities/article-quotation-entry.entity';
 import { ArticleQuotationEntryTaxRepository } from './repository/article-quotation-entry-tax.repository';
 import { ArticleQuotationEntryTaxEntity } from './entities/article-quotation-entry-tax.entity';
+import { QuotationMetaDataRepository } from './repository/quotation-meta-data-repository';
+import { QuotationMetaDataEntity } from './entities/quotation-meta-data.entity';
 
 @Module({
   controllers: [],
   providers: [
     QuotationRepository,
+    QuotationMetaDataRepository,
     ArticleQuotationEntryRepository,
     ArticleQuotationEntryTaxRepository,
   ],
   exports: [
     QuotationRepository,
+    QuotationMetaDataRepository,
     ArticleQuotationEntryRepository,
     ArticleQuotationEntryTaxRepository,
   ],
   imports: [
     TypeOrmModule.forFeature([QuotationEntity]),
+    TypeOrmModule.forFeature([QuotationMetaDataEntity]),
     TypeOrmModule.forFeature([ArticleQuotationEntryEntity]),
     TypeOrmModule.forFeature([ArticleQuotationEntryTaxEntity]),
   ],

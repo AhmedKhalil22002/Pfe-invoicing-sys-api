@@ -6,6 +6,7 @@ import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
 import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
+import { ResponseQuotationMetaDataDto } from './quotation-meta-data.response.dto';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: 1, type: Number })
@@ -108,4 +109,7 @@ export class ResponseQuotationDto {
 
   @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
   articleQuotationEntries?: ResponseArticleQuotationEntryDto[];
+
+  @ApiProperty({ type: () => ResponseQuotationMetaDataDto })
+  quotationMetaData?: ResponseQuotationMetaDataDto;
 }

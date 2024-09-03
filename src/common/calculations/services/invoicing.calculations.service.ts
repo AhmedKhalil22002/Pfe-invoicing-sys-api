@@ -14,20 +14,70 @@ export class InvoicingCalculationsService {
   //calculate total for a line item
   calculateTotalForLineItem(lineItem: LineItem) {
     const { taxes, discount, discount_type } = lineItem;
-    let subTotal = this.calculateSubTotalForLineItem(lineItem);
-    if (discount_type === DISCOUNT_TYPES.AMOUNT) {
-      subTotal -= discount;
-    } else if (discount_type === DISCOUNT_TYPES.PERCENTAGE) {
-      subTotal -= (subTotal * discount) / 100;
-    }
-    let taxAmount = 0;
+
+    const subTotal = this.calculateSubTotalForLineItem(lineItem);
+
+    const discountAmount =
+      discount_type === DISCOUNT_TYPES.PERCENTAGE
+        ? (subTotal * discount) / 100
+        : discount;
+
+    const subTotalPlusDiscount = subTotal - discountAmount;
+
+    let regularTaxAmount = 0;
     let specialTaxAmount = 0;
+
     for (const tax of taxes) {
       if (tax.isSpecial) specialTaxAmount += tax.rate;
-      else taxAmount += tax.rate;
+      else regularTaxAmount += tax.rate;
     }
-    const total = subTotal * (1 + taxAmount) * (1 + specialTaxAmount);
+    // Apply regular taxes first
+    const totalAfterRegularTax = subTotalPlusDiscount * (1 + regularTaxAmount);
+
+    // Apply special taxes on top of the total after regular taxes
+    const total = totalAfterRegularTax * (1 + specialTaxAmount);
+
     return total;
+  }
+
+  calculateTaxSummary(lineItems: LineItem[]) {
+    const taxSummaryMap = new Map<number, { taxId: number; amount: number }>();
+
+    lineItems.forEach((item) => {
+      const taxes = item.taxes || [];
+      const subTotalPlusDiscount = this.calculateSubTotalForLineItem(item) || 0;
+
+      // Calculate regular taxes first
+      let regularTaxAmount = 0;
+      taxes.forEach((tax) => {
+        if (!tax?.isSpecial) {
+          const taxAmount = subTotalPlusDiscount * (tax?.rate || 0);
+          regularTaxAmount += taxAmount;
+          if (tax?.id && taxSummaryMap.has(tax.id)) {
+            taxSummaryMap.get(tax.id)!.amount += taxAmount;
+          } else {
+            tax?.id &&
+              taxSummaryMap.set(tax.id, { taxId: tax.id, amount: taxAmount });
+          }
+        }
+      });
+
+      // Apply special taxes on top of the amount including regular taxes
+      const totalAfterRegularTax = subTotalPlusDiscount + regularTaxAmount;
+      taxes.forEach((tax) => {
+        if (tax?.isSpecial) {
+          const taxAmount = totalAfterRegularTax * (tax?.rate || 0);
+          if (tax?.id && taxSummaryMap.has(tax.id)) {
+            taxSummaryMap.get(tax.id)!.amount += taxAmount;
+          } else {
+            tax?.id &&
+              taxSummaryMap.set(tax.id, { taxId: tax.id, amount: taxAmount });
+          }
+        }
+      });
+    });
+
+    return Array.from(taxSummaryMap.values());
   }
 
   //calculate subtotal and total for a line items after individual line items are calculated
