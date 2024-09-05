@@ -16,6 +16,7 @@ import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
+import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -92,4 +93,11 @@ export class QuotationEntity extends EntityHelper {
   @OneToOne(() => QuotationMetaDataEntity)
   @JoinColumn()
   quotationMetaData: QuotationMetaDataEntity;
+
+  @ManyToOne(() => BankAccountEntity)
+  @JoinColumn({ name: 'bankAccountId' })
+  bankAccount: BankAccountEntity;
+
+  @Column({ type: 'int' })
+  bankAccountId: number;
 }

@@ -97,6 +97,7 @@ export class ArticleQuotationEntryService {
       discount_type: createArticleQuotationEntryDto.discount_type,
       taxes: taxes,
     };
+
     const entry = await this.articleQuotationEntryRepository.save({
       ...createArticleQuotationEntryDto,
       articleId: article.id,

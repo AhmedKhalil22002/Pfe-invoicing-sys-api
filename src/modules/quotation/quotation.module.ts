@@ -14,6 +14,7 @@ import { AppConfigModule } from 'src/common/app-config/app-config.module';
 import { QuotationSequenceService } from './services/quotation-sequence.service';
 import { GatewaysModule } from 'src/common/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
+import { BankAccountModule } from '../bank-account/bank-account.module';
 
 @Module({
   controllers: [],
@@ -26,17 +27,20 @@ import { QuotationMetaDataService } from './services/quotation-meta-data.service
   ],
   exports: [QuotationService],
   imports: [
+    //repositories
     QuotationRepositoryModule,
+    //entities
     ArticleModule,
-    GatewaysModule,
     AppConfigModule,
+    BankAccountModule,
     CurrencyModule,
     FirmModule,
     InterlocutorModule,
     TaxModule,
+    //abstract modules
     PdfModule,
+    GatewaysModule,
     CalculationsModule,
-    TaxModule,
   ],
 })
 export class QuotationModule {}

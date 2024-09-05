@@ -21,23 +21,25 @@ import { QuotationSequenceService } from './quotation-sequence.service';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
 import { TaxService } from 'src/modules/tax/services/tax.service';
+import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
 
 @Injectable()
 export class QuotationService {
   constructor(
-    //quotation repository
+    //repositories
     private readonly quotationRepository: QuotationRepository,
-    //other entity services
-    private readonly currencyService: CurrencyService,
+    //entity services
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
+    private readonly bankAccountService: BankAccountService,
+    private readonly currencyService: CurrencyService,
     private readonly firmService: FirmService,
-    private readonly taxService: TaxService,
-    private readonly calculationsService: InvoicingCalculationsService,
     private readonly interlocutorService: InterlocutorService,
     private readonly quotationSequenceService: QuotationSequenceService,
     private readonly quotationMetaDataService: QuotationMetaDataService,
+    private readonly taxService: TaxService,
 
-    //pdf service
+    //abstract services
+    private readonly calculationsService: InvoicingCalculationsService,
     private readonly pdfService: PdfService,
   ) {}
 
@@ -48,6 +50,7 @@ export class QuotationService {
         'firm,',
         'cabinet,',
         'currency,',
+        'bankAccount,',
         'interlocutor,',
         'cabinet.address,',
         'quotationMetaData,',
@@ -140,6 +143,19 @@ export class QuotationService {
     const firm = await this.firmService.findOneByCondition({
       filter: `id||$eq||${createQuotationDto.firmId}`,
     });
+
+    //fetch bank account in order to check its existance
+    const bankAccount = createQuotationDto.bankAccountId
+      ? await this.bankAccountService.findOneById(
+          createQuotationDto.bankAccountId,
+        )
+      : null;
+
+    //fetch currency in order to check its existance
+    const currency = createQuotationDto.currencyId
+      ? await this.currencyService.findOneById(createQuotationDto.currencyId)
+      : null;
+
     //fetch the interlocutor in order to check its existance
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
@@ -202,8 +218,9 @@ export class QuotationService {
     //save quotation
     return this.quotationRepository.save({
       ...createQuotationDto,
+      bankAccountId: bankAccount ? bankAccount.id : null,
+      currencyId: currency ? currency.id : firm.currencyId,
       sequential,
-      currencyId: firm.currencyId,
       articleQuotationEntries: articleEntries,
       quotationMetaData,
       subTotal: subTotal,
@@ -231,6 +248,18 @@ export class QuotationService {
       filter: `id||$eq||${id}`,
       join: 'articleQuotationEntries,quotationMetaData',
     });
+
+    //fetch bank account in order to check its existance
+    const bankAccount = updateQuotationDto.bankAccountId
+      ? await this.bankAccountService.findOneById(
+          updateQuotationDto.bankAccountId,
+        )
+      : null;
+
+    //fetch currency in order to check its existance
+    const currency = updateQuotationDto.currencyId
+      ? await this.currencyService.findOneById(updateQuotationDto.currencyId)
+      : null;
 
     //fetch the firm in order to check its existance and later get its currency
     const firm = await this.firmService.findOneByCondition({
@@ -301,7 +330,8 @@ export class QuotationService {
     return this.quotationRepository.save({
       ...existingQuotation,
       ...updateQuotationDto,
-      currencyId: firm.currencyId,
+      bankAccountId: bankAccount ? bankAccount.id : null,
+      currencyId: currency ? currency.id : firm.currencyId,
       articleQuotationEntries: articleEntries,
       quotationMetaData,
       subTotal: subTotal,

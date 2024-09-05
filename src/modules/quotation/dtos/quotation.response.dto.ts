@@ -8,6 +8,7 @@ import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
 import { ResponseQuotationMetaDataDto } from './quotation-meta-data.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
+import { ResponseBankAccountDto } from 'src/modules/bank-account/dtos/bank-account.response.dto';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: 1, type: Number })
@@ -71,6 +72,15 @@ export class ResponseQuotationDto {
     type: Number,
   })
   currencyId?: number;
+
+  @ApiProperty({ type: () => ResponseBankAccountDto })
+  bankAccount?: ResponseBankAccountDto;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  bankAccountId?: number;
 
   @ApiProperty({
     example: '1',
