@@ -72,6 +72,14 @@ export class CreateQuotationDto {
   })
   @IsOptional()
   @IsInt()
+  bankAccountId?: number;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
   firmId?: number;
 
   @ApiProperty({
