@@ -16,6 +16,18 @@ export class QuotationMetaDataEntity extends EntityHelper {
   @Column({ type: 'boolean', default: true })
   showDeliveryAddress: boolean;
 
+  @Column({ type: 'boolean', default: true })
+  showArticleDescription: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  hasBankingDetails: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  hasGeneralConditions: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  hasTaxStamp: boolean;
+
   @Column({ type: 'json', nullable: true })
   taxSummary: any;
 }
