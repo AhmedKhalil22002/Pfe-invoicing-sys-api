@@ -24,7 +24,8 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS `country` (
         `id` int NOT NULL,
-        `name` varchar(255) DEFAULT NULL,
+        `alpha2code` varchar(2) DEFAULT NULL,
+        `alpha3code` varchar(3) DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT NOW (),
         `updatedAt` TIMESTAMP DEFAULT NOW (),
         `deletedAt` TIMESTAMP DEFAULT NULL,
