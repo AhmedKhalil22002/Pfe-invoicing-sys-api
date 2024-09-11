@@ -481,12 +481,12 @@ VALUES
     (153, 'ZMW', 'Zambian kwacha', 'ZK', 2);
 
 INSERT INTO
-    `payment_condition` (`label`, `description`)
+    `payment_condition` (`id`, `label`, `description`)
 VALUES
-    ('Payable à réception', ''),
-    ('Echéance à la fin du mois', ''),
-    ('Echéance à la fin du mois prochain', ''),
-    ('Personalisé', '');
+    (1, 'Payable à réception', ''),
+    (2, 'Echéance à la fin du mois', ''),
+    (3, 'Echéance à la fin du mois prochain', ''),
+    (4, 'Personalisé', '');
 
 INSERT INTO
     `app_config` (`key`, `value`)
