@@ -7,8 +7,11 @@ export class CountryEntity extends EntityHelper {
   @PrimaryColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  name: string;
+  @Column({ type: 'varchar', length: 2, nullable: true })
+  alpha2code: string;
+
+  @Column({ type: 'varchar', length: 3, nullable: true })
+  alpha3code: string;
 
   @OneToMany(() => AddressEntity, (address) => address.country)
   addresses: AddressEntity[];

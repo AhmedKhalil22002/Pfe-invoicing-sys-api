@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
@@ -8,8 +7,13 @@ export class CreateCountryDto {
   @IsInt()
   id: number;
 
-  @ApiProperty({ example: faker.location.country(), type: String })
+  @ApiProperty({ example: 'TN', type: String })
+  @IsString()
+  @MinLength(2)
+  alpha2code: string;
+
+  @ApiProperty({ example: 'TUN', type: String })
   @IsString()
   @MinLength(3)
-  name: string;
+  alpha3code: string;
 }
