@@ -1,7 +1,7 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('uploads')
+@Entity('upload')
 export class UploadEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

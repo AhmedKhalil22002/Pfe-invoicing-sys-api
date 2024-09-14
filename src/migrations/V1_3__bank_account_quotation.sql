@@ -3,7 +3,7 @@ ADD COLUMN `bankAccountId` int DEFAULT NULL,
 ADD CONSTRAINT `FK_bank_account_quotation` FOREIGN KEY (`bankAccountId`) REFERENCES `bank_account` (`id`) ON DELETE SET NULL;
 
 CREATE TABLE
-    IF NOT EXISTS uploads (
+    IF NOT EXISTS upload (
         `id` INT AUTO_INCREMENT,
         `slug` VARCHAR(255) NOT NULL,
         `filename` VARCHAR(255) NOT NULL,
