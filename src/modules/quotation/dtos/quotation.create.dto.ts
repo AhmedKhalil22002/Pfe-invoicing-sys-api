@@ -114,4 +114,8 @@ export class CreateQuotationDto {
   @ApiProperty({ type: () => CreateQuotationMetaDataDto })
   @IsOptional()
   quotationMetaData?: CreateQuotationMetaDataDto;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  uploadIds?: number[];
 }

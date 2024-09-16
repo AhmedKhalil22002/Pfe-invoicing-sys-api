@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from 'src/common/app-config/app-config.module';
 import { AppConfigController } from 'src/common/app-config/controllers/app-config.controller';
+import { StorageController } from 'src/common/storage/controllers/storage.controller';
+import { StorageModule } from 'src/common/storage/storage.module';
 import { ActivityModule } from 'src/modules/activity/activity.module';
 import { ActivityController } from 'src/modules/activity/controllers/activity.controller';
 import { AddressModule } from 'src/modules/address/address.module';
@@ -43,6 +45,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     InterlocutorController,
     PaymentConditionController,
     QuotationController,
+    StorageController,
     TaxController,
   ],
   providers: [],
@@ -61,6 +64,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     InterlocutorModule,
     PaymentConditionModule,
     QuotationModule,
+    StorageModule,
     TaxModule,
   ],
 })

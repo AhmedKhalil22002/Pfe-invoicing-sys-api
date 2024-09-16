@@ -126,4 +126,7 @@ export class ResponseQuotationDto {
 
   @ApiProperty({ type: () => ResponseQuotationMetaDataDto })
   quotationMetaData?: ResponseQuotationMetaDataDto;
+
+  @ApiProperty({ required: false })
+  uploadIds?: number[];
 }

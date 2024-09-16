@@ -32,7 +32,7 @@ export class EventsGateway
   }
 
   handleDisconnect(client: Socket): any {
-    console.log(client);
+    // console.log(client);
     console.log('disconnected');
   }
 }
