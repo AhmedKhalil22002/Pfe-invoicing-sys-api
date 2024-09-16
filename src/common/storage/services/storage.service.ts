@@ -13,12 +13,16 @@ import { StorageBadRequestException } from '../errors/storage.bad-request.error'
 import { UploadNotFoundException } from '../errors/upload.not-found.error';
 import { FileNotFoundException } from '../errors/file.not-found.error';
 import { ReadStream } from 'typeorm/platform/PlatformTools';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class StorageService {
-  constructor(private readonly uploadRepository: UploadRepository) {}
+  constructor(
+    private readonly uploadRepository: UploadRepository,
+    private configService: ConfigService,
+  ) {}
 
-  rootLocation = join(__dirname + '/../../../../upload');
+  rootLocation = this.configService.get('app.uploadPath', { infer: '/upload' });
 
   async findBySlug(slug: string): Promise<UploadEntity> {
     const upload = await this.uploadRepository.findOne({ where: { slug } });
@@ -83,7 +87,7 @@ export class StorageService {
 
   async loadResource(slug: string): Promise<ReadStream> {
     const upload = await this.findBySlug(slug);
-    const filePath = join(process.cwd(), '/upload', upload.relativePath);
+    const filePath = join(this.rootLocation, upload.relativePath);
 
     try {
       await fs.access(filePath, constants.F_OK);
