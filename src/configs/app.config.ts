@@ -15,5 +15,6 @@ export default registerAs(
     },
 
     jobEnable: process.env.JOB_ENABLE === 'true' ?? false,
+    uploadPath: process.env.UPLOAD_PATH ?? '/upload',
   }),
 );
