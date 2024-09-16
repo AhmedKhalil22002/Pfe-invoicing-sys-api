@@ -15,12 +15,15 @@ import { QuotationSequenceService } from './services/quotation-sequence.service'
 import { GatewaysModule } from 'src/common/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
 import { BankAccountModule } from '../bank-account/bank-account.module';
+import { StorageModule } from 'src/common/storage/storage.module';
+import { QuotationUploadService } from './services/quotation-upload.service';
 
 @Module({
   controllers: [],
   providers: [
     QuotationService,
     QuotationMetaDataService,
+    QuotationUploadService,
     QuotationSequenceService,
     ArticleQuotationEntryService,
     ArticleQuotationEntryTaxService,
@@ -41,6 +44,7 @@ import { BankAccountModule } from '../bank-account/bank-account.module';
     PdfModule,
     GatewaysModule,
     CalculationsModule,
+    StorageModule,
   ],
 })
 export class QuotationModule {}

@@ -22,6 +22,7 @@ import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
+import { QuotationUploadService } from './quotation-upload.service';
 
 @Injectable()
 export class QuotationService {
@@ -30,6 +31,7 @@ export class QuotationService {
     private readonly quotationRepository: QuotationRepository,
     //entity services
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
+    private readonly quotationUploadService: QuotationUploadService,
     private readonly bankAccountService: BankAccountService,
     private readonly currencyService: CurrencyService,
     private readonly firmService: FirmService,
@@ -216,7 +218,7 @@ export class QuotationService {
     });
 
     //save quotation
-    return this.quotationRepository.save({
+    const quotation = await this.quotationRepository.save({
       ...createQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
       currencyId: currency ? currency.id : firm.currencyId,
@@ -226,6 +228,12 @@ export class QuotationService {
       subTotal: subTotal,
       total: totalAfterGeneralDiscountAndTaxStamp,
     });
+
+    if (createQuotationDto.uploadIds)
+      for (const fileId of createQuotationDto.uploadIds)
+        this.quotationUploadService.save(quotation.id, fileId);
+
+    return quotation;
   }
 
   async saveMany(
@@ -327,7 +335,7 @@ export class QuotationService {
       taxSummary,
     });
 
-    return this.quotationRepository.save({
+    const quotation = await this.quotationRepository.save({
       ...existingQuotation,
       ...updateQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
@@ -337,6 +345,11 @@ export class QuotationService {
       subTotal: subTotal,
       total: totalAfterGeneralDiscountAndTaxStamp,
     });
+    if (updateQuotationDto.uploadIds)
+      for (const fileId of updateQuotationDto.uploadIds)
+        this.quotationUploadService.save(quotation.id, fileId);
+
+    return quotation;
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {

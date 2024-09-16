@@ -17,6 +17,7 @@ import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
+import { QuotationUploadEntity } from './quotation-file.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -100,4 +101,7 @@ export class QuotationEntity extends EntityHelper {
 
   @Column({ type: 'int' })
   bankAccountId: number;
+
+  @OneToMany(() => QuotationUploadEntity, (upload) => upload.quotation)
+  uploads: QuotationUploadEntity[];
 }
