@@ -12,10 +12,10 @@ export class CreateFirmInterlocutorEntryDto {
 
   @ApiProperty({ example: false, type: Boolean, required: false })
   @IsOptional()
-  @IsInt()
   isMain?: boolean;
 
   @ApiProperty({ example: 'CEO', type: String, required: false })
+  @IsOptional()
   @IsString()
   position?: string;
 }

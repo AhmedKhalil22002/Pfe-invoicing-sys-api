@@ -20,9 +20,34 @@ export class FirmInterlocutorEntryService {
     return entry;
   }
 
+  async findAllByInterlocutorId(
+    interlocutorId: number,
+  ): Promise<ResponseFirmInterlocutorEntryDto[]> {
+    const entry = await this.firmInterlocutorEntryRepository.findAll({
+      where: { interlocutorId },
+    });
+    return entry;
+  }
+
   async save(
     createFirmInterlocutorEntryDto: CreateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
+    const existing = await this.firmInterlocutorEntryRepository.findByCondition(
+      {
+        where: {
+          firmId: createFirmInterlocutorEntryDto.firmId,
+          interlocutorId: createFirmInterlocutorEntryDto.interlocutorId,
+        },
+      },
+    );
+
+    if (existing) {
+      return await this.firmInterlocutorEntryRepository.save({
+        ...existing,
+        ...createFirmInterlocutorEntryDto,
+      });
+    }
+
     return await this.firmInterlocutorEntryRepository.save(
       createFirmInterlocutorEntryDto,
     );
@@ -44,11 +69,24 @@ export class FirmInterlocutorEntryService {
     updateFirmInterlocutorEntryDto: UpdateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
     const existingEntry =
-      await this.firmInterlocutorEntryRepository.findOneById(id);
+      await this.firmInterlocutorEntryRepository.findByCondition({
+        where: { id },
+      });
     return await this.firmInterlocutorEntryRepository.save({
       ...existingEntry,
       ...updateFirmInterlocutorEntryDto,
     });
+  }
+
+  async updateMany(
+    updateFirmInterlocutorEntryDtos: UpdateFirmInterlocutorEntryDto[],
+  ): Promise<FirmInterlocutorEntryEntity[]> {
+    const savedEntries = [];
+    for (const dto of updateFirmInterlocutorEntryDtos) {
+      const savedEntry = await this.save(dto);
+      savedEntries.push(savedEntry);
+    }
+    return savedEntries;
   }
 
   async softDelete(id: number): Promise<FirmInterlocutorEntryEntity> {

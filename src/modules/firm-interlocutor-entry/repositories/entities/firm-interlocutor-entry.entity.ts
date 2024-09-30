@@ -21,7 +21,7 @@ export class FirmInterlocutorEntryEntity extends EntityHelper {
   @Column({ type: 'int' })
   firmId: number;
 
-  @ManyToOne(() => InterlocutorEntity, { eager: true })
+  @ManyToOne(() => InterlocutorEntity)
   @JoinColumn({ name: 'interlocutorId' })
   interlocutor: InterlocutorEntity;
 

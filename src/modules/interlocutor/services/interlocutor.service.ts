@@ -10,11 +10,13 @@ import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
 
 @Injectable()
 export class InterlocutorService {
   constructor(
     private readonly interlocutorRepository: InterlocutorRepository,
+    private readonly firmInterlocutorService: FirmInterlocutorEntryService,
   ) {}
 
   async findOneByCondition(
@@ -75,6 +77,15 @@ export class InterlocutorService {
     const interlocutor = await this.interlocutorRepository.save(
       createInterlocutorDto,
     );
+    if (createInterlocutorDto.firmsToInterlocutor)
+      this.firmInterlocutorService.saveMany(
+        createInterlocutorDto.firmsToInterlocutor.map((entry) => {
+          return {
+            ...entry,
+            interlocutorId: interlocutor.id,
+          };
+        }),
+      );
     return interlocutor;
   }
 
@@ -82,10 +93,42 @@ export class InterlocutorService {
     id: number,
     updateInterlocutorDto: UpdateInterlocutorDto,
   ): Promise<InterlocutorEntity> {
+    //find the exisiting interlocutor entity
     const existingInterlocutor = await this.findOneById(id);
+    //find all firm associations to the interlocutor
+    const existingAssociations =
+      await this.firmInterlocutorService.findAllByInterlocutorId(
+        existingInterlocutor.id,
+      );
+    //update the informations related to the interlocutor associated with the firm
+    const firmsToInterlocutor = updateInterlocutorDto.firmsToInterlocutor
+      ? await this.firmInterlocutorService.updateMany(
+          updateInterlocutorDto.firmsToInterlocutor.map((entry) => {
+            return {
+              ...entry,
+              interlocutorId: existingInterlocutor.id,
+            };
+          }),
+        )
+      : [];
+
+    //get the firm ids from the updated associations
+    const updatedFirmIds = firmsToInterlocutor.map((entry) => entry.firmId);
+
+    //get the firm ids from the existing associations to find the ones to delete
+    const associationsToDelete = existingAssociations.filter(
+      (association) => !updatedFirmIds.includes(association.firmId),
+    );
+
+    //delete the firm associations that are no longer associated with the interlocutor
+    await this.firmInterlocutorService.softDeleteMany(
+      associationsToDelete.map((association) => association.id),
+    );
+
     return this.interlocutorRepository.save({
       ...existingInterlocutor,
       ...updateInterlocutorDto,
+      firmsToInterlocutor,
     });
   }
 
