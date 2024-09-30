@@ -36,11 +36,22 @@ export class FirmInterlocutorEntryController {
 
   @Post('')
   async save(
-    @Body() createFirmInterlocutorEntryDto: CreateFirmInterlocutorEntryDto,
-  ): Promise<ResponseFirmInterlocutorEntryDto> {
-    return await this.firmInterlocutorEntryService.save(
-      createFirmInterlocutorEntryDto,
-    );
+    @Body()
+    createFirmInterlocutorEntryDtos:
+      | CreateFirmInterlocutorEntryDto
+      | CreateFirmInterlocutorEntryDto[],
+  ): Promise<
+    ResponseFirmInterlocutorEntryDto | ResponseFirmInterlocutorEntryDto[]
+  > {
+    if (Array.isArray(createFirmInterlocutorEntryDtos)) {
+      return await this.firmInterlocutorEntryService.saveMany(
+        createFirmInterlocutorEntryDtos,
+      );
+    } else {
+      return await this.firmInterlocutorEntryService.save(
+        createFirmInterlocutorEntryDtos,
+      );
+    }
   }
 
   @Put('/:id')
