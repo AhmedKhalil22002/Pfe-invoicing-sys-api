@@ -57,6 +57,10 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     return this.entity.create(data);
   }
 
+  public async updateMany(data: DeepPartial<T>[]): Promise<T[]> {
+    return await this.entity.save(data);
+  }
+
   public async findByCondition(filterCondition: FindOneOptions<T>): Promise<T> {
     return await this.entity.findOne(filterCondition);
   }

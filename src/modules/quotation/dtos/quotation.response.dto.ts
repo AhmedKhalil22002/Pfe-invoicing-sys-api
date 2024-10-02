@@ -37,6 +37,10 @@ export class ResponseQuotationDto {
     type: String,
   })
   generalConditions?: string;
+
+  @ApiProperty({ example: true, type: Boolean })
+  defaultCondition: boolean;
+
   @ApiProperty({
     example: QUOTATION_STATUS.Draft,
     enum: QUOTATION_STATUS,

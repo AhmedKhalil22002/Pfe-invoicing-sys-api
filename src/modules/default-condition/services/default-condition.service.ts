@@ -9,11 +9,15 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 import { CreateDefaultConditionDto } from '../dtos/default-condition.create.dto';
 import { UpdateDefaultConditionDto } from '../dtos/default-condition.update.dto';
+import { QuotationService } from 'src/modules/quotation/services/quotation.service';
+import { ACTIVITY_TYPE } from 'src/app/enums/activity-types.enum';
+import { DOCUMENT_TYPE } from 'src/app/enums/document-types.enum';
 
 @Injectable()
 export class DefaultConditionService {
   constructor(
     private readonly defaultConditionRepository: DefaultConditionRepository,
+    private readonly quotationService: QuotationService,
   ) {}
 
   async findOneById(id: number): Promise<DefaultConditionEntity> {
@@ -75,11 +79,45 @@ export class DefaultConditionService {
     return this.defaultConditionRepository.save(createDefaultConditionDto);
   }
 
+  async propagate(
+    formerDefaultCondition: DefaultConditionEntity,
+    newDefaultCondition: UpdateDefaultConditionDto,
+  ) {
+    if (
+      newDefaultCondition.activity_type === ACTIVITY_TYPE.SELLING &&
+      newDefaultCondition.document_type === DOCUMENT_TYPE.QUOTATION
+    ) {
+      const quotations = await this.quotationService.findAll();
+
+      const quotationsToUpdate = quotations
+        .map((quotation) => {
+          if (
+            quotation.defaultCondition &&
+            !newDefaultCondition.propagate_changes
+          ) {
+            return {
+              id: quotation.id,
+              generalConditions: formerDefaultCondition.value,
+              defaultCondition: false,
+            };
+          }
+          return undefined;
+        })
+        .filter((quotation) => quotation !== undefined);
+
+      if (quotationsToUpdate.length > 0) {
+        await this.quotationService.updateMany(quotationsToUpdate);
+      }
+    }
+  }
+
   async update(
     id: number,
     updateDefaultConditionDto: UpdateDefaultConditionDto,
   ): Promise<DefaultConditionEntity> {
     const defaultCondition = await this.findOneById(id);
+    if (defaultCondition.value != updateDefaultConditionDto.value)
+      await this.propagate(defaultCondition, updateDefaultConditionDto);
     return this.defaultConditionRepository.save({
       ...defaultCondition,
       ...updateDefaultConditionDto,
@@ -92,10 +130,13 @@ export class DefaultConditionService {
     const updatedConditions = await Promise.all(
       updateDefaultConditionDtos.map(async (dto) => {
         const defaultCondition = await this.findOneById(dto.id);
-        return this.defaultConditionRepository.save({
+        if (defaultCondition.value != dto.value)
+          await this.propagate(defaultCondition, dto);
+        const newCondition = await this.defaultConditionRepository.save({
           ...defaultCondition,
           ...dto,
         });
+        return newCondition;
       }),
     );
     return updatedConditions;

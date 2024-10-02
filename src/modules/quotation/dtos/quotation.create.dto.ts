@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEnum,
   IsInt,
   IsNumber,
@@ -38,6 +39,11 @@ export class CreateQuotationDto {
   @MaxLength(1024)
   generalConditions?: string;
 
+  @ApiProperty({ example: true, type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  defaultCondition?: boolean;
+
   @ApiProperty({
     example: QUOTATION_STATUS.Draft,
     enum: QUOTATION_STATUS,
@@ -56,7 +62,7 @@ export class CreateQuotationDto {
   @ApiProperty({ example: DISCOUNT_TYPES.PERCENTAGE, enum: DISCOUNT_TYPES })
   @IsOptional()
   @IsEnum(DISCOUNT_TYPES)
-  discount_type: DISCOUNT_TYPES;
+  discount_type?: DISCOUNT_TYPES;
 
   @ApiProperty({
     example: '1',

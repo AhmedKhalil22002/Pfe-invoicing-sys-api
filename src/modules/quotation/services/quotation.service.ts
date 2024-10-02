@@ -108,7 +108,7 @@ export class QuotationService {
     return quotation;
   }
 
-  async findAll(query: IQueryObject): Promise<ResponseQuotationDto[]> {
+  async findAll(query: IQueryObject = {}): Promise<ResponseQuotationDto[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.quotationRepository.findAll(
@@ -350,6 +350,10 @@ export class QuotationService {
         this.quotationUploadService.save(quotation.id, fileId);
 
     return quotation;
+  }
+
+  async updateMany(updateQuotationDtos: UpdateQuotationDto[]) {
+    await this.quotationRepository.updateMany(updateQuotationDtos);
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {
