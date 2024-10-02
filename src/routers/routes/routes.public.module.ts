@@ -17,6 +17,8 @@ import { CountryController } from 'src/modules/country/controllers/country.contr
 import { CountryModule } from 'src/modules/country/country.module';
 import { CurrencyController } from 'src/modules/currency/controllers/currency.controller';
 import { CurrencyModule } from 'src/modules/currency/currency.module';
+import { DefaultConditionController } from 'src/modules/default-condition/controllers/default-condition.controller';
+import { DefaultConditionModule } from 'src/modules/default-condition/default-condition.module';
 import { FirmInterlocutorEntryController } from 'src/modules/firm-interlocutor-entry/controllers/firm-interlocutor-entry.controller.ts';
 import { FirmInterlocutorEntryModule } from 'src/modules/firm-interlocutor-entry/firm-interlocutor-entry.module';
 import { FirmController } from 'src/modules/firm/controllers/firm.controller';
@@ -40,6 +42,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CabinetController,
     CountryController,
     CurrencyController,
+    DefaultConditionController,
     FirmController,
     FirmInterlocutorEntryController,
     InterlocutorController,
@@ -59,6 +62,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     CabinetModule,
     CountryModule,
     CurrencyModule,
+    DefaultConditionModule,
     FirmModule,
     FirmInterlocutorEntryModule,
     InterlocutorModule,
