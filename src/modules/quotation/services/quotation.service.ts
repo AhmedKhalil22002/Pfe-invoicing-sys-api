@@ -23,6 +23,7 @@ import { QuotationMetaDataService } from './quotation-meta-data.service';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
 import { QuotationUploadService } from './quotation-upload.service';
+import { ResponseQuotationUploadDto } from '../dtos/quotation-upload.response.dto';
 
 @Injectable()
 export class QuotationService {
@@ -88,7 +89,7 @@ export class QuotationService {
     }
   }
 
-  async findOneById(id: number): Promise<ResponseQuotationDto> {
+  async findOneById(id: number): Promise<QuotationEntity> {
     const quotation = await this.quotationRepository.findOneById(id);
     if (!quotation) {
       throw new QuotationNotFoundException();
@@ -108,7 +109,7 @@ export class QuotationService {
     return quotation;
   }
 
-  async findAll(query: IQueryObject = {}): Promise<ResponseQuotationDto[]> {
+  async findAll(query: IQueryObject = {}): Promise<QuotationEntity[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.quotationRepository.findAll(
@@ -162,6 +163,7 @@ export class QuotationService {
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
     );
+
     //retrieve the currency information
     await this.currencyService.findOneById(firm.currencyId);
 
@@ -208,7 +210,7 @@ export class QuotationService {
         }),
     );
 
-    //gte the latest sequential
+    //get the latest sequential
     const sequential = await this.quotationSequenceService.getSequential();
 
     //save quotation metadata
@@ -229,9 +231,10 @@ export class QuotationService {
       total: totalAfterGeneralDiscountAndTaxStamp,
     });
 
-    if (createQuotationDto.uploadIds)
-      for (const fileId of createQuotationDto.uploadIds)
-        this.quotationUploadService.save(quotation.id, fileId);
+    //handle file uploads
+    if (createQuotationDto.uploads)
+      for (const u of createQuotationDto.uploads)
+        this.quotationUploadService.save(quotation.id, u.uploadId);
 
     return quotation;
   }
@@ -247,15 +250,52 @@ export class QuotationService {
     return quotations;
   }
 
+  async updateQuotationUploads(
+    id: number,
+    updateQuotationDto: UpdateQuotationDto,
+    existingUploads: ResponseQuotationUploadDto[],
+  ) {
+    const newUploads = [];
+    const keptUploads = [];
+    const eliminatedUploads = [];
+
+    if (updateQuotationDto.uploads) {
+      for (const upload of existingUploads) {
+        const exists = updateQuotationDto.uploads.some(
+          (u) => u.id === upload.id,
+        );
+        if (!exists)
+          eliminatedUploads.push(
+            await this.quotationUploadService.softDelete(upload.id),
+          );
+        else keptUploads.push(upload);
+      }
+      for (const upload of updateQuotationDto.uploads) {
+        if (!upload.id)
+          newUploads.push(
+            await this.quotationUploadService.save(id, upload.uploadId),
+          );
+      }
+    }
+    return {
+      keptUploads,
+      newUploads,
+      eliminatedUploads,
+    };
+  }
+
   async update(
     id: number,
     updateQuotationDto: UpdateQuotationDto,
   ): Promise<QuotationEntity> {
     //retrieve the quotation that have to be updated
-    const existingQuotation = await this.findOneByCondition({
-      filter: `id||$eq||${id}`,
-      join: 'articleQuotationEntries,quotationMetaData',
-    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { uploads: existingUploads, ...existingQuotation } =
+      await this.findOneByCondition({
+        filter: `id||$eq||${id}`,
+        join: 'articleQuotationEntries,quotationMetaData,uploads',
+      });
 
     //fetch bank account in order to check its existance
     const bankAccount = updateQuotationDto.bankAccountId
@@ -335,7 +375,14 @@ export class QuotationService {
       taxSummary,
     });
 
-    const quotation = await this.quotationRepository.save({
+    const { keptUploads, newUploads, eliminatedUploads } =
+      await this.updateQuotationUploads(
+        existingQuotation.id,
+        updateQuotationDto,
+        existingUploads,
+      );
+
+    return this.quotationRepository.save({
       ...existingQuotation,
       ...updateQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
@@ -344,12 +391,8 @@ export class QuotationService {
       quotationMetaData,
       subTotal: subTotal,
       total: totalAfterGeneralDiscountAndTaxStamp,
+      uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });
-    if (updateQuotationDto.uploadIds)
-      for (const fileId of updateQuotationDto.uploadIds)
-        this.quotationUploadService.save(quotation.id, fileId);
-
-    return quotation;
   }
 
   async updateMany(updateQuotationDtos: UpdateQuotationDto[]) {
