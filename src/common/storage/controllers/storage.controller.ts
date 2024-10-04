@@ -6,6 +6,7 @@ import {
   Query,
   Res,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -13,7 +14,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 import { StorageService } from '../services/storage.service';
 import { UploadEntity } from '../repositories/entities/upload.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('storage')
 @Controller({
@@ -30,6 +31,28 @@ export class StorageController {
   @Get('/all')
   async findAll(@Query() options: IQueryObject): Promise<UploadEntity[]> {
     return await this.storageService.findAll(options);
+  }
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @Post('upload/multiple')
+  @UseInterceptors(FilesInterceptor('files'))
+  async uploadMultipleFiles(
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<UploadEntity[]> {
+    return this.storageService.storeMultipleFiles(files);
   }
 
   @ApiConsumes('multipart/form-data')

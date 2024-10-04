@@ -3,6 +3,7 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  In,
   QueryRunner,
   Repository,
   SelectQueryBuilder,
@@ -97,6 +98,22 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     const entity = await this.findOneById(id);
     await this.entity.softDelete(id);
     return entity;
+  }
+
+  public async softDeleteMany(ids: (string | number)[]): Promise<T[]> {
+    const options: FindManyOptions<T> = {
+      id: In(ids),
+    } as unknown as FindManyOptions<T>;
+
+    const entities = await this.findAll(options);
+
+    await Promise.all(
+      ids.map(async (id) => {
+        return this.entity.softDelete(id);
+      }),
+    );
+
+    return entities;
   }
 
   public async deleteAll(): Promise<void> {

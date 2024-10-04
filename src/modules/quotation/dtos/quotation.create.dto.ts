@@ -13,6 +13,7 @@ import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { CreateArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.create.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { CreateQuotationMetaDataDto } from './quotation-meta-data.create.dto';
+import { CreateQuotationUploadDto } from './quotation-upload.create.dto';
 
 export class CreateQuotationDto {
   @ApiProperty({ example: faker.date.anytime() })
@@ -123,5 +124,5 @@ export class CreateQuotationDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  uploadIds?: number[];
+  uploads?: CreateQuotationUploadDto[];
 }

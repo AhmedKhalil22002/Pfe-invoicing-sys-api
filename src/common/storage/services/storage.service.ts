@@ -85,6 +85,15 @@ export class StorageService {
     return upload;
   }
 
+  async storeMultipleFiles(files: Express.Multer.File[]) {
+    const uploads = await Promise.all(
+      files.map(async (file) => {
+        return this.store(file);
+      }),
+    );
+    return uploads;
+  }
+
   async loadResource(slug: string): Promise<ReadStream> {
     const upload = await this.findBySlug(slug);
     const filePath = join(this.rootLocation, upload.relativePath);
@@ -109,6 +118,12 @@ export class StorageService {
       throw new StorageBadRequestException(
         `Failed to delete file: ${upload.slug}` + error.message,
       );
+    }
+  }
+
+  async deleteMany(ids: number[]): Promise<void> {
+    for (const id in ids) {
+      await this.delete(ids[id]);
     }
   }
 

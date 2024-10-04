@@ -9,6 +9,7 @@ import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dt
 import { ResponseQuotationMetaDataDto } from './quotation-meta-data.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 import { ResponseBankAccountDto } from 'src/modules/bank-account/dtos/bank-account.response.dto';
+import { ResponseQuotationUploadDto } from './quotation-upload.response.dto';
 
 export class ResponseQuotationDto {
   @ApiProperty({ example: 1, type: Number })
@@ -132,5 +133,5 @@ export class ResponseQuotationDto {
   quotationMetaData?: ResponseQuotationMetaDataDto;
 
   @ApiProperty({ required: false })
-  uploadIds?: number[];
+  uploads?: ResponseQuotationUploadDto[];
 }

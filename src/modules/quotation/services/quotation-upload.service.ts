@@ -75,10 +75,22 @@ export class QuotationUploadService {
     return this.quotationUploadRepository.save({ quotationId, uploadId });
   }
 
-  async delete(id: number): Promise<QuotationUploadEntity> {
+  async softDelete(id: number): Promise<QuotationUploadEntity> {
     const upload = await this.findOneById(id);
     this.storageService.delete(upload.uploadId);
-    return this.quotationUploadRepository.remove(upload);
+    this.quotationUploadRepository.softDelete(upload.id);
+    return upload;
+  }
+
+  async softDeleteMany(
+    quotationUploadEntities: QuotationUploadEntity[],
+  ): Promise<QuotationUploadEntity[]> {
+    this.storageService.deleteMany(
+      quotationUploadEntities.map((qu) => qu.upload.id),
+    );
+    return this.quotationUploadRepository.softDeleteMany(
+      quotationUploadEntities.map((qu) => qu.id),
+    );
   }
 
   async deleteAll() {
