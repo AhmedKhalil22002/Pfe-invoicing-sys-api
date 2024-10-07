@@ -106,6 +106,53 @@ export class StorageService {
     }
   }
 
+  async duplicate(id: number): Promise<UploadEntity> {
+    //Find the original upload entity
+    const originalUpload = await this.findOneById(id);
+
+    //Generate a new slug and file path for the duplicate
+    const newSlug = uuidv4();
+    const originalFilePath = join(
+      this.rootLocation,
+      originalUpload.relativePath,
+    );
+    const fileExtension = mime.extension(originalUpload.mimetype) || '';
+    let newRelativePath = newSlug;
+
+    if (fileExtension) {
+      newRelativePath = `${newSlug}.${fileExtension}`;
+    }
+
+    const newFilePath = join(this.rootLocation, newRelativePath);
+
+    //Copy the file on the filesystem
+    try {
+      await fs.copyFile(originalFilePath, newFilePath);
+    } catch (error) {
+      throw new StorageBadRequestException(
+        `Failed to duplicate file: ${error.message}`,
+      );
+    }
+
+    //Save the duplicated upload entity in the database
+    const duplicatedUpload = await this.uploadRepository.save({
+      slug: newSlug,
+      filename: originalUpload.filename,
+      mimetype: originalUpload.mimetype,
+      size: originalUpload.size,
+      relativePath: newRelativePath,
+    });
+
+    return duplicatedUpload;
+  }
+
+  async duplicateMany(ids: number[]): Promise<UploadEntity[]> {
+    const duplicatedUploads = await Promise.all(
+      ids.map((id) => this.duplicate(id)),
+    );
+    return duplicatedUploads;
+  }
+
   async delete(id: number): Promise<UploadEntity> {
     const upload = await this.findOneById(id);
     const filePath = join(this.rootLocation, upload.relativePath);

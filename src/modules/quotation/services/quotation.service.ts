@@ -395,6 +395,46 @@ export class QuotationService {
     });
   }
 
+  async duplicate(id: number): Promise<ResponseQuotationDto> {
+    const existingQuotation = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: new String().concat(
+        'quotationMetaData,',
+        'articleQuotationEntries,',
+        'articleQuotationEntries.articleQuotationEntryTaxes,',
+        'uploads',
+      ),
+    });
+    const quotationMetaData = await this.quotationMetaDataService.duplicate(
+      existingQuotation.quotationMetaData.id,
+    );
+    const sequential = await this.quotationSequenceService.getSequential();
+    const quotation = await this.quotationRepository.save({
+      ...existingQuotation,
+      sequential,
+      quotationMetaData,
+      articleQuotationEntries: [],
+      uploads: [],
+      id: undefined,
+    });
+    const articleQuotationEntries =
+      await this.articleQuotationEntryService.duplicateMany(
+        existingQuotation.articleQuotationEntries.map((entry) => entry.id),
+        quotation.id,
+      );
+
+    const uploads = await this.quotationUploadService.duplicateMany(
+      existingQuotation.uploads.map((upload) => upload.id),
+      quotation.id,
+    );
+
+    return this.quotationRepository.save({
+      ...quotation,
+      articleQuotationEntries,
+      uploads,
+    });
+  }
+
   async updateMany(updateQuotationDtos: UpdateQuotationDto[]) {
     await this.quotationRepository.updateMany(updateQuotationDtos);
   }

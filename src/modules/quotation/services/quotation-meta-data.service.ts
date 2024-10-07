@@ -86,6 +86,15 @@ export class QuotationMetaDataService {
     });
   }
 
+  async duplicate(id: number): Promise<QuotationMetaDataEntity> {
+    const existingData = await this.findOneById(id);
+    const duplicatedData = {
+      ...existingData,
+      id: undefined,
+    };
+    return this.quotationMetaDataRepository.save(duplicatedData);
+  }
+
   async softDelete(id: number): Promise<QuotationMetaDataEntity> {
     await this.findOneById(id);
     return this.quotationMetaDataRepository.softDelete(id);
