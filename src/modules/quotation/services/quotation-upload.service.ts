@@ -75,6 +75,39 @@ export class QuotationUploadService {
     return this.quotationUploadRepository.save({ quotationId, uploadId });
   }
 
+  async duplicate(
+    id: number,
+    quotationId: number,
+  ): Promise<QuotationUploadEntity> {
+    //Find the original quotation upload entity
+    const originalQuotationUpload = await this.findOneById(id);
+
+    //Use the StorageService to duplicate the file
+    const duplicatedUpload = await this.storageService.duplicate(
+      originalQuotationUpload.uploadId,
+    );
+
+    //Save the duplicated QuotationUploadEntity
+    const duplicatedQuotationUpload = await this.quotationUploadRepository.save(
+      {
+        quotationId: quotationId,
+        uploadId: duplicatedUpload.id,
+      },
+    );
+
+    return duplicatedQuotationUpload;
+  }
+
+  async duplicateMany(
+    ids: number[],
+    quotationId: number,
+  ): Promise<QuotationUploadEntity[]> {
+    const duplicatedQuotationUploads = await Promise.all(
+      ids.map((id) => this.duplicate(id, quotationId)),
+    );
+    return duplicatedQuotationUploads;
+  }
+
   async softDelete(id: number): Promise<QuotationUploadEntity> {
     const upload = await this.findOneById(id);
     this.storageService.delete(upload.uploadId);

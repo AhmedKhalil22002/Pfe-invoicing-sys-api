@@ -194,6 +194,60 @@ export class ArticleQuotationEntryService {
     return entry;
   }
 
+  async duplicate(
+    id: number,
+    quotationId: number,
+  ): Promise<ArticleQuotationEntryEntity> {
+    // Fetch the existing entry
+    const existingEntry = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'articleQuotationEntryTaxes',
+    });
+
+    // Duplicate the taxes associated with this entry
+    const duplicatedTaxes = existingEntry.articleQuotationEntryTaxes.map(
+      (taxEntry) => ({
+        taxId: taxEntry.taxId,
+      }),
+    );
+
+    // Create the duplicated entry
+    const duplicatedEntry = {
+      ...existingEntry,
+      quotationId: quotationId,
+      id: undefined,
+      articleQuotationEntryTaxes: duplicatedTaxes, // Attach duplicated taxes
+      createdAt: undefined,
+      updatedAt: undefined,
+    };
+
+    // Save the duplicated entry
+    const newEntry =
+      await this.articleQuotationEntryRepository.save(duplicatedEntry);
+
+    // Save the new tax entries for the duplicated entry
+    await this.articleQuotationEntryTaxService.saveMany(
+      duplicatedTaxes.map((tax) => ({
+        taxId: tax.taxId,
+        articleQuotationEntryId: newEntry.id,
+      })),
+    );
+
+    return newEntry;
+  }
+
+  async duplicateMany(
+    ids: number[],
+    quotationId: number,
+  ): Promise<ArticleQuotationEntryEntity[]> {
+    const duplicatedEntries = [];
+    for (const id of ids) {
+      const duplicatedEntry = await this.duplicate(id, quotationId);
+      duplicatedEntries.push(duplicatedEntry);
+    }
+    return duplicatedEntries;
+  }
+
   async softDelete(id: number): Promise<ArticleQuotationEntryEntity> {
     const entry = await this.articleQuotationEntryRepository.findByCondition({
       where: { id, deletedAt: null },

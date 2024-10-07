@@ -74,6 +74,11 @@ export class QuotationController {
     return await this.quotationService.save(createQuotationDto);
   }
 
+  @Post('/duplicate/:id')
+  async duplicate(@Param('id') id: number): Promise<ResponseQuotationDto> {
+    return await this.quotationService.duplicate(id);
+  }
+
   @Put('/:id')
   @ApiParam({
     name: 'id',
