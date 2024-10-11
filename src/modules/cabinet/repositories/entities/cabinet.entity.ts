@@ -1,4 +1,5 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
 import { ActivityEntity } from 'src/modules/activity/repositories/entities/activity.entity';
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
@@ -47,4 +48,18 @@ export class CabinetEntity extends EntityHelper {
 
   @Column({ type: 'int', nullable: true })
   addressId: number;
+
+  @ManyToOne(() => UploadEntity)
+  @JoinColumn({ name: 'logoId' })
+  logo: UploadEntity;
+
+  @Column({ type: 'int', nullable: true })
+  logoId: number;
+
+  @ManyToOne(() => UploadEntity)
+  @JoinColumn({ name: 'signatureId' })
+  signature: UploadEntity;
+
+  @Column({ type: 'int', nullable: true })
+  signatureId: number;
 }

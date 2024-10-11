@@ -4,6 +4,7 @@ import { CabinetRepositoryModule } from './repositories/cabinet.repository.modul
 import { AddressModule } from '../address/address.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { ActivityModule } from '../activity/activity.module';
+import { StorageModule } from 'src/common/storage/storage.module';
 
 @Module({
   controllers: [],
@@ -14,6 +15,7 @@ import { ActivityModule } from '../activity/activity.module';
     ActivityModule,
     AddressModule,
     CurrencyModule,
+    StorageModule,
   ],
 })
 export class CabinetModule {}

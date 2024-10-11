@@ -75,13 +75,29 @@ export class StorageController {
     return this.storageService.store(file);
   }
 
-  @Get('file/:slug')
-  async downloadFile(
+  @Get('/file/slug/:slug')
+  async downloadFileBySlug(
     @Param('slug') slug: string,
     @Res() res: Response,
   ): Promise<void> {
     const upload = await this.storageService.findBySlug(slug);
     const fileStream = await this.storageService.loadResource(slug);
+    res.setHeader('Content-Type', upload.mimetype);
+    res.setHeader('Content-Length', upload.size);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${upload.filename}"`,
+    );
+    fileStream.pipe(res);
+  }
+
+  @Get('file/id/:id')
+  async downloadFileById(
+    @Param('id') id: number,
+    @Res() res: Response,
+  ): Promise<void> {
+    const upload = await this.storageService.findOneById(id);
+    const fileStream = await this.storageService.loadResource(upload.slug);
     res.setHeader('Content-Type', upload.mimetype);
     res.setHeader('Content-Length', upload.size);
     res.setHeader(

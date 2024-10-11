@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEmail, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 import { CreateAddressDto } from 'src/modules/address/dtos/address.create.dto';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
@@ -31,4 +31,20 @@ export class CreateCabinetDto {
 
   @ApiProperty({ example: 1, type: Number })
   currencyId?: number;
+
+  @ApiProperty({
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  logoId?: number;
+
+  @ApiProperty({
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  signatureId?: number;
 }
