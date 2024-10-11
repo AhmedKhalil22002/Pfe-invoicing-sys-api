@@ -11,6 +11,7 @@ import { CabinetNotFoundException } from '../errors/cabinet.notfound.error';
 import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
+import { StorageService } from 'src/common/storage/services/storage.service';
 
 @Injectable()
 export class CabinetService {
@@ -19,6 +20,7 @@ export class CabinetService {
     private readonly addressService: AddressService,
     private readonly currencyService: CurrencyService,
     private readonly activityService: ActivityService,
+    private readonly storageService: StorageService,
   ) {}
 
   async findOneById(id: number): Promise<CabinetEntity> {
@@ -75,6 +77,8 @@ export class CabinetService {
     updateCabinetDto: UpdateCabinetDto,
   ): Promise<CabinetEntity> {
     const cabinet = await this.findOneById(id);
+    this.storageService.delete(cabinet.logoId);
+    this.storageService.delete(cabinet.signatureId);
 
     let address = await this.addressService.findOneById(cabinet.addressId);
     const activity = await this.activityService.findOneById(

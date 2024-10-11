@@ -26,4 +26,16 @@ export class ResponseCabinetDto extends ResponseDtoHelper {
 
   @ApiProperty({ type: () => ResponseCurrencyDto, nullable: true })
   currency?: ResponseCurrencyDto;
+
+  @ApiProperty({
+    example: 1,
+    type: Number,
+  })
+  logoId?: number;
+
+  @ApiProperty({
+    example: 1,
+    type: Number,
+  })
+  signatureId?: number;
 }
