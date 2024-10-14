@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 import { DATE_FORMAT } from 'src/app/enums/date-formats.enum';
 
 export class UpdateQuotationSequenceDto {
@@ -15,4 +15,9 @@ export class UpdateQuotationSequenceDto {
   @IsOptional()
   @IsNumber()
   next: number;
+
+  @ApiProperty({ type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  propagate_changes: boolean;
 }

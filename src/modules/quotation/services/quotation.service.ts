@@ -435,8 +435,37 @@ export class QuotationService {
     });
   }
 
-  async updateMany(updateQuotationDtos: UpdateQuotationDto[]) {
-    await this.quotationRepository.updateMany(updateQuotationDtos);
+  async updateMany(
+    updateQuotationDtos: UpdateQuotationDto[],
+  ): Promise<QuotationEntity[]> {
+    return this.quotationRepository.updateMany(updateQuotationDtos);
+  }
+
+  //this method is used to update the sequence of quotation according to new format
+  async updateQuotationSequence(id: number): Promise<QuotationEntity> {
+    const existingQuotation = await this.findOneById(id);
+    const sequence = await this.quotationSequenceService.get();
+    const newSequenantial = this.quotationSequenceService.formSequential(
+      sequence.value.prefix,
+      sequence.value.dynamicSequence,
+      parseInt(existingQuotation.sequential.split('-').pop()),
+      existingQuotation.createdAt,
+    );
+    return this.quotationRepository.save({
+      ...existingQuotation,
+      sequential: newSequenantial,
+    });
+  }
+
+  //this method is used to update the sequence of all quotations according to new format
+  async updateAllQuotationSequences(): Promise<QuotationEntity[]> {
+    const existingQuotations = await this.findAll();
+    const updatedQuotations = [];
+    for (const quotation of existingQuotations) {
+      const updatedQuotation = await this.updateQuotationSequence(quotation.id);
+      updatedQuotations.push(updatedQuotation);
+    }
+    return updatedQuotations;
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {

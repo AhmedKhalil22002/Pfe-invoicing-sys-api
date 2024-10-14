@@ -10,25 +10,35 @@ import {
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
 import { EntityHelper } from '../interfaces/database.entity.interface';
+import { TransactionHost } from '@nestjs-cls/transactional';
+import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 
-export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
+export abstract class DatabaseAbstractRepository<T extends EntityHelper>
   implements DatabaseInterfaceRepository<T>
 {
-  private entity: Repository<T>;
-  protected constructor(entity: Repository<T>) {
-    this.entity = entity;
+  protected txHost?: TransactionHost<TransactionalAdapterTypeOrm>;
+
+  protected constructor(
+    protected readonly entity: Repository<T>,
+    txHost?: TransactionHost<TransactionalAdapterTypeOrm>,
+  ) {
+    this.txHost = txHost;
+  }
+
+  private getRepository(): Repository<T> {
+    return this.txHost?.tx?.getRepository(this.entity.target) || this.entity;
   }
 
   public async createQueryBuilder(
     alias?: string,
     queryRunner?: QueryRunner,
   ): Promise<SelectQueryBuilder<T>> {
-    return this.entity.createQueryBuilder(alias, queryRunner);
+    return this.getRepository().createQueryBuilder(alias, queryRunner);
   }
 
   public async getRelatedEntityNames(): Promise<string[]> {
-    return this.entity.metadata.relations
-      .filter(
+    return this.getRepository()
+      .metadata.relations.filter(
         (relation) =>
           relation.isManyToOne || relation.isOneToOne || relation.isManyToMany,
       )
@@ -39,64 +49,64 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
     const options: FindOptionsWhere<T> = {
       id: id,
     } as unknown as FindOptionsWhere<T>;
-    return await this.entity.findOneBy(options);
+    return await this.getRepository().findOneBy(options);
   }
 
   public async save(data: DeepPartial<T>): Promise<T> {
-    return await this.entity.save(data);
+    return await this.getRepository().save(data);
   }
 
   public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
-    return this.entity.save(data);
+    return this.getRepository().save(data);
   }
 
   public create(data: DeepPartial<T>): T {
-    return this.entity.create(data);
+    return this.getRepository().create(data);
   }
 
   public createMany(data: DeepPartial<T>[]): T[] {
-    return this.entity.create(data);
+    return this.getRepository().create(data);
   }
 
   public async updateMany(data: DeepPartial<T>[]): Promise<T[]> {
-    return await this.entity.save(data);
+    return await this.getRepository().save(data);
   }
 
   public async findByCondition(filterCondition: FindOneOptions<T>): Promise<T> {
-    return await this.entity.findOne(filterCondition);
+    return await this.getRepository().findOne(filterCondition);
   }
 
   public async findWithRelations(relations: FindManyOptions<T>): Promise<T[]> {
-    return await this.entity.find(relations);
+    return await this.getRepository().find(relations);
   }
 
   public async findOne(options: FindOneOptions<T>): Promise<T | undefined> {
-    return this.entity.findOne(options);
+    return this.getRepository().findOne(options);
   }
 
   public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
-    return await this.entity.find(options);
+    return await this.getRepository().find(options);
   }
 
   public async remove(data: T): Promise<T> {
-    return await this.entity.remove(data);
+    return await this.getRepository().remove(data);
   }
 
   public async preload(entityLike: DeepPartial<T>): Promise<T> {
-    return await this.entity.preload(entityLike);
+    return await this.getRepository().preload(entityLike);
   }
 
   public async getTotalCount(options: FindOneOptions<T> = {}): Promise<number> {
-    return this.entity.count(options);
+    return this.getRepository().count(options);
   }
 
   public async delete(id: string | number): Promise<void> {
-    await this.entity.delete(id);
+    await this.getRepository().delete(id);
   }
 
   public async softDelete(id: string | number): Promise<T> {
     const entity = await this.findOneById(id);
-    await this.entity.softDelete(id);
+    await this.getRepository().softDelete(id);
     return entity;
   }
 
@@ -109,7 +119,7 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
 
     await Promise.all(
       ids.map(async (id) => {
-        return this.entity.softDelete(id);
+        return this.getRepository().softDelete(id);
       }),
     );
 
@@ -117,6 +127,6 @@ export abstract class DatabaseAbstractRepostitory<T extends EntityHelper>
   }
 
   public async deleteAll(): Promise<void> {
-    await this.entity.clear();
+    await this.getRepository().clear();
   }
 }

@@ -12,6 +12,7 @@ import { UpdateDefaultConditionDto } from '../dtos/default-condition.update.dto'
 import { QuotationService } from 'src/modules/quotation/services/quotation.service';
 import { ACTIVITY_TYPE } from 'src/app/enums/activity-types.enum';
 import { DOCUMENT_TYPE } from 'src/app/enums/document-types.enum';
+import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class DefaultConditionService {
@@ -124,6 +125,7 @@ export class DefaultConditionService {
     });
   }
 
+  @Transactional()
   async updateMany(
     updateDefaultConditionDtos: UpdateDefaultConditionDto[],
   ): Promise<DefaultConditionEntity[]> {
