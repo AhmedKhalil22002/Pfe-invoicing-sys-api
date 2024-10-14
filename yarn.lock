@@ -699,6 +699,16 @@
   resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.14.2.tgz#c3ec604a0b54b9a9b87e9735dfc59e1a5da6a5fb"
   integrity sha512-9b8mPpKrfeGRuhFH5iO1iwCLeIIsV6+H1sRfxbkoGXIyQE2BTsPd9zqSqQJ+pv5sJ/hT5M1zvOFL02MnEezFug==
 
+"@nestjs-cls/transactional-adapter-typeorm@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@nestjs-cls/transactional-adapter-typeorm/-/transactional-adapter-typeorm-1.2.4.tgz#e8e7edad01484d747405553a76a94ca72457e740"
+  integrity sha512-CVvyLDvGSs/aTDtCbJLvJzUIIQs2Bxx6sTBTUK9BnrcWkcoW/HSB+2fM2NLj7ElaYopnBGA++gz52WtABCRLig==
+
+"@nestjs-cls/transactional@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@nestjs-cls/transactional/-/transactional-2.4.2.tgz#7b605298a108d74f8e806de8e303698f117ebacc"
+  integrity sha512-bQZ4Xo5BOPnmKcBk/Qsh/VX8kHr+fKTfJ6Fcxu/RGmxzSwjRVgShNu0E57V8CZkZJ6YuIKJoDQHAoIbeRIffbQ==
+
 "@nestjs/cli@^10.0.0":
   version "10.3.2"
   resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.3.2.tgz#42d2764ead6633e278c55d42de871b4cc1db002b"
@@ -757,6 +767,13 @@
     iterare "1.2.1"
     path-to-regexp "3.2.0"
     tslib "2.6.2"
+
+"@nestjs/event-emitter@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/event-emitter/-/event-emitter-2.0.4.tgz#de7d3986cfeb82639bb95181fab4fe5525437c74"
+  integrity sha512-quMiw8yOwoSul0pp3mOonGz8EyXWHSBTqBy8B0TbYYgpnG1Ix2wGUnuTksLWaaBiiOTDhciaZ41Y5fJZsSJE1Q==
+  dependencies:
+    eventemitter2 "6.4.9"
 
 "@nestjs/jwt@^10.2.0":
   version "10.2.0"
@@ -3304,6 +3321,11 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
+eventemitter2@6.4.9:
+  version "6.4.9"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.9.tgz#41f2750781b4230ed58827bc119d293471ecb125"
+  integrity sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==
+
 events@^3.2.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
@@ -5161,6 +5183,11 @@ nest-winston@^1.10.0:
   integrity sha512-ipfvW6jxjX9xUqACw1HhDmrE1HLLLReqqR5cYt2mehW6Fg87LYTYuoCqwAUYTrawekrQd2vNAe5YBC/Jmxxoxw==
   dependencies:
     fast-safe-stringify "^2.1.1"
+
+nestjs-cls@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/nestjs-cls/-/nestjs-cls-4.4.1.tgz#ce0affa15e8565cfee74336746c058feaaeb2d9d"
+  integrity sha512-4yhldwm/cJ02lQ8ZAdM8KQ7gMfjAc1z3fo5QAQgXNyN4N6X5So9BCwv+BTLRugDCkELUo3qtzQHnKhGYL/ftPg==
 
 nestjs-command@^3.1.4:
   version "3.1.4"

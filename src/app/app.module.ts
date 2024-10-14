@@ -9,6 +9,11 @@ import { RouterModule } from 'src/routers/router.module';
 import { HeaderResolver, I18nModule } from 'nestjs-i18n';
 import { TranslationConfigService } from 'src/common/translation/services/translation-config.service';
 import { TranslationModule } from 'src/common/translation/translation.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DataSource } from 'typeorm';
+import { ClsModule } from 'nestjs-cls';
+import { ClsPluginTransactional } from '@nestjs-cls/transactional';
+import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 
 @Module({
   controllers: [HelloController],
@@ -32,6 +37,17 @@ import { TranslationModule } from 'src/common/translation/translation.module';
     }),
     CommonModule,
     TranslationModule,
+    ClsModule.forRoot({
+      plugins: [
+        new ClsPluginTransactional({
+          imports: [TypeOrmModule],
+          adapter: new TransactionalAdapterTypeOrm({
+            dataSourceToken: DataSource,
+          }),
+        }),
+      ],
+    }),
+    EventEmitterModule.forRoot(),
     RouterModule.forRoot(),
   ],
 })
