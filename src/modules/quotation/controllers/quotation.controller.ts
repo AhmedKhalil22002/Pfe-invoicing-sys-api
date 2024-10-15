@@ -17,6 +17,7 @@ import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 
 @ApiTags('quotation')
 @Controller({
@@ -77,6 +78,20 @@ export class QuotationController {
   @Post('/duplicate/:id')
   async duplicate(@Param('id') id: number): Promise<ResponseQuotationDto> {
     return await this.quotationService.duplicate(id);
+  }
+
+  @Put('/update-quotation-sequences')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    required: true,
+  })
+  async updateQuotationSequences(
+    @Body() updatedSequenceDto: UpdateQuotationSequenceDto,
+  ): Promise<ResponseQuotationDto[]> {
+    return await this.quotationService.updateAllQuotationSequences(
+      updatedSequenceDto,
+    );
   }
 
   @Put('/:id')

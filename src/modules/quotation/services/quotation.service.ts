@@ -24,6 +24,9 @@ import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
 import { QuotationUploadService } from './quotation-upload.service';
 import { ResponseQuotationUploadDto } from '../dtos/quotation-upload.response.dto';
+import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
+import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
+import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class QuotationService {
@@ -290,7 +293,6 @@ export class QuotationService {
   ): Promise<QuotationEntity> {
     //retrieve the quotation that have to be updated
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { uploads: existingUploads, ...existingQuotation } =
       await this.findOneByCondition({
         filter: `id||$eq||${id}`,
@@ -442,30 +444,44 @@ export class QuotationService {
   }
 
   //this method is used to update the sequence of quotation according to new format
-  async updateQuotationSequence(id: number): Promise<QuotationEntity> {
+  @Transactional()
+  async updateQuotationSequence(
+    id: number,
+    sequence: QuotationSequence,
+  ): Promise<QuotationEntity> {
     const existingQuotation = await this.findOneById(id);
-    const sequence = await this.quotationSequenceService.get();
     const newSequenantial = this.quotationSequenceService.formSequential(
-      sequence.value.prefix,
-      sequence.value.dynamicSequence,
+      sequence.prefix,
+      sequence.dynamicSequence,
       parseInt(existingQuotation.sequential.split('-').pop()),
       existingQuotation.createdAt,
     );
     return this.quotationRepository.save({
-      ...existingQuotation,
+      id: existingQuotation.id,
       sequential: newSequenantial,
     });
   }
 
   //this method is used to update the sequence of all quotations according to new format
-  async updateAllQuotationSequences(): Promise<QuotationEntity[]> {
-    const existingQuotations = await this.findAll();
-    const updatedQuotations = [];
-    for (const quotation of existingQuotations) {
-      const updatedQuotation = await this.updateQuotationSequence(quotation.id);
-      updatedQuotations.push(updatedQuotation);
+  @Transactional()
+  async updateAllQuotationSequences(
+    updatedSequenceDto: UpdateQuotationSequenceDto,
+  ): Promise<QuotationEntity[]> {
+    const sequence = (
+      await this.quotationSequenceService.set(updatedSequenceDto)
+    ).value;
+    if (updatedSequenceDto.propagate_changes) {
+      const existingQuotations = await this.findAll();
+      const updatedQuotations = [];
+      for (const quotation of existingQuotations) {
+        const updatedQuotation = await this.updateQuotationSequence(
+          quotation.id,
+          sequence,
+        );
+        updatedQuotations.push(updatedQuotation);
+      }
+      return updatedQuotations;
     }
-    return updatedQuotations;
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {
