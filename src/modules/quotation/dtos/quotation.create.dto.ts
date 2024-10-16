@@ -4,7 +4,6 @@ import {
   IsBoolean,
   IsEnum,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -105,14 +104,6 @@ export class CreateQuotationDto {
   @IsString()
   @MaxLength(1024)
   notes?: string;
-
-  @ApiProperty({
-    example: '10',
-    type: Number,
-  })
-  @IsOptional()
-  @IsNumber()
-  taxStamp?: number;
 
   @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
   @IsOptional()

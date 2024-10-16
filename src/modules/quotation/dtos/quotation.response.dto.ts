@@ -120,12 +120,6 @@ export class ResponseQuotationDto {
   })
   notes?: string;
 
-  @ApiProperty({
-    example: '10',
-    type: Number,
-  })
-  taxStamp?: number;
-
   @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
   articleQuotationEntries?: ResponseArticleQuotationEntryDto[];
 

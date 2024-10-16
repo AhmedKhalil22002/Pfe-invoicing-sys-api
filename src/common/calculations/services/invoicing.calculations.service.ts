@@ -87,11 +87,10 @@ export class InvoicingCalculationsService {
     return { subTotal, total };
   }
 
-  calculateTotalDiscountAndTaxStamp(
+  calculateTotalDiscount(
     total: number,
     discount: number,
     discount_type: DISCOUNT_TYPES,
-    taxStamp: number,
     applyDiscountAfter: boolean = true,
   ): number {
     let discountAmount = 0;
@@ -103,11 +102,9 @@ export class InvoicingCalculationsService {
     }
 
     if (applyDiscountAfter) {
-      total -= taxStamp;
       total -= discountAmount;
     } else {
       total -= discountAmount;
-      total -= taxStamp;
     }
 
     return total;

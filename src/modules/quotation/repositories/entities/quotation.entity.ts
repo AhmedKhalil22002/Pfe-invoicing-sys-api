@@ -88,9 +88,6 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   notes: string;
 
-  @Column({ type: 'float', nullable: true })
-  taxStamp: number;
-
   @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation)
   articleQuotationEntries: ArticleQuotationEntryEntity[];
 

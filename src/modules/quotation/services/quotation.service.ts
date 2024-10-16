@@ -184,13 +184,12 @@ export class QuotationService {
         articleEntries.map((entry) => entry.subTotal),
       );
 
-    // apply taxstamp and general discount
-    const totalAfterGeneralDiscountAndTaxStamp =
-      this.calculationsService.calculateTotalDiscountAndTaxStamp(
+    // apply general discount
+    const totalAfterGeneralDiscount =
+      this.calculationsService.calculateTotalDiscount(
         total,
         createQuotationDto.discount,
         createQuotationDto.discount_type,
-        createQuotationDto.taxStamp || 0,
       );
 
     // format articleEntries for calculation
@@ -231,7 +230,7 @@ export class QuotationService {
       articleQuotationEntries: articleEntries,
       quotationMetaData,
       subTotal: subTotal,
-      total: totalAfterGeneralDiscountAndTaxStamp,
+      total: totalAfterGeneralDiscount,
     });
 
     //handle file uploads
@@ -341,12 +340,11 @@ export class QuotationService {
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
-    const totalAfterGeneralDiscountAndTaxStamp =
-      this.calculationsService.calculateTotalDiscountAndTaxStamp(
+    const totalAfterGeneralDiscount =
+      this.calculationsService.calculateTotalDiscount(
         total,
         updateQuotationDto.discount,
         updateQuotationDto.discount_type,
-        updateQuotationDto.taxStamp || 0,
         //applying discount is set true by default
       );
 
@@ -392,7 +390,7 @@ export class QuotationService {
       articleQuotationEntries: articleEntries,
       quotationMetaData,
       subTotal: subTotal,
-      total: totalAfterGeneralDiscountAndTaxStamp,
+      total: totalAfterGeneralDiscount,
       uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });
   }
