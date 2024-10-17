@@ -144,47 +144,49 @@ export class QuotationService {
     return new PageDto(entities, pageMetaDto);
   }
 
+  @Transactional()
   async save(createQuotationDto: CreateQuotationDto): Promise<QuotationEntity> {
-    //fetch the firm in order to check its existance and later get its currency
-    const firm = await this.firmService.findOneByCondition({
-      filter: `id||$eq||${createQuotationDto.firmId}`,
-    });
+    // Parallelize fetching firm, bank account, and currency, as they are independent
+    const [firm, bankAccount, currency] = await Promise.all([
+      this.firmService.findOneByCondition({
+        filter: `id||$eq||${createQuotationDto.firmId}`,
+      }),
+      createQuotationDto.bankAccountId
+        ? this.bankAccountService.findOneById(createQuotationDto.bankAccountId)
+        : Promise.resolve(null),
+      createQuotationDto.currencyId
+        ? this.currencyService.findOneById(createQuotationDto.currencyId)
+        : Promise.resolve(null),
+    ]);
 
-    //fetch bank account in order to check its existance
-    const bankAccount = createQuotationDto.bankAccountId
-      ? await this.bankAccountService.findOneById(
-          createQuotationDto.bankAccountId,
-        )
-      : null;
+    if (!firm) {
+      throw new Error('Firm not found'); // Handle firm not existing
+    }
 
-    //fetch currency in order to check its existance
-    const currency = createQuotationDto.currencyId
-      ? await this.currencyService.findOneById(createQuotationDto.currencyId)
-      : null;
-
-    //fetch the interlocutor in order to check its existance
+    // Check interlocutor existence
     await this.interlocutorService.findOneById(
       createQuotationDto.interlocutorId,
     );
 
-    //retrieve the currency information
-    await this.currencyService.findOneById(firm.currencyId);
-
-    //save article entries
+    // Save article entries if provided
     const articleEntries =
       createQuotationDto.articleQuotationEntries &&
       (await this.articleQuotationEntryService.saveMany(
         createQuotationDto.articleQuotationEntries,
       ));
 
-    // calculate the financial informations of the quotation
+    if (!articleEntries) {
+      throw new Error('Article entries are missing');
+    }
+
+    // Calculate financial information
     const { subTotal, total } =
       this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
 
-    // apply general discount
+    // Apply general discount
     const totalAfterGeneralDiscount =
       this.calculationsService.calculateTotalDiscount(
         total,
@@ -192,36 +194,40 @@ export class QuotationService {
         createQuotationDto.discount_type,
       );
 
-    // format articleEntries for calculation
+    // Format articleEntries as lineItems for tax calculations
     const lineItems =
       await this.articleQuotationEntryService.findManyAsLineItem(
         articleEntries.map((entry) => entry.id),
       );
 
-    // calculate tax summary
+    // Calculate tax summary and fetch tax details in parallel
     const taxSummary = await Promise.all(
       this.calculationsService
         .calculateTaxSummary(lineItems)
         .map(async (item) => {
           const tax = await this.taxService.findOneById(item.taxId);
+
           return {
             ...item,
             label: tax.label,
-            rate: tax.rate * 100,
+            // If the tax is a rate (percentage), multiply by 100 for percentage display,
+            // otherwise use the fixed amount directly.
+            value: tax.isRate ? tax.value * 100 : tax.value,
+            isRate: tax.isRate, // You can also return this flag for further use.
           };
         }),
     );
 
-    //get the latest sequential
+    // Fetch the latest sequential number for quotation
     const sequential = await this.quotationSequenceService.getSequential();
 
-    //save quotation metadata
+    // Save quotation metadata
     const quotationMetaData = await this.quotationMetaDataService.save({
       ...createQuotationDto.quotationMetaData,
       taxSummary,
     });
 
-    //save quotation
+    // Save the quotation entity
     const quotation = await this.quotationRepository.save({
       ...createQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
@@ -229,14 +235,18 @@ export class QuotationService {
       sequential,
       articleQuotationEntries: articleEntries,
       quotationMetaData,
-      subTotal: subTotal,
+      subTotal,
       total: totalAfterGeneralDiscount,
     });
 
-    //handle file uploads
-    if (createQuotationDto.uploads)
-      for (const u of createQuotationDto.uploads)
-        this.quotationUploadService.save(quotation.id, u.uploadId);
+    // Handle file uploads if they exist
+    if (createQuotationDto.uploads) {
+      await Promise.all(
+        createQuotationDto.uploads.map((u) =>
+          this.quotationUploadService.save(quotation.id, u.uploadId),
+        ),
+      );
+    }
 
     return quotation;
   }
@@ -286,95 +296,96 @@ export class QuotationService {
     };
   }
 
+  @Transactional()
   async update(
     id: number,
     updateQuotationDto: UpdateQuotationDto,
   ): Promise<QuotationEntity> {
-    //retrieve the quotation that have to be updated
-
+    // Retrieve the existing quotation with necessary relations
     const { uploads: existingUploads, ...existingQuotation } =
       await this.findOneByCondition({
         filter: `id||$eq||${id}`,
         join: 'articleQuotationEntries,quotationMetaData,uploads',
       });
 
-    //fetch bank account in order to check its existance
-    const bankAccount = updateQuotationDto.bankAccountId
-      ? await this.bankAccountService.findOneById(
-          updateQuotationDto.bankAccountId,
-        )
-      : null;
+    // Fetch and validate related entities in parallel to optimize performance
+    const [firm, bankAccount, currency] = await Promise.all([
+      this.firmService.findOneByCondition({
+        filter: `id||$eq||${updateQuotationDto.firmId}`,
+      }),
+      updateQuotationDto.bankAccountId
+        ? this.bankAccountService.findOneById(updateQuotationDto.bankAccountId)
+        : null,
+      updateQuotationDto.currencyId
+        ? this.currencyService.findOneById(updateQuotationDto.currencyId)
+        : null,
+    ]);
 
-    //fetch currency in order to check its existance
-    const currency = updateQuotationDto.currencyId
-      ? await this.currencyService.findOneById(updateQuotationDto.currencyId)
-      : null;
-
-    //fetch the firm in order to check its existance and later get its currency
-    const firm = await this.firmService.findOneByCondition({
-      filter: `id||$eq||${updateQuotationDto.firmId}`,
-    });
-
-    //fetch the interlocutor in order to check its existance
+    // Ensure the interlocutor exists
     await this.interlocutorService.findOneById(
       updateQuotationDto.interlocutorId,
     );
 
-    //retrieve the currency informations
-    await this.currencyService.findOneById(firm.currencyId);
+    // Fetch firm currency if no currency is provided
+    const finalCurrencyId = currency ? currency.id : firm.currencyId;
 
-    //perform soft delete for old entries
-    this.articleQuotationEntryService.softDeleteMany(
+    // Soft delete old article entries to prepare for new ones
+    await this.articleQuotationEntryService.softDeleteMany(
       existingQuotation.articleQuotationEntries.map((entry) => entry.id),
     );
 
-    //save the new article entries
+    // Save new article entries
     const articleEntries: ArticleQuotationEntryEntity[] =
       await this.articleQuotationEntryService.saveMany(
         updateQuotationDto.articleQuotationEntries,
       );
 
-    // calculate the financial informations of the quotation
+    // Calculate the subtotal and total for the new entries
     const { subTotal, total } =
       this.calculationsService.calculateLineItemsTotal(
         articleEntries.map((entry) => entry.total),
         articleEntries.map((entry) => entry.subTotal),
       );
+
+    // Apply general discount
     const totalAfterGeneralDiscount =
       this.calculationsService.calculateTotalDiscount(
         total,
         updateQuotationDto.discount,
         updateQuotationDto.discount_type,
-        //applying discount is set true by default
       );
 
-    // format articleEntries for calculation
+    // Convert article entries to line items for further calculations
     const lineItems =
       await this.articleQuotationEntryService.findManyAsLineItem(
         articleEntries.map((entry) => entry.id),
       );
 
-    // calculate tax summary
+    // Calculate tax summary (handle both percentage and fixed taxes)
     const taxSummary = await Promise.all(
       this.calculationsService
         .calculateTaxSummary(lineItems)
         .map(async (item) => {
           const tax = await this.taxService.findOneById(item.taxId);
+
           return {
             ...item,
             label: tax.label,
-            rate: tax.rate * 100,
+            // Check if the tax is rate-based or a fixed amount
+            rate: tax.isRate ? tax.value * 100 : tax.value, // handle both types
+            isRate: tax.isRate,
           };
         }),
     );
 
-    //save quotation metadata
+    // Save or update the quotation metadata with the updated tax summary
     const quotationMetaData = await this.quotationMetaDataService.save({
       ...existingQuotation.quotationMetaData,
       ...updateQuotationDto.quotationMetaData,
       taxSummary,
     });
 
+    // Handle uploads - manage existing, new, and eliminated uploads
     const { keptUploads, newUploads, eliminatedUploads } =
       await this.updateQuotationUploads(
         existingQuotation.id,
@@ -382,14 +393,15 @@ export class QuotationService {
         existingUploads,
       );
 
+    // Save and return the updated quotation with all updated details
     return this.quotationRepository.save({
       ...existingQuotation,
       ...updateQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
-      currencyId: currency ? currency.id : firm.currencyId,
+      currencyId: finalCurrencyId,
       articleQuotationEntries: articleEntries,
       quotationMetaData,
-      subTotal: subTotal,
+      subTotal,
       total: totalAfterGeneralDiscount,
       uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });

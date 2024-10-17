@@ -9,7 +9,10 @@ export class ResponseTaxDto extends ResponseDtoHelper {
   label: string;
 
   @ApiProperty({ example: '0.05', type: Number })
-  rate: number;
+  value: number;
+
+  @ApiProperty({ example: 'true', type: Boolean })
+  isRate: boolean;
 
   @ApiProperty({ example: 'true', type: Boolean })
   isSpecial: boolean;

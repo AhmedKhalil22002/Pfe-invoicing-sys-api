@@ -10,7 +10,10 @@ export class TaxEntity extends EntityHelper {
   label: string;
 
   @Column({ type: 'float', nullable: true })
-  rate: number;
+  value: number;
+
+  @Column({ type: 'boolean', default: true })
+  isRate: boolean;
 
   @Column({ type: 'boolean', default: false })
   isSpecial: boolean;
