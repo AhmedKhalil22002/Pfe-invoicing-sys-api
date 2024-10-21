@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsEnum,
   IsInt,
   IsOptional,
@@ -38,11 +37,6 @@ export class CreateQuotationDto {
   @IsString()
   @MaxLength(1024)
   generalConditions?: string;
-
-  @ApiProperty({ example: true, type: Boolean })
-  @IsBoolean()
-  @IsOptional()
-  defaultCondition?: boolean;
 
   @ApiProperty({
     example: QUOTATION_STATUS.Draft,

@@ -39,9 +39,6 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   generalConditions: string;
 
-  @Column({ type: 'boolean', default: false })
-  defaultCondition: boolean;
-
   @Column({ type: 'enum', enum: QUOTATION_STATUS, nullable: true })
   status: QUOTATION_STATUS;
 
