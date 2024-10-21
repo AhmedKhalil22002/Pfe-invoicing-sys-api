@@ -27,6 +27,8 @@ import { ResponseQuotationUploadDto } from '../dtos/quotation-upload.response.dt
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { Transactional } from '@nestjs-cls/transactional';
+import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
+import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 
 @Injectable()
 export class QuotationService {
@@ -407,9 +409,11 @@ export class QuotationService {
     });
   }
 
-  async duplicate(id: number): Promise<ResponseQuotationDto> {
+  async duplicate(
+    duplicateQuotationDto: DuplicateQuotationDto,
+  ): Promise<ResponseQuotationDto> {
     const existingQuotation = await this.findOneByCondition({
-      filter: `id||$eq||${id}`,
+      filter: `id||$eq||${duplicateQuotationDto.id}`,
       join: new String().concat(
         'quotationMetaData,',
         'articleQuotationEntries,',
@@ -428,6 +432,7 @@ export class QuotationService {
       articleQuotationEntries: [],
       uploads: [],
       id: undefined,
+      status: QUOTATION_STATUS.Draft,
     });
     const articleQuotationEntries =
       await this.articleQuotationEntryService.duplicateMany(
@@ -435,10 +440,12 @@ export class QuotationService {
         quotation.id,
       );
 
-    const uploads = await this.quotationUploadService.duplicateMany(
-      existingQuotation.uploads.map((upload) => upload.id),
-      quotation.id,
-    );
+    const uploads = duplicateQuotationDto.includeFiles
+      ? await this.quotationUploadService.duplicateMany(
+          existingQuotation.uploads.map((upload) => upload.id),
+          quotation.id,
+        )
+      : [];
 
     return this.quotationRepository.save({
       ...quotation,
