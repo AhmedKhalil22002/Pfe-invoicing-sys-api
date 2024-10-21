@@ -24,6 +24,8 @@ import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
 import { QuotationUploadService } from './quotation-upload.service';
 import { ResponseQuotationUploadDto } from '../dtos/quotation-upload.response.dto';
+import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
+import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
@@ -456,6 +458,12 @@ export class QuotationService {
     updateQuotationDtos: UpdateQuotationDto[],
   ): Promise<QuotationEntity[]> {
     return this.quotationRepository.updateMany(updateQuotationDtos);
+  }
+
+  async updateQuotationSequence(
+    updatedSequenceDto: UpdateQuotationSequenceDto,
+  ): Promise<QuotationSequence> {
+    return (await this.quotationSequenceService.set(updatedSequenceDto)).value;
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {
