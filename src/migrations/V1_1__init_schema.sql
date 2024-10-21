@@ -243,7 +243,6 @@ CREATE TABLE
             'quotation.status.accepted',
             'quotation.status.rejected'
         ) DEFAULT NULL,
-        `defaultCondition` BOOLEAN DEFAULT FALSE,
         `discount` float DEFAULT NULL,
         `discount_type` enum ('PERCENTAGE', 'AMOUNT') DEFAULT NULL,
         `subTotal` float DEFAULT NULL,

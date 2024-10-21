@@ -1,10 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsEnum,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -39,11 +37,6 @@ export class CreateQuotationDto {
   @IsString()
   @MaxLength(1024)
   generalConditions?: string;
-
-  @ApiProperty({ example: true, type: Boolean })
-  @IsBoolean()
-  @IsOptional()
-  defaultCondition?: boolean;
 
   @ApiProperty({
     example: QUOTATION_STATUS.Draft,
@@ -105,14 +98,6 @@ export class CreateQuotationDto {
   @IsString()
   @MaxLength(1024)
   notes?: string;
-
-  @ApiProperty({
-    example: '10',
-    type: Number,
-  })
-  @IsOptional()
-  @IsNumber()
-  taxStamp?: number;
 
   @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
   @IsOptional()

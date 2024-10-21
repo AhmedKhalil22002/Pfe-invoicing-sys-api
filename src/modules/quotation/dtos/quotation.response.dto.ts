@@ -39,9 +39,6 @@ export class ResponseQuotationDto {
   })
   generalConditions?: string;
 
-  @ApiProperty({ example: true, type: Boolean })
-  defaultCondition: boolean;
-
   @ApiProperty({
     example: QUOTATION_STATUS.Draft,
     enum: QUOTATION_STATUS,
@@ -119,12 +116,6 @@ export class ResponseQuotationDto {
     type: String,
   })
   notes?: string;
-
-  @ApiProperty({
-    example: '10',
-    type: Number,
-  })
-  taxStamp?: number;
 
   @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
   articleQuotationEntries?: ResponseArticleQuotationEntryDto[];
