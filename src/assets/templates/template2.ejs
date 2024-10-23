@@ -21,7 +21,7 @@
             </h2>
             <div>
                 <%= quotation.cabinet.address.address %>, <%= quotation.cabinet.address.zipcode %>
-                        <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.name %>
+                        <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.alpha2code %>
             </div>
             <div>
                 <%= quotation.cabinet.phone %>
@@ -45,7 +45,7 @@
                             <br><span>
                                 <%= quotation.firm.deliveryAddress.zipcode %>
                                     <%= quotation.firm.deliveryAddress.region %>
-                                        <%= quotation.firm.deliveryAddress.country.name %>
+                                        <%= quotation.firm.deliveryAddress.country.alpha2code %>
                             </span>
                     </p>
                     <% } %>
@@ -57,7 +57,7 @@
                                     <br> <span>
                                         <%= quotation.firm.invoicingAddress.zipcode %>
                                             <%= quotation.firm.invoicingAddress.region %>
-                                                <%= quotation.firm.invoicingAddress.country.name %>
+                                                <%= quotation.firm.invoicingAddress.country.alpha2code %>
                                     </span>
                             </p>
                             <% } %>
@@ -161,7 +161,7 @@
                         <%= quotation.currency.symbol %>
                 </td>
             </tr>
-            <% quotation.taxSummaury.forEach(function(tax) { %>
+            <% quotation.taxSummary.forEach(function(tax) { %>
                 <tr>
                     <td>
                         <%= tax.label %> (<%= tax.rate %> %)

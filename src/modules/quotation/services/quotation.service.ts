@@ -82,7 +82,7 @@ export class QuotationService {
           ...quotation,
           date: format(quotation.date, 'dd/MM/yyyy'),
           dueDate: format(quotation.dueDate, 'dd/MM/yyyy'),
-          taxSummaury: quotation.quotationMetaData.taxSummary,
+          taxSummary: quotation.quotationMetaData.taxSummary,
           subTotal: quotation.subTotal.toFixed(digitsAferComma),
           total: quotation.total.toFixed(digitsAferComma),
         },
