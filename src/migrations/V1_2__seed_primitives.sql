@@ -459,7 +459,7 @@ VALUES
         '$',
         2
     ),
-    (140, 'TND', 'Tunisian dinar', 'DT', 2),
+    (140, 'TND', 'Tunisian dinar', 'DT', 3),
     (141, 'TRY', 'Turkish lira', '₺', 2),
     (142, 'TMT', 'Turkmenistan manat', 'm', 2),
     (143, 'UGX', 'Ugandan shilling', 'Sh', 2),
