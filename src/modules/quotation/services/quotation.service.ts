@@ -16,7 +16,7 @@ import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
 import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
 import { PdfService } from 'src/common/pdf/services/pdf.service';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
@@ -29,6 +29,7 @@ import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto
 import { Transactional } from '@nestjs-cls/transactional';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class QuotationService {
@@ -464,6 +465,28 @@ export class QuotationService {
     updatedSequenceDto: UpdateQuotationSequenceDto,
   ): Promise<QuotationSequence> {
     return (await this.quotationSequenceService.set(updatedSequenceDto)).value;
+  }
+
+  @Transactional()
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async checkExpiredQuotations() {
+    const currentDate = new Date();
+    const expiredQuotations: QuotationEntity[] =
+      await this.quotationRepository.findAll({
+        where: {
+          status: QUOTATION_STATUS.Sent,
+        },
+      });
+    const quotationsToExpire = expiredQuotations.filter((quotation) =>
+      isAfter(currentDate, new Date(quotation.dueDate)),
+    );
+
+    if (quotationsToExpire.length) {
+      for (const quotation of quotationsToExpire) {
+        quotation.status = QUOTATION_STATUS.Expired;
+        await this.quotationRepository.save(quotation);
+      }
+    }
   }
 
   async softDelete(id: number): Promise<QuotationEntity> {

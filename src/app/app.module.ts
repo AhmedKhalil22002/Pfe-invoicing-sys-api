@@ -14,6 +14,7 @@ import { DataSource } from 'typeorm';
 import { ClsModule } from 'nestjs-cls';
 import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   controllers: [HelloController],
@@ -48,6 +49,7 @@ import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-t
       ],
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     RouterModule.forRoot(),
   ],
 })
