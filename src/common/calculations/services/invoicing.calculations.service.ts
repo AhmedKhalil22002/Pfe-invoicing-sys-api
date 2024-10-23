@@ -42,7 +42,7 @@ export class InvoicingCalculationsService {
 
     // Apply special taxes on top of the total after regular taxes
     const total =
-      totalAfterRegularTax * (1 + specialTaxAmount / 100) - fixedTaxAmount;
+      totalAfterRegularTax * (1 + specialTaxAmount / 100) + fixedTaxAmount;
 
     return total;
   }
