@@ -119,7 +119,6 @@ export class InterlocutorService {
     const associationsToDelete = existingAssociations.filter(
       (association) => !updatedFirmIds.includes(association.firmId),
     );
-
     //delete the firm associations that are no longer associated with the interlocutor
     await this.firmInterlocutorService.softDeleteMany(
       associationsToDelete.map((association) => association.id),
