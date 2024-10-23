@@ -26,17 +26,23 @@ export class InvoicingCalculationsService {
 
     let regularTaxAmount = 0;
     let specialTaxAmount = 0;
+    let fixedTaxAmount = 0;
 
     for (const tax of taxes) {
-      if (tax.isSpecial) specialTaxAmount += tax.value;
-      else regularTaxAmount += tax.value;
+      if (tax?.isRate) {
+        if (tax.isSpecial) specialTaxAmount += tax.value;
+        else regularTaxAmount += tax.value;
+      } else {
+        fixedTaxAmount += tax.value;
+      }
     }
     // Apply regular taxes first
     const totalAfterRegularTax =
       subTotalPlusDiscount * (1 + regularTaxAmount / 100);
 
     // Apply special taxes on top of the total after regular taxes
-    const total = totalAfterRegularTax * (1 + specialTaxAmount / 100);
+    const total =
+      totalAfterRegularTax * (1 + specialTaxAmount / 100) - fixedTaxAmount;
 
     return total;
   }
@@ -51,9 +57,22 @@ export class InvoicingCalculationsService {
       // Calculate regular taxes first
       let regularTaxAmount = 0;
       taxes.forEach((tax) => {
-        if (!tax?.isSpecial) {
-          const taxAmount = subTotalPlusDiscount * (tax?.value || 0);
+        if (!tax?.isSpecial && tax?.isRate) {
+          // Handle percentage-based regular taxes (dividing rate by 100)
+          const taxAmount = subTotalPlusDiscount * ((tax?.value || 0) / 100);
           regularTaxAmount += taxAmount;
+
+          if (tax?.id && taxSummaryMap.has(tax.id)) {
+            taxSummaryMap.get(tax.id)!.amount += taxAmount;
+          } else {
+            tax?.id &&
+              taxSummaryMap.set(tax.id, { taxId: tax.id, amount: taxAmount });
+          }
+        } else if (!tax?.isSpecial && !tax?.isRate) {
+          // Handle fixed-value regular taxes
+          const taxAmount = tax?.value || 0;
+          regularTaxAmount += taxAmount; // Include the fixed tax in the regular tax total
+
           if (tax?.id && taxSummaryMap.has(tax.id)) {
             taxSummaryMap.get(tax.id)!.amount += taxAmount;
           } else {
@@ -66,8 +85,18 @@ export class InvoicingCalculationsService {
       // Apply special taxes on top of the amount including regular taxes
       const totalAfterRegularTax = subTotalPlusDiscount + regularTaxAmount;
       taxes.forEach((tax) => {
-        if (tax?.isSpecial) {
-          const taxAmount = totalAfterRegularTax * (tax?.value || 0);
+        if (tax?.isSpecial && tax?.isRate) {
+          // Handle percentage-based special taxes (dividing rate by 100)
+          const taxAmount = totalAfterRegularTax * ((tax?.value || 0) / 100);
+          if (tax?.id && taxSummaryMap.has(tax.id)) {
+            taxSummaryMap.get(tax.id)!.amount += taxAmount;
+          } else {
+            tax?.id &&
+              taxSummaryMap.set(tax.id, { taxId: tax.id, amount: taxAmount });
+          }
+        } else if (tax?.isSpecial && !tax?.isRate) {
+          // Handle fixed-value special taxes
+          const taxAmount = tax?.value || 0;
           if (tax?.id && taxSummaryMap.has(tax.id)) {
             taxSummaryMap.get(tax.id)!.amount += taxAmount;
           } else {
