@@ -5,6 +5,9 @@ SET
 ALTER TABLE `quotation`
 DROP COLUMN `taxStamp`;
 
+ALTER TABLE `quotation_meta_data`
+DROP COLUMN `hasTaxStamp`;
+
 ALTER TABLE `tax`
 RENAME COLUMN `rate` TO `value`;
 
