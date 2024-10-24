@@ -25,6 +25,8 @@ import { FirmController } from 'src/modules/firm/controllers/firm.controller';
 import { FirmModule } from 'src/modules/firm/firm.module';
 import { InterlocutorModule } from 'src/modules/interlocutor/Interlocutor.module';
 import { InterlocutorController } from 'src/modules/interlocutor/controllers/interlocutor.controller';
+import { InvoiceController } from 'src/modules/invoice/controllers/invoice.controller';
+import { InvoiceModule } from 'src/modules/invoice/invoice.module';
 import { PaymentConditionController } from 'src/modules/payment-condition/controllers/payment-condition.controller';
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
 import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
@@ -46,6 +48,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     FirmController,
     FirmInterlocutorEntryController,
     InterlocutorController,
+    InvoiceController,
     PaymentConditionController,
     QuotationController,
     StorageController,
@@ -66,6 +69,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     FirmModule,
     FirmInterlocutorEntryModule,
     InterlocutorModule,
+    InvoiceModule,
     PaymentConditionModule,
     QuotationModule,
     StorageModule,
