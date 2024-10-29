@@ -29,7 +29,8 @@ CREATE TABLE
             'invoice.status.validated',
             'invoice.status.paid',
             'invoice.status.unpaid',
-            'invoice.status.expired'
+            'invoice.status.expired',
+            'invoice.status.archived'
         ) DEFAULT NULL,
         `discount` float DEFAULT NULL,
         `discount_type` enum ('PERCENTAGE', 'AMOUNT') DEFAULT NULL,

@@ -6,4 +6,5 @@ export enum INVOICE_STATUS {
   Paid = 'invoice.status.paid',
   Unpaid = 'invoice.status.unpaid',
   Expired = 'invoice.status.expired',
+  Archived = 'quotation.status.archived',
 }
