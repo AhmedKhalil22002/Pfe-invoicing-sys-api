@@ -24,6 +24,9 @@ CREATE TABLE
         `generalConditions` varchar(1024) DEFAULT NULL,
         `status` enum (
             'invoice.status.non_existent',
+            'invoice.status.draft',
+            'invoice.status.sent',
+            'invoice.status.validated',
             'invoice.status.paid',
             'invoice.status.unpaid',
             'invoice.status.expired'
