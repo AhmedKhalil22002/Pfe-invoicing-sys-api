@@ -18,6 +18,7 @@ import { BankAccountEntity } from 'src/modules/bank-account/repositories/entitie
 import { InvoiceUploadEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
+import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {
@@ -101,4 +102,11 @@ export class InvoiceEntity extends EntityHelper {
 
   @OneToMany(() => InvoiceUploadEntity, (upload) => upload.invoice)
   uploads: InvoiceUploadEntity[];
+
+  @OneToOne(() => QuotationEntity)
+  @JoinColumn({ name: 'quotationId' })
+  quotation: QuotationEntity;
+
+  @Column({ type: 'int', nullable: true })
+  quotationId: number;
 }

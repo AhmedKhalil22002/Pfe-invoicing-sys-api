@@ -125,4 +125,7 @@ export class ResponseQuotationDto {
 
   @ApiProperty({ required: false })
   uploads?: ResponseQuotationUploadDto[];
+
+  @ApiProperty({ required: false })
+  invoiceId?: number;
 }

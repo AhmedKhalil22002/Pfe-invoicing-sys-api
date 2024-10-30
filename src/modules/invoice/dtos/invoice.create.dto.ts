@@ -110,4 +110,12 @@ export class CreateInvoiceDto {
   @ApiProperty({ required: false })
   @IsOptional()
   uploads?: CreateInvoiceUploadDto[];
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  quotationId?: number;
 }

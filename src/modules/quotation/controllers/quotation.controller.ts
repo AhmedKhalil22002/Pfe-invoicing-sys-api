@@ -20,6 +20,8 @@ import { IQueryObject } from 'src/common/database/interfaces/database-query-opti
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
+import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
+import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 
 @ApiTags('quotation')
 @Controller({
@@ -27,7 +29,10 @@ import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
   path: '/quotation',
 })
 export class QuotationController {
-  constructor(private readonly quotationService: QuotationService) {}
+  constructor(
+    private readonly quotationService: QuotationService,
+    private readonly invoiceService: InvoiceService,
+  ) {}
 
   @Get('/all')
   async findAll(
@@ -106,9 +111,23 @@ export class QuotationController {
   })
   async update(
     @Param('id') id: number,
-    @Body() updateActivityDto: UpdateQuotationDto,
+    @Body() updateQuotationDto: UpdateQuotationDto,
   ): Promise<ResponseQuotationDto> {
-    return await this.quotationService.update(id, updateActivityDto);
+    if (updateQuotationDto.status === QUOTATION_STATUS.Invoiced) {
+      const quotation = await this.quotationService.findOneByCondition({
+        filter: `id||$eq||${id}`,
+        join:
+          'quotationMetaData,' +
+          'articleQuotationEntries,' +
+          `articleQuotationEntries.article,` +
+          `articleQuotationEntries.articleQuotationEntryTaxes,` +
+          `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
+      });
+      console.log(quotation);
+      const invoice = await this.invoiceService.saveFromQuotation(quotation);
+      updateQuotationDto.invoiceId = invoice.id;
+    }
+    return await this.quotationService.update(id, updateQuotationDto);
   }
 
   @Delete('/:id')

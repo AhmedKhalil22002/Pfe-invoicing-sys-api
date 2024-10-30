@@ -17,6 +17,7 @@ import { QuotationMetaDataService } from './services/quotation-meta-data.service
 import { BankAccountModule } from '../bank-account/bank-account.module';
 import { StorageModule } from 'src/common/storage/storage.module';
 import { QuotationUploadService } from './services/quotation-upload.service';
+import { InvoiceModule } from '../invoice/invoice.module';
 
 @Module({
   controllers: [],
@@ -39,6 +40,7 @@ import { QuotationUploadService } from './services/quotation-upload.service';
     CurrencyModule,
     FirmModule,
     InterlocutorModule,
+    InvoiceModule,
     TaxModule,
     //abstract modules
     PdfModule,

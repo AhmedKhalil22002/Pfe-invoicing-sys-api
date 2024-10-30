@@ -29,6 +29,7 @@ import { DuplicateInvoiceDto } from '../dtos/invoice.duplicate.dto';
 import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
+import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 
 @Injectable()
 export class InvoiceService {
@@ -162,7 +163,7 @@ export class InvoiceService {
     ]);
 
     if (!firm) {
-      throw new Error('Firm not found'); // Handle firm not existing
+      throw new Error('Firm not found');
     }
 
     // Check interlocutor existence
@@ -231,6 +232,8 @@ export class InvoiceService {
       ...createInvoiceDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
       currencyId: currency ? currency.id : firm.currencyId,
+      //this will be changed to fit with the connected cabinet
+      cabinetId: 1,
       sequential,
       articleInvoiceEntries: articleEntries,
       invoiceMetaData,
@@ -259,6 +262,40 @@ export class InvoiceService {
       invoices.push(invoice);
     }
     return invoices;
+  }
+
+  @Transactional()
+  async saveFromQuotation(quotation: QuotationEntity): Promise<InvoiceEntity> {
+    // Fetch the latest sequential number for invoice
+    return this.save({
+      quotationId: quotation.id,
+      currencyId: quotation.currencyId,
+      bankAccountId: quotation.bankAccountId,
+      interlocutorId: quotation.interlocutorId,
+      firmId: quotation.firmId,
+      discount: quotation.discount,
+      discount_type: quotation.discount_type,
+      object: quotation.object,
+      status: INVOICE_STATUS.Draft,
+      date: null,
+      dueDate: null,
+      invoiceMetaData: quotation.quotationMetaData,
+      articleInvoiceEntries: quotation.articleQuotationEntries.map((entry) => {
+        return {
+          unit_price: entry.unit_price,
+          quantity: entry.quantity,
+          discount: entry.discount,
+          discount_type: entry.discount_type,
+          subTotal: entry.subTotal,
+          total: entry.total,
+          articleId: entry.article.id,
+          article: entry.article,
+          taxes: entry.articleQuotationEntryTaxes.map((entry) => {
+            return entry.taxId;
+          }),
+        };
+      }),
+    });
   }
 
   async updateInvoiceUploads(

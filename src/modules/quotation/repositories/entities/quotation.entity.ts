@@ -18,6 +18,7 @@ import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet
 import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
 import { QuotationUploadEntity } from './quotation-file.entity';
+import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
@@ -101,4 +102,10 @@ export class QuotationEntity extends EntityHelper {
 
   @OneToMany(() => QuotationUploadEntity, (upload) => upload.quotation)
   uploads: QuotationUploadEntity[];
+
+  @OneToOne(() => InvoiceEntity, (invoice) => invoice.quotation)
+  invoice: InvoiceEntity;
+
+  @Column({ type: 'int', nullable: true })
+  invoiceId: number;
 }
