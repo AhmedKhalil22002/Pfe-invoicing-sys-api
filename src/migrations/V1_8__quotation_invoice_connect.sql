@@ -11,11 +11,6 @@ MODIFY `status` ENUM(
     'quotation.status.archived'
 ) DEFAULT NULL;
 
-
 ALTER TABLE `invoice`
 ADD COLUMN `quotationId` INT NULL,
 ADD CONSTRAINT `FK_invoice_quotation` FOREIGN KEY (`quotationId`) REFERENCES `quotation` (`id`) ON DELETE SET NULL;
-
-ALTER TABLE `quotation`
-ADD COLUMN `invoiceId` INT NULL,
-ADD CONSTRAINT `FK_quotation_invoice` FOREIGN KEY (`invoiceId`) REFERENCES `invoice` (`id`) ON DELETE SET NULL;

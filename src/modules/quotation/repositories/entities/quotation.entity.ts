@@ -103,9 +103,6 @@ export class QuotationEntity extends EntityHelper {
   @OneToMany(() => QuotationUploadEntity, (upload) => upload.quotation)
   uploads: QuotationUploadEntity[];
 
-  @OneToOne(() => InvoiceEntity, (invoice) => invoice.quotation)
-  invoice: InvoiceEntity;
-
-  @Column({ type: 'int', nullable: true })
-  invoiceId: number;
+  @OneToMany(() => InvoiceEntity, (invoice) => invoice.quotation)
+  invoices: InvoiceEntity[];
 }
