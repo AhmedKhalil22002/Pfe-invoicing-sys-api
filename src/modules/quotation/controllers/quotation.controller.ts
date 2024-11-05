@@ -113,7 +113,10 @@ export class QuotationController {
     @Param('id') id: number,
     @Body() updateQuotationDto: UpdateQuotationDto,
   ): Promise<ResponseQuotationDto> {
-    if (updateQuotationDto.status === QUOTATION_STATUS.Invoiced) {
+    if (
+      updateQuotationDto.status === QUOTATION_STATUS.Invoiced &&
+      updateQuotationDto.createInvoice
+    ) {
       const quotation = await this.quotationService.findOneByCondition({
         filter: `id||$eq||${id}`,
         join:
@@ -123,7 +126,6 @@ export class QuotationController {
           `articleQuotationEntries.articleQuotationEntryTaxes,` +
           `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
       });
-      console.log(quotation);
       const invoice = await this.invoiceService.saveFromQuotation(quotation);
       updateQuotationDto.invoiceId = invoice.id;
     }

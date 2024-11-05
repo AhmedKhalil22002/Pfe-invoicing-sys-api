@@ -10,4 +10,8 @@ export class UpdateQuotationDto extends CreateQuotationDto {
   @ApiProperty({ required: false })
   @IsOptional()
   uploads?: UpdateQuotationUploadDto[];
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  createInvoice: boolean;
 }

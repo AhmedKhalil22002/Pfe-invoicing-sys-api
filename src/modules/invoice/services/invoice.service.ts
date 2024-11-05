@@ -266,7 +266,6 @@ export class InvoiceService {
 
   @Transactional()
   async saveFromQuotation(quotation: QuotationEntity): Promise<InvoiceEntity> {
-    // Fetch the latest sequential number for invoice
     return this.save({
       quotationId: quotation.id,
       currencyId: quotation.currencyId,
@@ -279,7 +278,6 @@ export class InvoiceService {
       status: INVOICE_STATUS.Draft,
       date: null,
       dueDate: null,
-      invoiceMetaData: quotation.quotationMetaData,
       articleInvoiceEntries: quotation.articleQuotationEntries.map((entry) => {
         return {
           unit_price: entry.unit_price,
