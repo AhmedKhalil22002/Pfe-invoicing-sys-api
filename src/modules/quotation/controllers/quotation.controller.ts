@@ -103,6 +103,40 @@ export class QuotationController {
     );
   }
 
+  @Put('/invoice/:id/:create')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    required: true,
+  })
+  @ApiParam({
+    name: 'create',
+    type: 'boolean',
+    required: false,
+  })
+  async invoice(
+    @Param('id') id: number,
+    @Param('create') create: boolean,
+  ): Promise<ResponseQuotationDto> {
+    let quotation = await this.quotationService.findOneById(id);
+    if (quotation.status === QUOTATION_STATUS.Invoiced || create) {
+      quotation = await this.quotationService.findOneByCondition({
+        filter: `id||$eq||${id}`,
+        join:
+          'quotationMetaData,' +
+          'articleQuotationEntries,' +
+          `articleQuotationEntries.article,` +
+          `articleQuotationEntries.articleQuotationEntryTaxes,` +
+          `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
+      });
+      await this.invoiceService.saveFromQuotation(quotation);
+    }
+    return await this.quotationService.updateStatus(
+      id,
+      QUOTATION_STATUS.Invoiced,
+    );
+  }
+
   @Put('/:id')
   @ApiParam({
     name: 'id',
@@ -113,22 +147,6 @@ export class QuotationController {
     @Param('id') id: number,
     @Body() updateQuotationDto: UpdateQuotationDto,
   ): Promise<ResponseQuotationDto> {
-    if (
-      updateQuotationDto.status === QUOTATION_STATUS.Invoiced &&
-      updateQuotationDto.createInvoice
-    ) {
-      const quotation = await this.quotationService.findOneByCondition({
-        filter: `id||$eq||${id}`,
-        join:
-          'quotationMetaData,' +
-          'articleQuotationEntries,' +
-          `articleQuotationEntries.article,` +
-          `articleQuotationEntries.articleQuotationEntryTaxes,` +
-          `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
-      });
-      const invoice = await this.invoiceService.saveFromQuotation(quotation);
-      updateQuotationDto.invoiceId = invoice.id;
-    }
     return await this.quotationService.update(id, updateQuotationDto);
   }
 

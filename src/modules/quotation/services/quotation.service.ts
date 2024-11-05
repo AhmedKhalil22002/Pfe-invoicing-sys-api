@@ -455,6 +455,17 @@ export class QuotationService {
     });
   }
 
+  async updateStatus(
+    id: number,
+    status: QUOTATION_STATUS,
+  ): Promise<QuotationEntity> {
+    const quotation = await this.quotationRepository.findOneById(id);
+    return this.quotationRepository.save({
+      id: quotation.id,
+      status,
+    });
+  }
+
   async updateMany(
     updateQuotationDtos: UpdateQuotationDto[],
   ): Promise<QuotationEntity[]> {
