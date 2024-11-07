@@ -14,3 +14,11 @@ MODIFY `status` ENUM(
 ALTER TABLE `invoice`
 ADD COLUMN `quotationId` INT NULL,
 ADD CONSTRAINT `FK_invoice_quotation` FOREIGN KEY (`quotationId`) REFERENCES `quotation` (`id`) ON DELETE SET NULL;
+
+ALTER TABLE `invoice`
+ADD COLUMN `taxStampId` INT NULL,
+ADD CONSTRAINT `FK_invoice_tax` FOREIGN KEY (`taxStampId`) REFERENCES `tax` (`id`) ON DELETE SET NULL;
+
+
+ALTER TABLE `invoice_meta_data` 
+ADD COLUMN `hasTaxStamp` boolean DEFAULT FALSE;

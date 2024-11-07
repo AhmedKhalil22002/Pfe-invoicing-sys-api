@@ -125,4 +125,10 @@ export class ResponseInvoiceDto {
 
   @ApiProperty({ required: false })
   uploads?: ResponseInvoiceUploadDto[];
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  taxStampId?: number;
 }

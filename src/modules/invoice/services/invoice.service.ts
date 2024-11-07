@@ -187,12 +187,18 @@ export class InvoiceService {
         articleEntries.map((entry) => entry.subTotal),
       );
 
+    // Fetch tax stamp if provided
+    const taxStamp = createInvoiceDto.taxStampId
+      ? await this.taxService.findOneById(createInvoiceDto.taxStampId)
+      : null;
+
     // Apply general discount
     const totalAfterGeneralDiscount =
       this.calculationsService.calculateTotalDiscount(
         total,
         createInvoiceDto.discount,
         createInvoiceDto.discount_type,
+        taxStamp?.value || 0,
       );
 
     // Format articleEntries as lineItems for tax calculations
@@ -276,7 +282,7 @@ export class InvoiceService {
       discount_type: quotation.discount_type,
       object: quotation.object,
       status: INVOICE_STATUS.Draft,
-      date: null,
+      date: new Date(),
       dueDate: null,
       articleInvoiceEntries: quotation.articleQuotationEntries.map((entry) => {
         return {
@@ -377,12 +383,18 @@ export class InvoiceService {
         articleEntries.map((entry) => entry.subTotal),
       );
 
+    // Fetch tax stamp if provided
+    const taxStamp = updateInvoiceDto.taxStampId
+      ? await this.taxService.findOneById(updateInvoiceDto.taxStampId)
+      : null;
+
     // Apply general discount
     const totalAfterGeneralDiscount =
       this.calculationsService.calculateTotalDiscount(
         total,
         updateInvoiceDto.discount,
         updateInvoiceDto.discount_type,
+        taxStamp?.value || 0,
       );
 
     // Convert article entries to line items for further calculations
@@ -430,6 +442,7 @@ export class InvoiceService {
       currencyId: finalCurrencyId,
       articleInvoiceEntries: articleEntries,
       invoiceMetaData,
+      taxStampId: taxStamp ? taxStamp.id : null,
       subTotal,
       total: totalAfterGeneralDiscount,
       uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],

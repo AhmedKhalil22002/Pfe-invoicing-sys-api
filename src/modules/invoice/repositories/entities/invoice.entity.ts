@@ -19,6 +19,7 @@ import { InvoiceUploadEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
+import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {
@@ -109,4 +110,11 @@ export class InvoiceEntity extends EntityHelper {
 
   @Column({ type: 'int', nullable: true })
   quotationId: number;
+
+  @ManyToOne(() => TaxEntity)
+  @JoinColumn({ name: 'taxStampId' })
+  taxStamp: TaxEntity;
+
+  @Column({ type: 'int' })
+  taxStampId: number;
 }

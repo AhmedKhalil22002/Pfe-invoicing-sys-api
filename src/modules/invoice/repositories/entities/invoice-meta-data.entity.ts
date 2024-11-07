@@ -25,6 +25,9 @@ export class InvoiceMetaDataEntity extends EntityHelper {
   @Column({ type: 'boolean', default: true })
   hasGeneralConditions: boolean;
 
+  @Column({ type: 'boolean', default: true })
+  hasTaxStamp: boolean;
+
   @Column({ type: 'json', nullable: true })
   taxSummary: any;
 }

@@ -19,6 +19,9 @@ export class ResponseInvoiceMetaDataDto {
   @ApiProperty({ example: true, type: Boolean })
   hasGeneralConditions?: boolean;
 
+  @ApiProperty({ example: true, type: Boolean })
+  hasTaxStamp?: boolean;
+
   @ApiProperty({ example: {}, type: Object })
   taxSummary: any;
 }

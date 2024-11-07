@@ -27,6 +27,11 @@ export class CreateInvoiceMetaDataDto {
   @IsOptional()
   hasGeneralConditions?: boolean;
 
+  @ApiProperty({ example: true, type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  hasTaxStamp?: boolean;
+
   @ApiProperty({ example: true, type: Object })
   @IsOptional()
   taxSummary?: any;
