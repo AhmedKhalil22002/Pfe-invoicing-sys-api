@@ -1,5 +1,6 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
@@ -12,16 +13,16 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
-import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
-import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
-import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
+import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
-import { QuotationUploadEntity } from './quotation-file.entity';
-import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
+import { InvoiceUploadEntity } from './invoice-file.entity';
+import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
+import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
+import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
+import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
 
-@Entity('quotation')
-export class QuotationEntity extends EntityHelper {
+@Entity('invoice')
+export class InvoiceEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -40,8 +41,8 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   generalConditions: string;
 
-  @Column({ type: 'enum', enum: QUOTATION_STATUS, nullable: true })
-  status: QUOTATION_STATUS;
+  @Column({ type: 'enum', enum: INVOICE_STATUS, nullable: true })
+  status: INVOICE_STATUS;
 
   @Column({ nullable: true })
   discount: number;
@@ -86,12 +87,12 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   notes: string;
 
-  @OneToMany(() => ArticleQuotationEntryEntity, (entry) => entry.quotation)
-  articleQuotationEntries: ArticleQuotationEntryEntity[];
+  @OneToMany(() => ArticleInvoiceEntryEntity, (entry) => entry.invoice)
+  articleInvoiceEntries: ArticleInvoiceEntryEntity[];
 
-  @OneToOne(() => QuotationMetaDataEntity)
+  @OneToOne(() => InvoiceMetaDataEntity)
   @JoinColumn()
-  quotationMetaData: QuotationMetaDataEntity;
+  invoiceMetaData: InvoiceMetaDataEntity;
 
   @ManyToOne(() => BankAccountEntity)
   @JoinColumn({ name: 'bankAccountId' })
@@ -100,9 +101,20 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'int' })
   bankAccountId: number;
 
-  @OneToMany(() => QuotationUploadEntity, (upload) => upload.quotation)
-  uploads: QuotationUploadEntity[];
+  @OneToMany(() => InvoiceUploadEntity, (upload) => upload.invoice)
+  uploads: InvoiceUploadEntity[];
 
-  @OneToMany(() => InvoiceEntity, (invoice) => invoice.quotation)
-  invoices: InvoiceEntity[];
+  @ManyToOne(() => QuotationEntity)
+  @JoinColumn({ name: 'quotationId' })
+  quotation: QuotationEntity;
+
+  @Column({ type: 'int', nullable: true })
+  quotationId: number;
+
+  @ManyToOne(() => TaxEntity)
+  @JoinColumn({ name: 'taxStampId' })
+  taxStamp: TaxEntity;
+
+  @Column({ type: 'int' })
+  taxStampId: number;
 }

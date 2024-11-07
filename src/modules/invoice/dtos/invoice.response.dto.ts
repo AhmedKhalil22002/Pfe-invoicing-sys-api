@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
+import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { ResponseArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.response.dto';
-import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
-import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
-import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
-import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
-import { ResponseQuotationMetaDataDto } from './quotation-meta-data.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
 import { ResponseBankAccountDto } from 'src/modules/bank-account/dtos/bank-account.response.dto';
-import { ResponseQuotationUploadDto } from './quotation-upload.response.dto';
+import { ResponseFirmDto } from 'src/modules/firm/dtos/firm.response.dto';
+import { ResponseInterlocutorDto } from 'src/modules/interlocutor/dtos/interlocutor.response.dto';
+import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
+import { ResponseArticleInvoiceEntryDto } from './article-invoice-entry.response.dto';
+import { ResponseInvoiceMetaDataDto } from './invoice-meta-data.response.dto';
+import { ResponseInvoiceUploadDto } from './invoice-upload.response.dto';
 
-export class ResponseQuotationDto {
+export class ResponseInvoiceDto {
   @ApiProperty({ example: 1, type: Number })
   id: number;
 
@@ -40,10 +40,10 @@ export class ResponseQuotationDto {
   generalConditions?: string;
 
   @ApiProperty({
-    example: QUOTATION_STATUS.Draft,
-    enum: QUOTATION_STATUS,
+    example: INVOICE_STATUS.Unpaid,
+    enum: INVOICE_STATUS,
   })
-  status?: QUOTATION_STATUS;
+  status?: INVOICE_STATUS;
 
   @ApiProperty({
     example: '0.1',
@@ -108,7 +108,7 @@ export class ResponseQuotationDto {
   })
   cabinetId?: number;
 
-  @ApiProperty({ type: () => ResponseFirmDto })
+  @ApiProperty({ type: () => ResponseCabinetDto })
   cabinet?: ResponseCabinetDto;
 
   @ApiProperty({
@@ -117,15 +117,18 @@ export class ResponseQuotationDto {
   })
   notes?: string;
 
-  @ApiProperty({ type: () => ResponseArticleQuotationEntryDto, isArray: true })
-  articleQuotationEntries?: ResponseArticleQuotationEntryDto[];
+  @ApiProperty({ type: () => ResponseArticleInvoiceEntryDto, isArray: true })
+  articleInvoiceEntries?: ResponseArticleInvoiceEntryDto[];
 
-  @ApiProperty({ type: () => ResponseQuotationMetaDataDto })
-  quotationMetaData?: ResponseQuotationMetaDataDto;
-
-  @ApiProperty({ required: false })
-  uploads?: ResponseQuotationUploadDto[];
+  @ApiProperty({ type: () => ResponseInvoiceMetaDataDto })
+  invoiceMetaData?: ResponseInvoiceMetaDataDto;
 
   @ApiProperty({ required: false })
-  invoiceId?: number;
+  uploads?: ResponseInvoiceUploadDto[];
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  taxStampId?: number;
 }

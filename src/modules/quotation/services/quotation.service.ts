@@ -105,7 +105,7 @@ export class QuotationService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<ResponseQuotationDto | null> {
+  ): Promise<QuotationEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const quotation = await this.quotationRepository.findOne(
@@ -452,6 +452,17 @@ export class QuotationService {
       ...quotation,
       articleQuotationEntries,
       uploads,
+    });
+  }
+
+  async updateStatus(
+    id: number,
+    status: QUOTATION_STATUS,
+  ): Promise<QuotationEntity> {
+    const quotation = await this.quotationRepository.findOneById(id);
+    return this.quotationRepository.save({
+      id: quotation.id,
+      status,
     });
   }
 

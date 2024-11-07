@@ -8,12 +8,12 @@ import {
   MaxLength,
 } from 'class-validator';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { CreateArticleQuotationEntryDto } from 'src/modules/quotation/dtos/article-quotation-entry.create.dto';
-import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
-import { CreateQuotationMetaDataDto } from './quotation-meta-data.create.dto';
-import { CreateQuotationUploadDto } from './quotation-upload.create.dto';
+import { INVOICE_STATUS } from '../enums/invoice-status.enum';
+import { CreateArticleInvoiceEntryDto } from './article-invoice-entry.create.dto';
+import { CreateInvoiceMetaDataDto } from './invoice-meta-data.create.dto';
+import { CreateInvoiceUploadDto } from './invoice-upload.create.dto';
 
-export class CreateQuotationDto {
+export class CreateInvoiceDto {
   @ApiProperty({ example: faker.date.anytime() })
   date?: Date;
 
@@ -39,12 +39,12 @@ export class CreateQuotationDto {
   generalConditions?: string;
 
   @ApiProperty({
-    example: QUOTATION_STATUS.Draft,
-    enum: QUOTATION_STATUS,
+    example: INVOICE_STATUS.Unpaid,
+    enum: INVOICE_STATUS,
   })
   @IsOptional()
-  @IsEnum(QUOTATION_STATUS)
-  status?: QUOTATION_STATUS;
+  @IsEnum(INVOICE_STATUS)
+  status?: INVOICE_STATUS;
 
   @ApiProperty({
     example: '0.1',
@@ -99,19 +99,31 @@ export class CreateQuotationDto {
   @MaxLength(1024)
   notes?: string;
 
-  @ApiProperty({ type: () => CreateArticleQuotationEntryDto, isArray: true })
+  @ApiProperty({ type: () => CreateArticleInvoiceEntryDto, isArray: true })
   @IsOptional()
-  articleQuotationEntries?: CreateArticleQuotationEntryDto[];
+  articleInvoiceEntries?: CreateArticleInvoiceEntryDto[];
 
-  @ApiProperty({ type: () => CreateQuotationMetaDataDto })
+  @ApiProperty({ type: () => CreateInvoiceMetaDataDto })
   @IsOptional()
-  quotationMetaData?: CreateQuotationMetaDataDto;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  uploads?: CreateQuotationUploadDto[];
+  invoiceMetaData?: CreateInvoiceMetaDataDto;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  invoiceId?: number;
+  uploads?: CreateInvoiceUploadDto[];
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  quotationId?: number;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  taxStampId?: number;
 }

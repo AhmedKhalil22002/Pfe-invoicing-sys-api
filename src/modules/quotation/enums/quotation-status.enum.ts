@@ -6,4 +6,6 @@ export enum QUOTATION_STATUS {
   Sent = 'quotation.status.sent',
   Accepted = 'quotation.status.accepted',
   Rejected = 'quotation.status.rejected',
+  Invoiced = 'quotation.status.invoiced',
+  Archived = 'quotation.status.archived',
 }

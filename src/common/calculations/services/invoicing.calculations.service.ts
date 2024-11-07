@@ -121,6 +121,7 @@ export class InvoicingCalculationsService {
     total: number,
     discount: number,
     discount_type: DISCOUNT_TYPES,
+    taxStamp: number = 0,
     applyDiscountAfter: boolean = true,
   ): number {
     let discountAmount = 0;
@@ -137,6 +138,6 @@ export class InvoicingCalculationsService {
       total -= discountAmount;
     }
 
-    return total;
+    return total + taxStamp;
   }
 }
