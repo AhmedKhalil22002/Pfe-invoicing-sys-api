@@ -118,23 +118,23 @@ export class QuotationController {
     @Param('id') id: number,
     @Param('create') create: boolean,
   ): Promise<ResponseQuotationDto> {
-    let quotation = await this.quotationService.findOneById(id);
+    const quotation = await this.quotationService.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join:
+        'quotationMetaData,' +
+        'articleQuotationEntries,' +
+        `articleQuotationEntries.article,` +
+        `articleQuotationEntries.articleQuotationEntryTaxes,` +
+        `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
+    });
     if (quotation.status === QUOTATION_STATUS.Invoiced || create) {
-      quotation = await this.quotationService.findOneByCondition({
-        filter: `id||$eq||${id}`,
-        join:
-          'quotationMetaData,' +
-          'articleQuotationEntries,' +
-          `articleQuotationEntries.article,` +
-          `articleQuotationEntries.articleQuotationEntryTaxes,` +
-          `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
-      });
       await this.invoiceService.saveFromQuotation(quotation);
     }
-    return await this.quotationService.updateStatus(
-      id,
-      QUOTATION_STATUS.Invoiced,
-    );
+    await this.quotationService.updateStatus(id, QUOTATION_STATUS.Invoiced);
+    return await this.quotationService.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'invoices',
+    });
   }
 
   @Put('/:id')
