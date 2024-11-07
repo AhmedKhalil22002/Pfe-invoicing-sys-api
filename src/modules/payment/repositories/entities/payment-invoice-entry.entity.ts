@@ -27,4 +27,7 @@ export class PaymentInvoiceEntryEntity extends EntityHelper {
 
   @Column({ type: 'int' })
   invoicetId: number;
+
+  @Column({ type: 'float', nullable: true })
+  amount: number;
 }

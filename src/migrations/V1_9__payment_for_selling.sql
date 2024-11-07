@@ -39,6 +39,7 @@ CREATE TABLE
         `id` int NOT NULL AUTO_INCREMENT,
         `paymentId` int DEFAULT NULL,
         `invoiceId` int DEFAULT NULL,
+        `amount` float DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT NOW (),
         `updatedAt` TIMESTAMP DEFAULT NOW (),
         `deletedAt` TIMESTAMP DEFAULT NULL,
