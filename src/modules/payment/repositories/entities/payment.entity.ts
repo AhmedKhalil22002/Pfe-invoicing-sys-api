@@ -1,8 +1,16 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { PAYMENT_MODE } from '../../enums/payment-mode.enum';
 import { PaymentUploadEntity } from './payment-file.entity';
 import { PaymentInvoiceEntryEntity } from './payment-invoice-entry.entity';
+import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 
 @Entity('payment')
 export class PaymentEntity extends EntityHelper {
@@ -12,6 +20,9 @@ export class PaymentEntity extends EntityHelper {
   @Column({ type: 'float', nullable: true })
   amount: number;
 
+  @Column({ type: 'float', nullable: true })
+  fee: number;
+
   @Column({ nullable: true })
   date: Date;
 
@@ -20,6 +31,13 @@ export class PaymentEntity extends EntityHelper {
 
   @Column({ type: 'varchar', length: 1024, nullable: true })
   notes: string;
+
+  @ManyToOne(() => CurrencyEntity)
+  @JoinColumn({ name: 'currencyId' })
+  currency: CurrencyEntity;
+
+  @Column({ type: 'int', nullable: true })
+  currencyId: number;
 
   @OneToMany(() => PaymentUploadEntity, (upload) => upload.payment)
   uploads: PaymentUploadEntity[];
