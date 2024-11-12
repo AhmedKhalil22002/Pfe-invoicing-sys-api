@@ -102,15 +102,14 @@ export class ActivityService {
     id: number,
     updateActivityDto: UpdateActivityDto,
   ): Promise<ActivityEntity> {
-    let activity = await this.findOneByLabel(updateActivityDto.label);
+    const activity = await this.findOneByLabel(updateActivityDto.label);
     if (activity) {
       throw new ActivityAlreadyExistsException();
     }
-    activity = await this.findOneById(id);
-    return this.activityRepository.save({
-      ...activity,
+    await this.activityRepository.update(id, {
       ...updateActivityDto,
     });
+    return this.findOneById(id);
   }
 
   async softDelete(id: number): Promise<ActivityEntity> {
