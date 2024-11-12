@@ -8,11 +8,15 @@ import { PaymentInvoiceEntryEntity } from '../repositories/entities/payment-invo
 import { PaymentInvoiceEntryNotFoundException } from '../errors/payment-invoice-entry.notfound.error';
 import { CreatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.create.dto';
 import { UpdatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.update.dto';
+import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
+import { Transactional } from '@nestjs-cls/transactional';
+import { INVOICE_STATUS } from 'src/modules/invoice/enums/invoice-status.enum';
 
 @Injectable()
 export class PaymentInvoiceEntryService {
   constructor(
     private readonly paymentInvoiceEntryRepository: PaymentInvoiceEntryRepository,
+    private readonly invoiceService: InvoiceService,
   ) {}
 
   async findOneByCondition(
@@ -35,9 +39,31 @@ export class PaymentInvoiceEntryService {
     return entry;
   }
 
+  @Transactional()
   async save(
     createPaymentInvoiceEntryDto: CreatePaymentInvoiceEntryDto,
   ): Promise<PaymentInvoiceEntryEntity> {
+    // Fetch the invoice
+    const existingInvoice = await this.invoiceService.findOneById(
+      createPaymentInvoiceEntryDto.invoiceId,
+    );
+    // Calculate the total amount paid
+    const totalAmountPaid =
+      existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount;
+
+    // determine the new invoice status
+    const newInvoiceStatus =
+      totalAmountPaid === 0
+        ? INVOICE_STATUS.Unpaid
+        : totalAmountPaid === existingInvoice.total
+          ? INVOICE_STATUS.Paid
+          : INVOICE_STATUS.PartiallyPaid;
+
+    await this.invoiceService.updateFields(existingInvoice.id, {
+      amountPaid: totalAmountPaid,
+      status: newInvoiceStatus,
+    });
+
     return this.paymentInvoiceEntryRepository.save(
       createPaymentInvoiceEntryDto,
     );

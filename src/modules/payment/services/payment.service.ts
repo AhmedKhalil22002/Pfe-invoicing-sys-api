@@ -10,10 +10,17 @@ import { PaymentNotFoundException } from '../errors/payment.notfound.error';
 import { ResponsePaymentDto } from '../dtos/payment.response.dto';
 import { CreatePaymentDto } from '../dtos/payment.create.dto';
 import { UpdatePaymentDto } from '../dtos/payment.update.dto';
+import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
+import { Transactional } from '@nestjs-cls/transactional';
+import { PaymentInvoiceEntryService } from './payment-invoice-entry.service';
 
 @Injectable()
 export class PaymentService {
-  constructor(private readonly paymentRepository: PaymentRepository) {}
+  constructor(
+    private readonly paymentRepository: PaymentRepository,
+    private readonly paymentInvoiceEntryService: PaymentInvoiceEntryService,
+    private readonly invoiceService: InvoiceService,
+  ) {}
 
   async findOneById(id: number): Promise<PaymentEntity> {
     const payment = await this.paymentRepository.findOneById(id);
@@ -67,8 +74,18 @@ export class PaymentService {
     return new PageDto(entities, pageMetaDto);
   }
 
+  @Transactional()
   async save(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
-    return this.paymentRepository.save(createPaymentDto);
+    const payement = await this.paymentRepository.save(createPaymentDto);
+    await this.paymentInvoiceEntryService.saveMany(
+      createPaymentDto.invoices.map((entry) => ({
+        paymentId: payement.id,
+        invoiceId: entry.invoiceId,
+        amount: entry.amount,
+        convertionRate: entry.convertionRate,
+      })),
+    );
+    return payement;
   }
 
   async update(

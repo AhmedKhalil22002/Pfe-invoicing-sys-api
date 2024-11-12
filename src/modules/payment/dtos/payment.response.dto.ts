@@ -14,6 +14,12 @@ export class ResponsePaymentDto {
   })
   amount?: number;
 
+  @ApiProperty({
+    example: '15.0',
+    type: Number,
+  })
+  fee?: number;
+
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;
 
@@ -28,6 +34,12 @@ export class ResponsePaymentDto {
     type: String,
   })
   notes?: string;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  currencyId?: number;
 
   @ApiProperty({ required: false })
   uploads?: ResponsePaymentUploadDto[];

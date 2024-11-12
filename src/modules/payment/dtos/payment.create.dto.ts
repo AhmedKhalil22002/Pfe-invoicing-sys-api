@@ -1,11 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { PAYMENT_MODE } from '../enums/payment-mode.enum';
-import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import {
   IsEnum,
+  IsInt,
   IsOptional,
-  IsPositive,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -20,8 +19,13 @@ export class CreatePaymentDto {
     example: '150.0',
     type: Number,
   })
-  @IsPositive()
   amount?: number;
+
+  @ApiProperty({
+    example: '15.0',
+    type: Number,
+  })
+  fee?: number;
 
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;
@@ -30,7 +34,8 @@ export class CreatePaymentDto {
     example: PAYMENT_MODE.Cash,
     enum: PAYMENT_MODE,
   })
-  @IsEnum(DISCOUNT_TYPES)
+  @IsEnum(PAYMENT_MODE)
+  @IsOptional()
   mode?: PAYMENT_MODE;
 
   @ApiProperty({
@@ -41,6 +46,14 @@ export class CreatePaymentDto {
   @IsString()
   @MaxLength(1024)
   notes?: string;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  currencyId?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
