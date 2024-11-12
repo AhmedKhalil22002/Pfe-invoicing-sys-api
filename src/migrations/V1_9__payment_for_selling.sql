@@ -55,3 +55,18 @@ CREATE TABLE
         CONSTRAINT `FK_payment_payment-invoice` FOREIGN KEY (`paymentId`) REFERENCES `payment` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_invoice_payment-invoice` FOREIGN KEY (`invoiceId`) REFERENCES `invoice` (`id`) ON DELETE CASCADE
     );
+
+ALTER TABLE `invoice`
+ADD COLUMN `amountPaid` float DEFAULT 0;
+
+ALTER TABLE `invoice` MODIFY `status` ENUM (
+    'invoice.status.non_existent',
+    'invoice.status.draft',
+    'invoice.status.sent',
+    'invoice.status.validated',
+    'invoice.status.paid',
+    'invoice.status.partially_paid',
+    'invoice.status.unpaid',
+    'invoice.status.expired',
+    'invoice.status.archived'
+) DEFAULT NULL;

@@ -10,4 +10,8 @@ export class UpdateInvoiceDto extends CreateInvoiceDto {
   @ApiProperty({ required: false })
   @IsOptional()
   uploads?: UpdateInvoiceUploadDto[];
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  amountPaid: number;
 }

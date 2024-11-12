@@ -9,7 +9,7 @@ import {
 import { PaymentEntity } from './payment.entity';
 import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
 
-@Entity('payment_invoice_entry')
+@Entity('payment-invoice_entry')
 export class PaymentInvoiceEntryEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,11 +22,11 @@ export class PaymentInvoiceEntryEntity extends EntityHelper {
   paymentId: number;
 
   @ManyToOne(() => InvoiceEntity)
-  @JoinColumn({ name: 'invoicetId' })
+  @JoinColumn({ name: 'invoiceId' })
   invoice: InvoiceEntity;
 
   @Column({ type: 'int' })
-  invoicetId: number;
+  invoiceId: number;
 
   @Column({ type: 'float', nullable: true })
   amount: number;

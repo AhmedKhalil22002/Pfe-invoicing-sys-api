@@ -56,6 +56,9 @@ export class InvoiceEntity extends EntityHelper {
   @Column({ type: 'float', nullable: true })
   total: number;
 
+  @Column({ type: 'float', nullable: true })
+  amountPaid: number;
+
   @ManyToOne(() => CurrencyEntity)
   @JoinColumn({ name: 'currencyId' })
   currency: CurrencyEntity;
