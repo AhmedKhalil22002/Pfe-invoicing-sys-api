@@ -312,7 +312,7 @@ export class QuotationService {
       });
 
     // Fetch and validate related entities in parallel to optimize performance
-    const [firm, bankAccount, currency] = await Promise.all([
+    const [firm, bankAccount, currency, interlocutor] = await Promise.all([
       this.firmService.findOneByCondition({
         filter: `id||$eq||${updateQuotationDto.firmId}`,
       }),
@@ -322,26 +322,26 @@ export class QuotationService {
       updateQuotationDto.currencyId
         ? this.currencyService.findOneById(updateQuotationDto.currencyId)
         : null,
+      updateQuotationDto.interlocutorId
+        ? this.interlocutorService.findOneById(
+            updateQuotationDto.interlocutorId,
+          )
+        : null,
     ]);
 
-    // Ensure the interlocutor exists
-    await this.interlocutorService.findOneById(
-      updateQuotationDto.interlocutorId,
-    );
-
-    // Fetch firm currency if no currency is provided
-    const finalCurrencyId = currency ? currency.id : firm.currencyId;
-
     // Soft delete old article entries to prepare for new ones
-    await this.articleQuotationEntryService.softDeleteMany(
-      existingQuotation.articleQuotationEntries.map((entry) => entry.id),
-    );
+    const existingArticles =
+      await this.articleQuotationEntryService.softDeleteMany(
+        existingQuotation.articleQuotationEntries.map((entry) => entry.id),
+      );
 
     // Save new article entries
     const articleEntries: ArticleQuotationEntryEntity[] =
-      await this.articleQuotationEntryService.saveMany(
-        updateQuotationDto.articleQuotationEntries,
-      );
+      updateQuotationDto.articleQuotationEntries
+        ? await this.articleQuotationEntryService.saveMany(
+            updateQuotationDto.articleQuotationEntries,
+          )
+        : existingArticles;
 
     // Calculate the subtotal and total for the new entries
     const { subTotal, total } =
@@ -398,10 +398,10 @@ export class QuotationService {
 
     // Save and return the updated quotation with all updated details
     return this.quotationRepository.save({
-      ...existingQuotation,
       ...updateQuotationDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
-      currencyId: finalCurrencyId,
+      currencyId: currency ? currency.id : firm.currencyId,
+      interlocutorId: interlocutor ? interlocutor.id : null,
       articleQuotationEntries: articleEntries,
       quotationMetaData,
       subTotal,
