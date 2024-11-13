@@ -475,13 +475,15 @@ export class InvoiceService {
     const sequential = await this.invoiceSequenceService.getSequential();
     const invoice = await this.invoiceRepository.save({
       ...existingInvoice,
+      id: undefined,
       sequential,
       invoiceMetaData,
       articleInvoiceEntries: [],
       uploads: [],
-      id: undefined,
-      status: INVOICE_STATUS.Unpaid,
+      amountPaid: 0,
+      status: INVOICE_STATUS.Draft,
     });
+
     const articleInvoiceEntries =
       await this.articleInvoiceEntryService.duplicateMany(
         existingInvoice.articleInvoiceEntries.map((entry) => entry.id),
