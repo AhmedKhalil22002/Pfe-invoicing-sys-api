@@ -54,7 +54,7 @@ export class PaymentInvoiceEntryService {
       existingInvoice.amountPaid +
         createPaymentInvoiceEntryDto.amount *
           createPaymentInvoiceEntryDto.convertionRate,
-      createPaymentInvoiceEntryDto.digitsAfterComma,
+      createPaymentInvoiceEntryDto.digitsAfterComma + 1,
     );
 
     // determine the new invoice status
@@ -108,7 +108,7 @@ export class PaymentInvoiceEntryService {
     const totalAmountPaid = approximateNumber(
       existingInvoice.amountPaid -
         existingEntry.amount * existingEntry.convertionRate,
-      existingInvoice.currency.digitAfterComma,
+      existingInvoice.currency.digitAfterComma + 1,
     );
     // determine the new invoice status
     const newInvoiceStatus =
