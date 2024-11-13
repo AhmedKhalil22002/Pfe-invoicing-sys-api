@@ -105,8 +105,15 @@ export class PaymentService {
     });
   }
 
+  @Transactional()
   async softDelete(id: number): Promise<PaymentEntity> {
-    await this.findOneById(id);
+    const existingPayment = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'invoices',
+    });
+    await this.paymentInvoiceEntryService.softDeleteMany(
+      existingPayment.invoices.map((invoice) => invoice.id),
+    );
     return this.paymentRepository.softDelete(id);
   }
 

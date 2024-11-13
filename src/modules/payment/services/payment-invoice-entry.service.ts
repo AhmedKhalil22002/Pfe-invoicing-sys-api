@@ -97,11 +97,33 @@ export class PaymentInvoiceEntryService {
     });
   }
 
+  @Transactional()
   async softDelete(id: number): Promise<PaymentInvoiceEntryEntity> {
-    await this.findOneById(id);
+    const existingEntry = await this.findOneById(id);
+    const existingInvoice = await this.invoiceService.findOneByCondition({
+      filter: `id||$eq||${existingEntry.invoiceId}`,
+      join: 'currency',
+    });
+    // Calculate the total amount paid
+    const totalAmountPaid = approximateNumber(
+      existingInvoice.amountPaid -
+        existingEntry.amount * existingEntry.convertionRate,
+      existingInvoice.currency.digitAfterComma,
+    );
+    // determine the new invoice status
+    const newInvoiceStatus =
+      totalAmountPaid === 0
+        ? INVOICE_STATUS.Unpaid
+        : INVOICE_STATUS.PartiallyPaid;
+
+    await this.invoiceService.updateFields(existingInvoice.id, {
+      amountPaid: totalAmountPaid,
+      status: newInvoiceStatus,
+    });
     return this.paymentInvoiceEntryRepository.softDelete(id);
   }
 
+  @Transactional()
   async softDeleteMany(ids: number[]) {
     ids.forEach(async (id) => {
       await this.softDelete(id);
