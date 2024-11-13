@@ -20,6 +20,7 @@ import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
+import { PaymentInvoiceEntryEntity } from 'src/modules/payment/repositories/entities/payment-invoice-entry.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {
@@ -120,4 +121,7 @@ export class InvoiceEntity extends EntityHelper {
 
   @Column({ type: 'int' })
   taxStampId: number;
+
+  @OneToMany(() => PaymentInvoiceEntryEntity, (entry) => entry.invoice)
+  payments: PaymentInvoiceEntryEntity[];
 }

@@ -5,11 +5,17 @@ import { PaymentInvoiceEntryService } from './services/payment-invoice-entry.ser
 import { PaymentRepositoryModule } from './repositories/payment.repository.module';
 import { StorageModule } from 'src/common/storage/storage.module';
 import { InvoiceModule } from '../invoice/invoice.module';
+import { CurrencyModule } from '../currency/currency.module';
 
 @Module({
   controllers: [],
   providers: [PaymentService, PaymentUploadService, PaymentInvoiceEntryService],
   exports: [PaymentService],
-  imports: [PaymentRepositoryModule, InvoiceModule, StorageModule],
+  imports: [
+    PaymentRepositoryModule,
+    CurrencyModule,
+    InvoiceModule,
+    StorageModule,
+  ],
 })
 export class PaymentModule {}

@@ -21,4 +21,10 @@ export class CreatePaymentInvoiceEntryDto {
   })
   @IsPositive()
   convertionRate?: number;
+
+  @ApiProperty({
+    example: 1,
+    type: Number,
+  })
+  digitsAfterComma?: number;
 }

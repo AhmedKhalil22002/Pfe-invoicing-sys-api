@@ -11,6 +11,7 @@ import { UpdatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.upda
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { INVOICE_STATUS } from 'src/modules/invoice/enums/invoice-status.enum';
+import { approximateNumber } from 'src/utils/number.utils';
 
 @Injectable()
 export class PaymentInvoiceEntryService {
@@ -47,9 +48,14 @@ export class PaymentInvoiceEntryService {
     const existingInvoice = await this.invoiceService.findOneById(
       createPaymentInvoiceEntryDto.invoiceId,
     );
+
     // Calculate the total amount paid
-    const totalAmountPaid =
-      existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount;
+    const totalAmountPaid = approximateNumber(
+      existingInvoice.amountPaid +
+        createPaymentInvoiceEntryDto.amount *
+          createPaymentInvoiceEntryDto.convertionRate,
+      createPaymentInvoiceEntryDto.digitsAfterComma,
+    );
 
     // determine the new invoice status
     const newInvoiceStatus =

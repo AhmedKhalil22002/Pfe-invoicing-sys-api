@@ -13,6 +13,7 @@ import { UpdatePaymentDto } from '../dtos/payment.update.dto';
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { PaymentInvoiceEntryService } from './payment-invoice-entry.service';
+import { CurrencyService } from 'src/modules/currency/services/currency.service';
 
 @Injectable()
 export class PaymentService {
@@ -20,6 +21,7 @@ export class PaymentService {
     private readonly paymentRepository: PaymentRepository,
     private readonly paymentInvoiceEntryService: PaymentInvoiceEntryService,
     private readonly invoiceService: InvoiceService,
+    private readonly currencyService: CurrencyService,
   ) {}
 
   async findOneById(id: number): Promise<PaymentEntity> {
@@ -77,12 +79,16 @@ export class PaymentService {
   @Transactional()
   async save(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
     const payement = await this.paymentRepository.save(createPaymentDto);
+    const currency = await this.currencyService.findOneById(
+      payement.currencyId,
+    );
     await this.paymentInvoiceEntryService.saveMany(
       createPaymentDto.invoices.map((entry) => ({
         paymentId: payement.id,
         invoiceId: entry.invoiceId,
         amount: entry.amount,
         convertionRate: entry.convertionRate,
+        digitsAfterComma: currency.digitAfterComma,
       })),
     );
     return payement;
