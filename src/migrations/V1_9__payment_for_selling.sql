@@ -12,13 +12,16 @@ CREATE TABLE
             'payment.payment_mode.wire_transfer'
         ) DEFAULT NULL,
         `currencyId` int NOT NULL,
+        `firmId` int NOT NULL,
         `notes` varchar(1024) DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT NOW (),
         `updatedAt` TIMESTAMP DEFAULT NOW (),
         `deletedAt` TIMESTAMP DEFAULT NULL,
         `isDeletionRestricted` BOOLEAN DEFAULT FALSE,
         PRIMARY KEY (`id`),
+        KEY `FK_firm_payment` (`firmId`),
         KEY `FK_currency_payment` (`currencyId`),
+        CONSTRAINT `FK_firm_payment` FOREIGN KEY (`firmId`) REFERENCES `firm` (`id`) ON DELETE CASCADE,
         CONSTRAINT `FK_currency_payment` FOREIGN KEY (`currencyId`) REFERENCES `currency` (`id`) ON DELETE CASCADE
     );
 
