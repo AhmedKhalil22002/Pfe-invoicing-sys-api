@@ -486,7 +486,7 @@ VALUES
     (1, 'Payable à réception', ''),
     (2, 'Echéance à la fin du mois', ''),
     (3, 'Echéance à la fin du mois prochain', ''),
-    (4, 'Personalisé', '');
+    (4, 'Personnalisé', '');
 
 INSERT INTO
     `app_config` (`key`, `value`)

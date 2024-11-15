@@ -29,6 +29,8 @@ import { InvoiceController } from 'src/modules/invoice/controllers/invoice.contr
 import { InvoiceModule } from 'src/modules/invoice/invoice.module';
 import { PaymentConditionController } from 'src/modules/payment-condition/controllers/payment-condition.controller';
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
+import { PaymentController } from 'src/modules/payment/controllers/payment.controller';
+import { PaymentModule } from 'src/modules/payment/payment.module';
 import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
@@ -49,6 +51,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     FirmInterlocutorEntryController,
     InterlocutorController,
     InvoiceController,
+    PaymentController,
     PaymentConditionController,
     QuotationController,
     StorageController,
@@ -71,6 +74,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     InterlocutorModule,
     InvoiceModule,
     PaymentConditionModule,
+    PaymentModule,
     QuotationModule,
     StorageModule,
     TaxModule,

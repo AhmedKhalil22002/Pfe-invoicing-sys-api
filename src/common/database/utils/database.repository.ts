@@ -7,11 +7,13 @@ import {
   QueryRunner,
   Repository,
   SelectQueryBuilder,
+  UpdateResult,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
 import { EntityHelper } from '../interfaces/database.entity.interface';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export abstract class DatabaseAbstractRepository<T extends EntityHelper>
   implements DatabaseInterfaceRepository<T>
@@ -66,6 +68,13 @@ export abstract class DatabaseAbstractRepository<T extends EntityHelper>
 
   public createMany(data: DeepPartial<T>[]): T[] {
     return this.getRepository().create(data);
+  }
+
+  public async update(
+    id: string | number,
+    data: QueryDeepPartialEntity<T>,
+  ): Promise<UpdateResult> {
+    return await this.getRepository().update(id, data);
   }
 
   public async updateMany(data: DeepPartial<T>[]): Promise<T[]> {

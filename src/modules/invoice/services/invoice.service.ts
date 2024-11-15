@@ -6,7 +6,7 @@ import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { FindManyOptions, FindOneOptions, UpdateResult } from 'typeorm';
 import { PdfService } from 'src/common/pdf/services/pdf.service';
 import { format } from 'date-fns';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
@@ -30,6 +30,7 @@ import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class InvoiceService {
@@ -104,11 +105,11 @@ export class InvoiceService {
   }
 
   async findOneByCondition(
-    query: IQueryObject,
+    query: IQueryObject = {},
   ): Promise<ResponseInvoiceDto | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
-    const invoice = await this.invoiceRepository.findOne(
+    const invoice = await this.invoiceRepository.findByCondition(
       queryOptions as FindOneOptions<InvoiceEntity>,
     );
     if (!invoice) return null;
@@ -346,8 +347,8 @@ export class InvoiceService {
         join: 'articleInvoiceEntries,invoiceMetaData,uploads',
       });
 
-    // Fetch and validate related entities in parallel to optimize performance
-    const [firm, bankAccount, currency] = await Promise.all([
+    // Fetch and validate related entities
+    const [firm, bankAccount, currency, interlocutor] = await Promise.all([
       this.firmService.findOneByCondition({
         filter: `id||$eq||${updateInvoiceDto.firmId}`,
       }),
@@ -357,24 +358,24 @@ export class InvoiceService {
       updateInvoiceDto.currencyId
         ? this.currencyService.findOneById(updateInvoiceDto.currencyId)
         : null,
+      updateInvoiceDto.interlocutorId
+        ? this.interlocutorService.findOneById(updateInvoiceDto.interlocutorId)
+        : null,
     ]);
 
-    // Ensure the interlocutor exists
-    await this.interlocutorService.findOneById(updateInvoiceDto.interlocutorId);
-
-    // Fetch firm currency if no currency is provided
-    const finalCurrencyId = currency ? currency.id : firm.currencyId;
-
     // Soft delete old article entries to prepare for new ones
-    await this.articleInvoiceEntryService.softDeleteMany(
-      existingInvoice.articleInvoiceEntries.map((entry) => entry.id),
-    );
+    const existingArticles =
+      await this.articleInvoiceEntryService.softDeleteMany(
+        existingInvoice.articleInvoiceEntries.map((entry) => entry.id),
+      );
 
     // Save new article entries
     const articleEntries: ArticleInvoiceEntryEntity[] =
-      await this.articleInvoiceEntryService.saveMany(
-        updateInvoiceDto.articleInvoiceEntries,
-      );
+      updateInvoiceDto.articleInvoiceEntries
+        ? await this.articleInvoiceEntryService.saveMany(
+            updateInvoiceDto.articleInvoiceEntries,
+          )
+        : existingArticles;
 
     // Calculate the subtotal and total for the new entries
     const { subTotal, total } =
@@ -436,10 +437,10 @@ export class InvoiceService {
 
     // Save and return the updated invoice with all updated details
     return this.invoiceRepository.save({
-      ...existingInvoice,
       ...updateInvoiceDto,
       bankAccountId: bankAccount ? bankAccount.id : null,
-      currencyId: finalCurrencyId,
+      currencyId: currency ? currency.id : firm.currencyId,
+      interlocutorId: interlocutor ? interlocutor.id : null,
       articleInvoiceEntries: articleEntries,
       invoiceMetaData,
       taxStampId: taxStamp ? taxStamp.id : null,
@@ -447,6 +448,13 @@ export class InvoiceService {
       total: totalAfterGeneralDiscount,
       uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });
+  }
+
+  async updateFields(
+    id: number,
+    dict: QueryDeepPartialEntity<InvoiceEntity>,
+  ): Promise<UpdateResult> {
+    return this.invoiceRepository.update(id, dict);
   }
 
   async duplicate(
@@ -467,13 +475,15 @@ export class InvoiceService {
     const sequential = await this.invoiceSequenceService.getSequential();
     const invoice = await this.invoiceRepository.save({
       ...existingInvoice,
+      id: undefined,
       sequential,
       invoiceMetaData,
       articleInvoiceEntries: [],
       uploads: [],
-      id: undefined,
-      status: INVOICE_STATUS.Unpaid,
+      amountPaid: 0,
+      status: INVOICE_STATUS.Draft,
     });
+
     const articleInvoiceEntries =
       await this.articleInvoiceEntryService.duplicateMany(
         existingInvoice.articleInvoiceEntries.map((entry) => entry.id),

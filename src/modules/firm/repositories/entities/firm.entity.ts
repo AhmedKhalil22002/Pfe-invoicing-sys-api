@@ -4,7 +4,9 @@ import { AddressEntity } from 'src/modules/address/repositories/entities/address
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
+import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
 import { PaymentConditionEntity } from 'src/modules/payment-condition/repositories/entity/payment-condition.entity';
+import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 import {
   Column,
   Entity,
@@ -83,4 +85,12 @@ export class FirmEntity extends EntityHelper {
   @OneToMany(() => FirmInterlocutorEntryEntity, (entry) => entry.firm)
   @JoinTable()
   interlocutorsToFirm: FirmInterlocutorEntryEntity[];
+
+  @OneToMany(() => QuotationEntity, (entry) => entry.firm)
+  @JoinTable()
+  quotations: QuotationEntity[];
+
+  @OneToMany(() => InvoiceEntity, (entry) => entry.firm)
+  @JoinTable()
+  invoices: InvoiceEntity[];
 }

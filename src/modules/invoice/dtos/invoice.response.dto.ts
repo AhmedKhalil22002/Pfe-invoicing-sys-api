@@ -66,6 +66,12 @@ export class ResponseInvoiceDto {
   })
   total?: number;
 
+  @ApiProperty({
+    example: '120.0',
+    type: Number,
+  })
+  amountPaid: number;
+
   @ApiProperty({ type: () => ResponseCurrencyDto })
   currency?: ResponseCurrencyDto;
 

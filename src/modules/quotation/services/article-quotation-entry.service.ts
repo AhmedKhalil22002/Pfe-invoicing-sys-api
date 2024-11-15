@@ -259,9 +259,10 @@ export class ArticleQuotationEntryService {
     return this.articleQuotationEntryRepository.softDelete(id);
   }
 
-  async softDeleteMany(ids: number[]) {
-    ids.forEach(async (id) => {
-      await this.softDelete(id);
-    });
+  async softDeleteMany(ids: number[]): Promise<ArticleQuotationEntryEntity[]> {
+    const entries = await Promise.all(
+      ids.map(async (id) => this.softDelete(id)),
+    );
+    return entries;
   }
 }
