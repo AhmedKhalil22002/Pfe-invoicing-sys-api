@@ -94,15 +94,37 @@ export class PaymentService {
     return payement;
   }
 
+  @Transactional()
   async update(
     id: number,
     updatePaymentDto: UpdatePaymentDto,
   ): Promise<PaymentEntity> {
-    const existingPayment = await this.findOneById(id);
-    return this.paymentRepository.save({
+    const existingPayment = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'invoices',
+    });
+    await this.paymentInvoiceEntryService.softDeleteMany(
+      existingPayment.invoices.map((entry) => entry.id),
+    );
+
+    const payement = await this.paymentRepository.save({
       ...existingPayment,
       ...updatePaymentDto,
     });
+
+    const currency = await this.currencyService.findOneById(
+      payement.currencyId,
+    );
+    await this.paymentInvoiceEntryService.saveMany(
+      updatePaymentDto.invoices.map((entry) => ({
+        paymentId: payement.id,
+        invoiceId: entry.invoiceId,
+        amount: entry.amount,
+        convertionRate: entry.convertionRate,
+        digitsAfterComma: currency.digitAfterComma,
+      })),
+    );
+    return payement;
   }
 
   @Transactional()

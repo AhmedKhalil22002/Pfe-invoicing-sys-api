@@ -75,6 +75,7 @@ export class PaymentInvoiceEntryService {
     );
   }
 
+  @Transactional()
   async saveMany(
     createPaymentInvoiceEntryDtos: CreatePaymentInvoiceEntryDto[],
   ): Promise<PaymentInvoiceEntryEntity[]> {
