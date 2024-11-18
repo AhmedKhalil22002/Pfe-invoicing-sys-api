@@ -30,7 +30,4 @@ export class PaymentInvoiceEntryEntity extends EntityHelper {
 
   @Column({ type: 'float', nullable: true })
   amount: number;
-
-  @Column({ type: 'float', nullable: true })
-  convertionRate: number;
 }

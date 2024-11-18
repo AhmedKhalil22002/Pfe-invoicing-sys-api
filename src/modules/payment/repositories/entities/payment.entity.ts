@@ -24,6 +24,9 @@ export class PaymentEntity extends EntityHelper {
   @Column({ type: 'float', nullable: true })
   fee: number;
 
+  @Column({ type: 'float', nullable: true })
+  convertionRate: number;
+
   @Column({ nullable: true })
   date: Date;
 

@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsInt,
   IsOptional,
+  IsPositive,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -26,6 +27,13 @@ export class CreatePaymentDto {
     type: Number,
   })
   fee?: number;
+
+  @ApiProperty({
+    example: '150.0',
+    type: Number,
+  })
+  @IsPositive()
+  convertionRate?: number;
 
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;

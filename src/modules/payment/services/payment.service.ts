@@ -78,20 +78,26 @@ export class PaymentService {
 
   @Transactional()
   async save(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
-    const payement = await this.paymentRepository.save(createPaymentDto);
-    const currency = await this.currencyService.findOneById(
-      payement.currencyId,
+    const payment = await this.paymentRepository.save(createPaymentDto);
+    const currency = await this.currencyService.findOneById(payment.currencyId);
+    const invoiceEntries = await Promise.all(
+      createPaymentDto.invoices.map(async (entry) => {
+        const invoice = await this.invoiceService.findOneById(entry.invoiceId);
+        return {
+          paymentId: payment.id,
+          invoiceId: entry.invoiceId,
+          amount:
+            entry.amount *
+            (invoice.currencyId !== payment.currencyId
+              ? payment.convertionRate
+              : 1),
+          digitsAfterComma: currency.digitAfterComma,
+        };
+      }),
     );
-    await this.paymentInvoiceEntryService.saveMany(
-      createPaymentDto.invoices.map((entry) => ({
-        paymentId: payement.id,
-        invoiceId: entry.invoiceId,
-        amount: entry.amount,
-        convertionRate: entry.convertionRate,
-        digitsAfterComma: currency.digitAfterComma,
-      })),
-    );
-    return payement;
+
+    await this.paymentInvoiceEntryService.saveMany(invoiceEntries);
+    return payment;
   }
 
   @Transactional()
@@ -107,24 +113,31 @@ export class PaymentService {
       existingPayment.invoices.map((entry) => entry.id),
     );
 
-    const payement = await this.paymentRepository.save({
+    const payment = await this.paymentRepository.save({
       ...existingPayment,
       ...updatePaymentDto,
     });
 
-    const currency = await this.currencyService.findOneById(
-      payement.currencyId,
+    const currency = await this.currencyService.findOneById(payment.currencyId);
+
+    const invoiceEntries = await Promise.all(
+      updatePaymentDto.invoices.map(async (entry) => {
+        const invoice = await this.invoiceService.findOneById(entry.invoiceId);
+        return {
+          paymentId: payment.id,
+          invoiceId: entry.invoiceId,
+          amount:
+            entry.amount *
+            (invoice.currencyId !== payment.currencyId
+              ? payment.convertionRate
+              : 1),
+          digitsAfterComma: currency.digitAfterComma,
+        };
+      }),
     );
-    await this.paymentInvoiceEntryService.saveMany(
-      updatePaymentDto.invoices.map((entry) => ({
-        paymentId: payement.id,
-        invoiceId: entry.invoiceId,
-        amount: entry.amount,
-        convertionRate: entry.convertionRate,
-        digitsAfterComma: currency.digitAfterComma,
-      })),
-    );
-    return payement;
+
+    await this.paymentInvoiceEntryService.saveMany(invoiceEntries);
+    return payment;
   }
 
   @Transactional()

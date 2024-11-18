@@ -20,6 +20,12 @@ export class ResponsePaymentDto {
   })
   fee?: number;
 
+  @ApiProperty({
+    example: '150.0',
+    type: Number,
+  })
+  convertionRate?: number;
+
   @ApiProperty({ example: faker.date.anytime(), type: Date })
   date?: Date;
 

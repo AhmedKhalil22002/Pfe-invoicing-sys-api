@@ -51,10 +51,7 @@ export class PaymentInvoiceEntryService {
 
     // Calculate the total amount paid
     const totalAmountPaid = approximateNumber(
-      existingInvoice.amountPaid +
-        createPaymentInvoiceEntryDto.amount *
-          createPaymentInvoiceEntryDto.convertionRate,
-      createPaymentInvoiceEntryDto.digitsAfterComma + 1,
+      existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount,
     );
 
     // determine the new invoice status
@@ -107,9 +104,7 @@ export class PaymentInvoiceEntryService {
     });
     // Calculate the total amount paid
     const totalAmountPaid = approximateNumber(
-      existingInvoice.amountPaid -
-        existingEntry.amount * existingEntry.convertionRate,
-      existingInvoice.currency.digitAfterComma + 1,
+      existingInvoice.amountPaid - existingEntry.amount,
     );
     // determine the new invoice status
     const newInvoiceStatus =

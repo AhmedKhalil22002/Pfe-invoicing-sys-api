@@ -3,6 +3,7 @@ CREATE TABLE
         `id` int NOT NULL AUTO_INCREMENT,
         `amount` float DEFAULT NULL,
         `fee` float DEFAULT NULL,
+        `convertionRate` float DEFAULT NULL,
         `date` datetime DEFAULT NULL,
         `mode` enum (
             'payment.payment_mode.cash',
@@ -47,7 +48,6 @@ CREATE TABLE
         `paymentId` int DEFAULT NULL,
         `invoiceId` int DEFAULT NULL,
         `amount` float DEFAULT NULL,
-        `convertionRate` float DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT NOW (),
         `updatedAt` TIMESTAMP DEFAULT NOW (),
         `deletedAt` TIMESTAMP DEFAULT NULL,

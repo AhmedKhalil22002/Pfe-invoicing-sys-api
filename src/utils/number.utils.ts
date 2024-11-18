@@ -1,6 +1,7 @@
 export const approximateNumber = (
-  number: number,
+  value: number,
   digitsAfterComma: number = 2,
 ) => {
-  return Number(number.toFixed(digitsAfterComma));
+  const factor = Math.pow(10, digitsAfterComma);
+  return Math.round(value * factor) / factor;
 };

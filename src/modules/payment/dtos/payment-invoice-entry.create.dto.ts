@@ -16,13 +16,6 @@ export class CreatePaymentInvoiceEntryDto {
   amount?: number;
 
   @ApiProperty({
-    example: '150.0',
-    type: Number,
-  })
-  @IsPositive()
-  convertionRate?: number;
-
-  @ApiProperty({
     example: 1,
     type: Number,
   })
