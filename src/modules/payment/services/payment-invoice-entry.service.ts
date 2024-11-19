@@ -11,7 +11,7 @@ import { UpdatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.upda
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { INVOICE_STATUS } from 'src/modules/invoice/enums/invoice-status.enum';
-import { approximateNumber } from 'src/utils/number.utils';
+import { ciel } from 'src/utils/number.utils';
 
 @Injectable()
 export class PaymentInvoiceEntryService {
@@ -22,7 +22,7 @@ export class PaymentInvoiceEntryService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<ResponsePaymentInvoiceEntryDto | null> {
+  ): Promise<PaymentInvoiceEntryEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const entry = await this.paymentInvoiceEntryRepository.findOne(
@@ -50,7 +50,7 @@ export class PaymentInvoiceEntryService {
     );
 
     // Calculate the total amount paid
-    const totalAmountPaid = approximateNumber(
+    const totalAmountPaid = ciel(
       existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount,
     );
 
@@ -97,13 +97,16 @@ export class PaymentInvoiceEntryService {
 
   @Transactional()
   async softDelete(id: number): Promise<PaymentInvoiceEntryEntity> {
-    const existingEntry = await this.findOneById(id);
+    const existingEntry = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'payment',
+    });
     const existingInvoice = await this.invoiceService.findOneByCondition({
       filter: `id||$eq||${existingEntry.invoiceId}`,
       join: 'currency',
     });
     // Calculate the total amount paid
-    const totalAmountPaid = approximateNumber(
+    const totalAmountPaid = ciel(
       existingInvoice.amountPaid - existingEntry.amount,
     );
     // determine the new invoice status
