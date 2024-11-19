@@ -303,38 +303,6 @@ export class InvoiceService {
     });
   }
 
-  async updateInvoiceUploads(
-    id: number,
-    updateInvoiceDto: UpdateInvoiceDto,
-    existingUploads: ResponseInvoiceUploadDto[],
-  ) {
-    const newUploads = [];
-    const keptUploads = [];
-    const eliminatedUploads = [];
-
-    if (updateInvoiceDto.uploads) {
-      for (const upload of existingUploads) {
-        const exists = updateInvoiceDto.uploads.some((u) => u.id === upload.id);
-        if (!exists)
-          eliminatedUploads.push(
-            await this.invoiceUploadService.softDelete(upload.id),
-          );
-        else keptUploads.push(upload);
-      }
-      for (const upload of updateInvoiceDto.uploads) {
-        if (!upload.id)
-          newUploads.push(
-            await this.invoiceUploadService.save(id, upload.uploadId),
-          );
-      }
-    }
-    return {
-      keptUploads,
-      newUploads,
-      eliminatedUploads,
-    };
-  }
-
   @Transactional()
   async update(
     id: number,
@@ -428,12 +396,17 @@ export class InvoiceService {
     });
 
     // Handle uploads - manage existing, new, and eliminated uploads
-    const { keptUploads, newUploads, eliminatedUploads } =
-      await this.updateInvoiceUploads(
-        existingInvoice.id,
-        updateInvoiceDto,
-        existingUploads,
-      );
+    const {
+      keptItems: keptUploads,
+      newItems: newUploads,
+      eliminatedItems: eliminatedUploads,
+    } = await this.invoiceRepository.updateAssociations({
+      updatedItems: updateInvoiceDto.uploads,
+      existingItems: existingUploads,
+      onDelete: (id: number) => this.invoiceUploadService.softDelete(id),
+      onCreate: (entity: ResponseInvoiceUploadDto) =>
+        this.invoiceUploadService.save(entity.invoiceId, entity.uploadId),
+    });
 
     // Save and return the updated invoice with all updated details
     return this.invoiceRepository.save({
