@@ -14,12 +14,15 @@ import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { PaymentInvoiceEntryService } from './payment-invoice-entry.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
+import { PaymentUploadService } from './payment-upload.service';
+import { ResponsePaymentUploadDto } from '../dtos/payment-upload.response.dto';
 
 @Injectable()
 export class PaymentService {
   constructor(
     private readonly paymentRepository: PaymentRepository,
     private readonly paymentInvoiceEntryService: PaymentInvoiceEntryService,
+    private readonly paymentUploadService: PaymentUploadService,
     private readonly invoiceService: InvoiceService,
     private readonly currencyService: CurrencyService,
   ) {}
@@ -97,6 +100,14 @@ export class PaymentService {
     );
 
     await this.paymentInvoiceEntryService.saveMany(invoiceEntries);
+    // Handle file uploads if they exist
+    if (createPaymentDto.uploads) {
+      await Promise.all(
+        createPaymentDto.uploads.map((u) =>
+          this.paymentUploadService.save(payment.id, u.uploadId),
+        ),
+      );
+    }
     return payment;
   }
 
@@ -107,15 +118,29 @@ export class PaymentService {
   ): Promise<PaymentEntity> {
     const existingPayment = await this.findOneByCondition({
       filter: `id||$eq||${id}`,
-      join: 'invoices',
+      join: 'invoices,uploads',
     });
     await this.paymentInvoiceEntryService.softDeleteMany(
       existingPayment.invoices.map((entry) => entry.id),
     );
 
+    // Handle uploads - manage existing, new, and eliminated uploads
+    const {
+      keptItems: keptUploads,
+      newItems: newUploads,
+      eliminatedItems: eliminatedUploads,
+    } = await this.paymentRepository.updateAssociations({
+      updatedItems: updatePaymentDto.uploads,
+      existingItems: existingPayment.uploads,
+      onDelete: (id: number) => this.paymentUploadService.softDelete(id),
+      onCreate: (entity: ResponsePaymentUploadDto) =>
+        this.paymentUploadService.save(entity.paymentId, entity.uploadId),
+    });
+
     const payment = await this.paymentRepository.save({
       ...existingPayment,
       ...updatePaymentDto,
+      uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });
 
     const currency = await this.currencyService.findOneById(payment.currencyId);
@@ -137,6 +162,7 @@ export class PaymentService {
     );
 
     await this.paymentInvoiceEntryService.saveMany(invoiceEntries);
+
     return payment;
   }
 
