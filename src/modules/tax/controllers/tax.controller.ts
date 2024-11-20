@@ -58,10 +58,10 @@ export class TaxController {
 
   @Post('')
   async save(@Body() createTaxDto: CreateTaxDto): Promise<ResponseTaxDto> {
-    const activity = await this.taxService.findOneByCondition({
+    const tax = await this.taxService.findOneByCondition({
       filter: `label||$eq||${createTaxDto.label}`,
     });
-    if (activity) {
+    if (tax) {
       throw new ConflictException(
         `Tax with label "${createTaxDto.label}" already exists`,
       );
