@@ -135,6 +135,51 @@ export abstract class DatabaseAbstractRepository<T extends EntityHelper>
     return entities;
   }
 
+  public async updateAssociations<U extends { id?: number | string }>({
+    existingItems,
+    updatedItems,
+    onDelete,
+    onCreate,
+  }: {
+    existingItems: U[];
+    updatedItems: U[];
+    onDelete: (id: number | string) => Promise<any>;
+    onCreate: (item: any) => Promise<any>;
+  }): Promise<{
+    keptItems: U[];
+    newItems: any[];
+    eliminatedItems: any[];
+  }> {
+    const newItems = [];
+    const keptItems = [];
+    const eliminatedItems = [];
+
+    // Identify eliminated and kept items
+    for (const existingItem of existingItems) {
+      const existsInUpdate = updatedItems.some(
+        (updatedItem) => updatedItem.id === existingItem.id,
+      );
+      if (!existsInUpdate) {
+        eliminatedItems.push(await onDelete(existingItem.id));
+      } else {
+        keptItems.push(existingItem);
+      }
+    }
+
+    // Identify new items
+    for (const updatedItem of updatedItems) {
+      if (!updatedItem.id) {
+        newItems.push(await onCreate(updatedItem));
+      }
+    }
+
+    return {
+      keptItems,
+      newItems,
+      eliminatedItems,
+    };
+  }
+
   public async deleteAll(): Promise<void> {
     await this.getRepository().clear();
   }
