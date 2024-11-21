@@ -26,3 +26,6 @@ ALTER TABLE `invoice`
 ADD COLUMN `taxWithholdingId` INT NULL,
 ADD CONSTRAINT `FK_invoice_tax-withholding` FOREIGN KEY (`taxWithholdingId`) REFERENCES `tax-withholding` (`id`) ON DELETE SET NULL;
 
+
+ALTER TABLE `invoice_meta_data`
+ADD COLUMN `hasTaxWithholding` BOOLEAN DEFAULT FALSE;

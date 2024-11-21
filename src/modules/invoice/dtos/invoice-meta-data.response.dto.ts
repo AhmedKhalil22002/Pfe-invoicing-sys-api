@@ -24,4 +24,7 @@ export class ResponseInvoiceMetaDataDto {
 
   @ApiProperty({ example: {}, type: Object })
   taxSummary: any;
+
+  @ApiProperty({ example: true, type: Boolean })
+  hasTaxWithholding: boolean;
 }
