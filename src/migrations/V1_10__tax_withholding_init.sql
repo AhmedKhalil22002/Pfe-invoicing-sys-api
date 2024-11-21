@@ -21,3 +21,8 @@ VALUES
     ('Marché - Frais généraux', 1.5),
     ('Marché - Frais spéciaux - Société exportation', 0.5),
     ('Revenus des comptes épargne spéciaux', 20);
+
+ALTER TABLE `invoice`
+ADD COLUMN `taxWithholdingId` INT NULL,
+ADD CONSTRAINT `FK_invoice_tax-withholding` FOREIGN KEY (`taxWithholdingId`) REFERENCES `tax-withholding` (`id`) ON DELETE SET NULL;
+

@@ -17,6 +17,7 @@ import { InvoiceSequenceService } from './services/invoice-sequence.service';
 import { ArticleInvoiceEntryService } from './services/article-invoice-entry.service';
 import { ArticleInvoiceEntryTaxService } from './services/article-invoice-entry-tax.service';
 import { InvoiceRepositoryModule } from './repositories/invoice.repository.module';
+import { TaxWithholdingModule } from '../tax-withholding/tax-withholding.module';
 
 @Module({
   controllers: [],
@@ -40,6 +41,7 @@ import { InvoiceRepositoryModule } from './repositories/invoice.repository.modul
     FirmModule,
     InterlocutorModule,
     TaxModule,
+    TaxWithholdingModule,
     //abstract modules
     PdfModule,
     GatewaysModule,
