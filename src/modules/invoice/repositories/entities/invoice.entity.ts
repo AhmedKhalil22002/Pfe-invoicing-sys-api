@@ -132,4 +132,7 @@ export class InvoiceEntity extends EntityHelper {
 
   @Column({ type: 'int', nullable: true })
   taxWithholdingId: number;
+
+  @Column({ type: 'float', nullable: true })
+  taxWithholdingAmount: number;
 }

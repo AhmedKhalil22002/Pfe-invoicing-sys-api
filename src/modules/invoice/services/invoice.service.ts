@@ -32,6 +32,7 @@ import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { TaxWithholdingService } from 'src/modules/tax-withholding/services/tax-withholding.service';
+import { ciel } from 'src/utils/number.utils';
 
 @Injectable()
 export class InvoiceService {
@@ -236,11 +237,18 @@ export class InvoiceService {
       taxSummary,
     });
 
-    // Determine the amount of tax withholding
-    const taxWithholding = await this.taxWithholdingService.findOneById(
-      createInvoiceDto.taxWithholdingId,
-    );
-    const amountPaid = totalAfterGeneralDiscount * (taxWithholding?.rate / 100);
+    // Ensure taxWithholding.rate is valid and calculate the withholding amount
+    let taxWithholdingAmount = 0;
+    if (createInvoiceDto.taxWithholdingId) {
+      const taxWithholding = await this.taxWithholdingService.findOneById(
+        createInvoiceDto.taxWithholdingId,
+      );
+
+      if (taxWithholding.rate !== undefined && taxWithholding.rate !== null) {
+        taxWithholdingAmount =
+          totalAfterGeneralDiscount * (taxWithholding.rate / 100);
+      }
+    }
 
     // Save the invoice entity
     const invoice = await this.invoiceRepository.save({
@@ -253,7 +261,7 @@ export class InvoiceService {
       articleInvoiceEntries: articleEntries,
       invoiceMetaData,
       subTotal,
-      amountPaid,
+      taxWithholdingAmount: taxWithholdingAmount || 0,
       total: totalAfterGeneralDiscount,
     });
 
@@ -404,35 +412,20 @@ export class InvoiceService {
       taxSummary,
     });
 
-    // Determine the amount of tax withholding
-    const oldWithholdingRate =
-      existingInvoice.taxWithholdingId && existingInvoice?.taxWithholding
-        ? existingInvoice.taxWithholding.rate
-        : 0;
+    // Ensure taxWithholding.rate is valid and calculate the withholding amount
+    let taxWithholdingAmount = 0;
+    if (updateInvoiceDto.taxWithholdingId) {
+      const taxWithholding = await this.taxWithholdingService.findOneById(
+        updateInvoiceDto.taxWithholdingId,
+      );
 
-    const oldWithholdingAmount =
-      oldWithholdingRate > 0
-        ? existingInvoice.total * (oldWithholdingRate / 100)
-        : 0;
-    const taxWithholding = await this.taxWithholdingService.findOneById(
-      updateInvoiceDto.taxWithholdingId,
-    );
-
-    const newWithholdingRate =
-      updateInvoiceDto.taxWithholdingId && taxWithholding
-        ? taxWithholding.rate
-        : 0;
-
-    const newWithholdingAmount =
-      newWithholdingRate > 0
-        ? totalAfterGeneralDiscount * (newWithholdingRate / 100)
-        : 0;
-
-    // Adjust the amount paid based on withholding tax changes
-    const amountPaid =
-      (existingInvoice.amountPaid || 0) -
-      oldWithholdingAmount +
-      newWithholdingAmount;
+      if (taxWithholding.rate !== undefined && taxWithholding.rate !== null) {
+        taxWithholdingAmount = ciel(
+          totalAfterGeneralDiscount * (taxWithholding.rate / 100),
+          currency.digitAfterComma + 1,
+        );
+      }
+    }
 
     // Handle uploads - manage existing, new, and eliminated uploads
     const {
@@ -457,7 +450,7 @@ export class InvoiceService {
       invoiceMetaData,
       taxStampId: taxStamp ? taxStamp.id : null,
       subTotal,
-      amountPaid,
+      taxWithholdingAmount,
       total: totalAfterGeneralDiscount,
       uploads: [...keptUploads, ...newUploads, ...eliminatedUploads],
     });
