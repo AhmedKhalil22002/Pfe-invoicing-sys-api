@@ -45,20 +45,27 @@ export class PaymentInvoiceEntryService {
     createPaymentInvoiceEntryDto: CreatePaymentInvoiceEntryDto,
   ): Promise<PaymentInvoiceEntryEntity> {
     // Fetch the invoice
-    const existingInvoice = await this.invoiceService.findOneById(
-      createPaymentInvoiceEntryDto.invoiceId,
-    );
-
+    const existingInvoice = await this.invoiceService.findOneByCondition({
+      filter: `id||$eq||${createPaymentInvoiceEntryDto.invoiceId}`,
+      join: 'currency',
+    });
+    console.log('curr', existingInvoice.currency);
+    console.log('amount', createPaymentInvoiceEntryDto.amount);
     // Calculate the total amount paid
     const totalAmountPaid = ciel(
       existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount,
+      existingInvoice.currency.digitAfterComma + 1,
     );
 
     // determine the new invoice status
     const newInvoiceStatus =
       totalAmountPaid === 0
         ? INVOICE_STATUS.Unpaid
-        : totalAmountPaid === existingInvoice.total
+        : totalAmountPaid ===
+            ciel(
+              existingInvoice.total - existingInvoice.taxWithholdingAmount,
+              existingInvoice.currency.digitAfterComma + 1,
+            )
           ? INVOICE_STATUS.Paid
           : INVOICE_STATUS.PartiallyPaid;
 

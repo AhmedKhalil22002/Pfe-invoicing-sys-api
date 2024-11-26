@@ -29,3 +29,6 @@ ADD CONSTRAINT `FK_invoice_tax-withholding` FOREIGN KEY (`taxWithholdingId`) REF
 
 ALTER TABLE `invoice_meta_data`
 ADD COLUMN `hasTaxWithholding` BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE `invoice`
+ADD COLUMN `taxWithholdingAmount` float DEFAULT NULL, 
