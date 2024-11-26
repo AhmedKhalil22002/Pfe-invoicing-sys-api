@@ -137,4 +137,10 @@ export class ResponseInvoiceDto {
     type: Number,
   })
   taxStampId?: number;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  taxWithholdingId?: number;
 }

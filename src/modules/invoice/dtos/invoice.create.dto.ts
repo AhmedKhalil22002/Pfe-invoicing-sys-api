@@ -126,4 +126,12 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsInt()
   taxStampId?: number;
+
+  @ApiProperty({
+    example: '1',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt()
+  taxWithholdingId?: number;
 }

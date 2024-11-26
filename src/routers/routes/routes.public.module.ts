@@ -33,6 +33,8 @@ import { PaymentController } from 'src/modules/payment/controllers/payment.contr
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
+import { TaxWithholdingController } from 'src/modules/tax-withholding/controllers/tax-withholding.controller';
+import { TaxWithholdingModule } from 'src/modules/tax-withholding/tax-withholding.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 
@@ -56,6 +58,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     QuotationController,
     StorageController,
     TaxController,
+    TaxWithholdingController,
   ],
   providers: [],
   exports: [],
@@ -78,6 +81,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     QuotationModule,
     StorageModule,
     TaxModule,
+    TaxWithholdingModule,
   ],
 })
 export class RoutesPublicModule {}

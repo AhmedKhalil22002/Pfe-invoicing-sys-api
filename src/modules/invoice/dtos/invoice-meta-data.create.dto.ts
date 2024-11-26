@@ -35,4 +35,9 @@ export class CreateInvoiceMetaDataDto {
   @ApiProperty({ example: true, type: Object })
   @IsOptional()
   taxSummary?: any;
+
+  @ApiProperty({ example: true, type: Boolean })
+  @IsBoolean()
+  @IsOptional()
+  hasTaxWithholding: boolean;
 }
