@@ -82,7 +82,6 @@ export class PaymentService {
   @Transactional()
   async save(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
     const payment = await this.paymentRepository.save(createPaymentDto);
-    console.log('payment', payment);
     const currency = await this.currencyService.findOneById(payment.currencyId);
     const invoiceEntries = await Promise.all(
       createPaymentDto.invoices.map(async (entry) => {
@@ -95,7 +94,7 @@ export class PaymentService {
             (invoice.currencyId !== payment.currencyId
               ? payment.convertionRate
               : 1),
-          digitsAfterComma: currency.digitAfterComma,
+          digitAfterComma: currency.digitAfterComma + 1,
         };
       }),
     );
@@ -156,7 +155,7 @@ export class PaymentService {
             (invoice.currencyId !== payment.currencyId
               ? payment.convertionRate
               : 1),
-          digitsAfterComma: currency.digitAfterComma,
+          digitAfterComma: currency.digitAfterComma,
         };
       }),
     );

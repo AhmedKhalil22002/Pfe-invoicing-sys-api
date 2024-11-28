@@ -19,5 +19,5 @@ export class CreatePaymentInvoiceEntryDto {
     example: 1,
     type: Number,
   })
-  digitsAfterComma?: number;
+  digitAfterComma?: number;
 }

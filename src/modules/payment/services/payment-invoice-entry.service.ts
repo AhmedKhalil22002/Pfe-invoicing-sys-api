@@ -49,12 +49,10 @@ export class PaymentInvoiceEntryService {
       filter: `id||$eq||${createPaymentInvoiceEntryDto.invoiceId}`,
       join: 'currency',
     });
-    console.log('curr', existingInvoice.currency);
-    console.log('amount', createPaymentInvoiceEntryDto.amount);
     // Calculate the total amount paid
     const totalAmountPaid = ciel(
       existingInvoice.amountPaid + createPaymentInvoiceEntryDto.amount,
-      existingInvoice.currency.digitAfterComma + 1,
+      createPaymentInvoiceEntryDto.digitAfterComma,
     );
 
     // determine the new invoice status
@@ -64,7 +62,7 @@ export class PaymentInvoiceEntryService {
         : totalAmountPaid ===
             ciel(
               existingInvoice.total - existingInvoice.taxWithholdingAmount,
-              existingInvoice.currency.digitAfterComma + 1,
+              createPaymentInvoiceEntryDto.digitAfterComma,
             )
           ? INVOICE_STATUS.Paid
           : INVOICE_STATUS.PartiallyPaid;
