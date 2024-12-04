@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { AppConfigService } from 'src/common/app-config/services/app-config.service';
 import { QuotationSequentialNotFoundException } from '../errors/quotation.sequential.error';
 import { AppConfigEntity } from 'src/common/app-config/repositories/entities/app-config.entity';
-import { format } from 'date-fns';
 import { EventsGateway } from 'src/common/gateways/events/events.gateway';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
+import { formSequential } from 'src/utils/sequence.utils';
 
 @Injectable()
 export class QuotationSequenceService {
@@ -32,23 +32,13 @@ export class QuotationSequenceService {
     return updatedSequence;
   }
 
-  //helper function to format the sequence
-  formSequential(
-    prefix: string,
-    dynamicSequence: any,
-    next: number,
-    date: Date = new Date(),
-  ): string {
-    return `${prefix}-${format(date, dynamicSequence)}-${next}`;
-  }
-
   async getSequential(): Promise<string> {
     const sequence = await this.get();
     this.set({ ...sequence.value, next: sequence.value.next + 1 });
     this.wsGateway.server.emit('quotation-sequence-updated', {
       value: sequence.value,
     });
-    return this.formSequential(
+    return formSequential(
       sequence.value.prefix,
       sequence.value.dynamicSequence,
       sequence.value.next,
