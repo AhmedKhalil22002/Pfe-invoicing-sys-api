@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AppConfigService } from 'src/common/app-config/services/app-config.service';
 import { AppConfigEntity } from 'src/common/app-config/repositories/entities/app-config.entity';
-import { format } from 'date-fns';
 import { EventsGateway } from 'src/common/gateways/events/events.gateway';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequentialNotFoundException } from '../errors/invoice-sequential.error';
+import { formSequential } from 'src/utils/sequence.utils';
 
 @Injectable()
 export class InvoiceSequenceService {
@@ -32,23 +32,13 @@ export class InvoiceSequenceService {
     return updatedSequence;
   }
 
-  //helper function to format the sequence
-  formSequential(
-    prefix: string,
-    dynamicSequence: any,
-    next: number,
-    date: Date = new Date(),
-  ): string {
-    return `${prefix}-${format(date, dynamicSequence)}-${next}`;
-  }
-
   async getSequential(): Promise<string> {
     const sequence = await this.get();
     this.set({ ...sequence.value, next: sequence.value.next + 1 });
     this.wsGateway.server.emit('invoice-sequence-updated', {
       value: sequence.value,
     });
-    return this.formSequential(
+    return formSequential(
       sequence.value.prefix,
       sequence.value.dynamicSequence,
       sequence.value.next,

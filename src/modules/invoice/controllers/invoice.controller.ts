@@ -20,6 +20,7 @@ import { DuplicateInvoiceDto } from '../dtos/invoice.duplicate.dto';
 import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { UpdateInvoiceDto } from '../dtos/invoice.update.dto';
+import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
 
 @ApiTags('invoice')
 @Controller({
@@ -40,6 +41,13 @@ export class InvoiceController {
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseInvoiceDto>> {
     return await this.invoiceService.findAllPaginated(query);
+  }
+
+  @Get('/sequential-range/:id')
+  async findInvoicesByRange(
+    @Param('id') id: number,
+  ): Promise<ResponseInvoiceRangeDto> {
+    return await this.invoiceService.findInvoicesByRange(id);
   }
 
   @Get('/:id')
