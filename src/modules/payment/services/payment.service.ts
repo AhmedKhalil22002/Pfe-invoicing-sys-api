@@ -94,7 +94,7 @@ export class PaymentService {
             (invoice.currencyId !== payment.currencyId
               ? payment.convertionRate
               : 1),
-          digitAfterComma: currency.digitAfterComma + 1,
+          digitAfterComma: currency.digitAfterComma,
         };
       }),
     );
