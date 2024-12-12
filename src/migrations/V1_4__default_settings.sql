@@ -4,8 +4,8 @@ CREATE TABLE
         `document_type` ENUM ('quotation', 'invoice') DEFAULT NULL,
         `activity_type` ENUM ('selling', 'buying') DEFAULT NULL,
         `value` VARCHAR(1024) DEFAULT NULL,
-        `createdAt` TIMESTAMP DEFAULT NOW (),
-        `updatedAt` TIMESTAMP DEFAULT NOW (),
+        `createdAt` TIMESTAMP DEFAULT NOW(),
+        `updatedAt` TIMESTAMP DEFAULT NOW(),
         `deletedAt` TIMESTAMP DEFAULT NULL,
         `isDeletionRestricted` BOOLEAN DEFAULT FALSE,
         PRIMARY KEY (`id`)
