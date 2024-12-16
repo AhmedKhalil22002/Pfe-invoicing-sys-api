@@ -167,13 +167,7 @@ export class FirmService {
     const existingMainInterlocutor =
       await this.interlocutorService.findOneByCondition({
         filter: `id||$eq||${mainInterlocutorId}`,
-        join: 'firmsToInterlocutor',
       });
-
-    this.interlocutorService.update(mainInterlocutorId, {
-      ...existingMainInterlocutor,
-      ...updateFirmDto.mainInterlocutor,
-    });
 
     //update main interlocutor position independently
     this.firmInterlocutorEntryService.update(
@@ -184,6 +178,13 @@ export class FirmService {
         position: updateFirmDto.mainInterlocutor.position,
       },
     );
+
+    this.interlocutorService.update(mainInterlocutorId, {
+      ...existingMainInterlocutor,
+      ...updateFirmDto.mainInterlocutor,
+      //force undefined position to update the interlocutor entity
+      position: undefined,
+    });
 
     //invoicing address
     const invoicingAddress = updateFirmDto.invoicingAddress

@@ -5,6 +5,9 @@ import { FirmInterlocutorEntryNotFoundException } from '../errors/firm-interlocu
 import { CreateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.create.dto';
 import { FirmInterlocutorEntryEntity } from '../repositories/entities/firm-interlocutor-entry.entity';
 import { UpdateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.update.dto';
+import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class FirmInterlocutorEntryService {
@@ -26,6 +29,18 @@ export class FirmInterlocutorEntryService {
     const entry = await this.firmInterlocutorEntryRepository.findAll({
       where: { interlocutorId },
     });
+    return entry;
+  }
+
+  async findOneByCondition(
+    query: IQueryObject,
+  ): Promise<ResponseFirmInterlocutorEntryDto | null> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const entry = await this.firmInterlocutorEntryRepository.findOne(
+      queryOptions as FindOneOptions<FirmInterlocutorEntryEntity>,
+    );
+    if (!entry) return null;
     return entry;
   }
 
@@ -76,6 +91,13 @@ export class FirmInterlocutorEntryService {
       ...existingEntry,
       ...updateFirmInterlocutorEntryDto,
     });
+  }
+
+  async updatePosition(id: number, position: string): Promise<boolean> {
+    const result = await this.firmInterlocutorEntryRepository.update(id, {
+      position,
+    });
+    return result.affected === 1;
   }
 
   async updateMany(

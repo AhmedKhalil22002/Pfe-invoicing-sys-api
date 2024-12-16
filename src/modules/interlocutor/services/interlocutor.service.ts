@@ -89,46 +89,50 @@ export class InterlocutorService {
     return interlocutor;
   }
 
+  async promote(id: number, firmId: number): Promise<boolean> {
+    const firmInterlocutor =
+      await this.firmInterlocutorService.findOneByCondition({
+        filter: `interlocutorId||$eq||${id};firmId||$eq||${firmId}`,
+      });
+    try {
+      await this.firmInterlocutorService.save({
+        ...firmInterlocutor,
+        isMain: true,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async demote(firmId: number): Promise<boolean> {
+    const firmInterlocutor =
+      await this.firmInterlocutorService.findOneByCondition({
+        filter: `isMain||$eq||1;firmId||$eq||${firmId}`,
+      });
+    try {
+      await this.firmInterlocutorService.save({
+        ...firmInterlocutor,
+        isMain: false,
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async update(
     id: number,
     updateInterlocutorDto: UpdateInterlocutorDto,
   ): Promise<InterlocutorEntity> {
-    //find the exisiting interlocutor entity
     const existingInterlocutor = await this.findOneById(id);
-    //find all firm associations to the interlocutor
-    const existingAssociations =
-      await this.firmInterlocutorService.findAllByInterlocutorId(
-        existingInterlocutor.id,
-      );
-    //update the informations related to the interlocutor associated with the firm
-    const firmsToInterlocutor = updateInterlocutorDto.firmsToInterlocutor
-      ? await this.firmInterlocutorService.updateMany(
-          updateInterlocutorDto.firmsToInterlocutor.map((entry) => {
-            return {
-              ...entry,
-              interlocutorId: existingInterlocutor.id,
-            };
-          }),
-        )
-      : [];
 
-    //get the firm ids from the updated associations
-    const updatedFirmIds = firmsToInterlocutor.map((entry) => entry.firmId);
-
-    //get the firm ids from the existing associations to find the ones to delete
-    const associationsToDelete = existingAssociations.filter(
-      (association) => !updatedFirmIds.includes(association.firmId),
-    );
-    //delete the firm associations that are no longer associated with the interlocutor
-    await this.firmInterlocutorService.softDeleteMany(
-      associationsToDelete.map((association) => association.id),
-    );
-
-    return this.interlocutorRepository.save({
+    await this.interlocutorRepository.update(id, {
       ...existingInterlocutor,
       ...updateInterlocutorDto,
-      firmsToInterlocutor,
     });
+
+    return this.findOneById(id);
   }
 
   async softDelete(id: number): Promise<InterlocutorEntity> {

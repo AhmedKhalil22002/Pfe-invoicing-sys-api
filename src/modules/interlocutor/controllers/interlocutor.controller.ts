@@ -63,6 +63,21 @@ export class InterlocutorController {
     return await this.interlocutorService.save(createInterlocutorDto);
   }
 
+  @Post('/promote/:id/:firmId')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    required: true,
+  })
+  async promote(
+    @Param('id') id: number,
+    @Param('firmId') firmId: number,
+  ): Promise<ResponseInterlocutorDto> {
+    await this.interlocutorService.demote(firmId);
+    await this.interlocutorService.promote(id, firmId);
+    return await this.interlocutorService.findOneById(id);
+  }
+
   @Put('/:id')
   @ApiParam({
     name: 'id',
