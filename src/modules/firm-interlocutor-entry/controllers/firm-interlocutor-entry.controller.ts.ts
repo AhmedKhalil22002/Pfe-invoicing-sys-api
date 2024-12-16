@@ -81,4 +81,25 @@ export class FirmInterlocutorEntryController {
   ): Promise<ResponseFirmInterlocutorEntryDto> {
     return await this.firmInterlocutorEntryService.softDelete(id);
   }
+
+  @Delete('/:firmId/:interlocutorId')
+  @ApiParam({
+    name: 'firmId',
+    type: 'number',
+    required: true,
+  })
+  @ApiParam({
+    name: 'interlocutorId',
+    type: 'number',
+    required: true,
+  })
+  async deleteByFirmIdAndInterlocutorId(
+    @Param('firmId') firmId: number,
+    @Param('interlocutorId') interlocutorId: number,
+  ): Promise<ResponseFirmInterlocutorEntryDto> {
+    return await this.firmInterlocutorEntryService.softDeleteByFirmIdAndInterlocutorId(
+      firmId,
+      interlocutorId,
+    );
+  }
 }

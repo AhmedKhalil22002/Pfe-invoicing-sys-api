@@ -12,7 +12,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as fs from 'fs';
 import { useContainer } from 'class-validator';
 import * as Sentry from '@sentry/node';
 import { SentryFilter } from './filters/sentry.filter';
@@ -73,7 +72,6 @@ async function bootstrap() {
     deepScanRoutes: true,
     extraModels: [],
   });
-  fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
 
   SwaggerModule.setup(docPrefix, app, document, {
     explorer: true,
