@@ -116,6 +116,16 @@ export class FirmInterlocutorEntryService {
     return this.firmInterlocutorEntryRepository.softDelete(id);
   }
 
+  async softDeleteByFirmIdAndInterlocutorId(
+    firmId: number,
+    interlocutorId: number,
+  ): Promise<FirmInterlocutorEntryEntity> {
+    const entry = await this.findOneByCondition({
+      filter: `firmId||$eq||${firmId};interlocutorId||$eq||${interlocutorId}`,
+    });
+    return this.firmInterlocutorEntryRepository.softDelete(entry.id);
+  }
+
   async softDeleteMany(ids: number[]): Promise<void> {
     for (const id in ids) {
       await this.softDelete(ids[id]);
