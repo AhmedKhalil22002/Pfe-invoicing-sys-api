@@ -31,8 +31,12 @@ import { PaymentConditionController } from 'src/modules/payment-condition/contro
 import { PaymentConditionModule } from 'src/modules/payment-condition/payment-condition.module';
 import { PaymentController } from 'src/modules/payment/controllers/payment.controller';
 import { PaymentModule } from 'src/modules/payment/payment.module';
+import { PermissionController } from 'src/modules/permission/controllers/permission.controller';
+import { PermissionModule } from 'src/modules/permission/permission.module';
 import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
+import { RoleController } from 'src/modules/role/controllers/role.controller';
+import { RoleModule } from 'src/modules/role/role.module';
 import { TaxWithholdingController } from 'src/modules/tax-withholding/controllers/tax-withholding.controller';
 import { TaxWithholdingModule } from 'src/modules/tax-withholding/tax-withholding.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
@@ -55,7 +59,9 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     InvoiceController,
     PaymentController,
     PaymentConditionController,
+    PermissionController,
     QuotationController,
+    RoleController,
     StorageController,
     TaxController,
     TaxWithholdingController,
@@ -78,7 +84,9 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     InvoiceModule,
     PaymentConditionModule,
     PaymentModule,
+    PermissionModule,
     QuotationModule,
+    RoleModule,
     StorageModule,
     TaxModule,
     TaxWithholdingModule,
