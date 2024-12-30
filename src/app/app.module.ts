@@ -15,6 +15,7 @@ import { ClsModule } from 'nestjs-cls';
 import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [HelloController],
@@ -38,6 +39,11 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     CommonModule,
     TranslationModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
+    }),
     ClsModule.forRoot({
       plugins: [
         new ClsPluginTransactional({

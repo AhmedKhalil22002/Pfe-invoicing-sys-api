@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from 'src/common/app-config/app-config.module';
 import { AppConfigController } from 'src/common/app-config/controllers/app-config.controller';
+import { AuthModule } from 'src/common/auth/auth.module';
+import { AuthController } from 'src/common/auth/controllers/auth.controller';
 import { StorageController } from 'src/common/storage/controllers/storage.controller';
 import { StorageModule } from 'src/common/storage/storage.module';
 import { ActivityModule } from 'src/modules/activity/activity.module';
@@ -46,6 +48,7 @@ import { UsersModule } from 'src/modules/user/user.module';
 
 @Module({
   controllers: [
+    AuthController,
     ActivityController,
     AddressController,
     ArticleController,
@@ -72,6 +75,7 @@ import { UsersModule } from 'src/modules/user/user.module';
   providers: [],
   exports: [],
   imports: [
+    AuthModule,
     ActivityModule,
     AddressModule,
     ArticleModule,
