@@ -41,6 +41,8 @@ import { TaxWithholdingController } from 'src/modules/tax-withholding/controller
 import { TaxWithholdingModule } from 'src/modules/tax-withholding/tax-withholding.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
+import { UserController } from 'src/modules/user/controllers/user.controller';
+import { UsersModule } from 'src/modules/user/user.module';
 
 @Module({
   controllers: [
@@ -65,6 +67,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     StorageController,
     TaxController,
     TaxWithholdingController,
+    UserController,
   ],
   providers: [],
   exports: [],
@@ -90,6 +93,7 @@ import { TaxModule } from 'src/modules/tax/tax.module';
     StorageModule,
     TaxModule,
     TaxWithholdingModule,
+    UsersModule,
   ],
 })
 export class RoutesPublicModule {}
