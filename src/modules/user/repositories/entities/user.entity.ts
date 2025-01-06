@@ -36,7 +36,7 @@ export class UserEntity extends EntityHelper {
   @JoinColumn({ name: 'roleId' })
   role: RoleEntity;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   roleId: number;
 
   @Column({ type: 'varchar', nullable: true })
