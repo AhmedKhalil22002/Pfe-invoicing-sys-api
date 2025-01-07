@@ -25,4 +25,9 @@ export enum EVENT_TYPE {
   SELLING_INVOICE_PAID = 'invoice_paid',
   SELLING_INVOICE_OVERDUE = 'invoice_overdue',
   SELLING_INVOICE_CANCELED = 'invoice_canceled',
+
+  //Content
+  ACTIVITY_CREATED = 'activity_created',
+  ACTIVITY_UPDATED = 'activity_updated',
+  ACTIVITY_DELETED = 'activity_deleted',
 }
