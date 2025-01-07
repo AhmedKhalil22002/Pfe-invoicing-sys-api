@@ -1,4 +1,5 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { LoggerEntity } from 'src/common/logger/repositories/entities/logger.entity';
 import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
 import { RoleEntity } from 'src/modules/role/repositories/entities/role.entity';
 import {
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -51,4 +53,7 @@ export class UserEntity extends EntityHelper {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => LoggerEntity, (log) => log.user)
+  logs: LoggerEntity[];
 }

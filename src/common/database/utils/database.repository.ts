@@ -10,12 +10,11 @@ import {
   UpdateResult,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
-import { EntityHelper } from '../interfaces/database.entity.interface';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export abstract class DatabaseAbstractRepository<T extends EntityHelper>
+export abstract class DatabaseAbstractRepository<T>
   implements DatabaseInterfaceRepository<T>
 {
   protected txHost?: TransactionHost<TransactionalAdapterTypeOrm>;
