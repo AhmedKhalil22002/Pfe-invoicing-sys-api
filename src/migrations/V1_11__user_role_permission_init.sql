@@ -46,7 +46,7 @@ CREATE TABLE
         `lastName` VARCHAR(255) DEFAULT NULL,
         `email` VARCHAR(255) NOT NULL,
         `password` VARCHAR(255) NOT NULL,
-        `dateOfBirth` DATE DEFAULT NULL,
+        `dateOfBirth` datetime DEFAULT NULL,
         `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         `deletedAt` TIMESTAMP DEFAULT NULL,

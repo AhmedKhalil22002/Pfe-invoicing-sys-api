@@ -31,7 +31,7 @@ export class UserEntity extends EntityHelper {
   @Column()
   password: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ nullable: true })
   dateOfBirth?: Date;
 
   @ManyToOne(() => RoleEntity, (role) => role.users)

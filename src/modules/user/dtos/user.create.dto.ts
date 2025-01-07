@@ -32,7 +32,7 @@ export class CreateUserDto {
   @IsString()
   lastName?: string;
 
-  @ApiProperty({ type: String, required: false })
+  @ApiProperty({ type: Date, required: false })
   @IsOptional()
   dateOfBirth?: Date;
 
