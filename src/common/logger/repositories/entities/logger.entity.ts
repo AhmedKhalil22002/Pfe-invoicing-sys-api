@@ -1,4 +1,3 @@
-import { ACCESS_TYPE } from 'src/app/enums/logger/access-types.enum';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { UserEntity } from 'src/modules/user/repositories/entities/user.entity';
 import {
@@ -15,19 +14,16 @@ export class LoggerEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: ACCESS_TYPE, nullable: true })
-  access_type: ACCESS_TYPE;
-
   @Column({ type: 'enum', enum: EVENT_TYPE, nullable: true })
   event: EVENT_TYPE;
 
-  @Column({ type: 'boolean', default: true })
-  event_result: boolean;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  api: string;
 
-  @Column({ type: 'json', nullable: true })
-  payload: any;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  method: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.logs)
+  @ManyToOne(() => UserEntity, (user) => user.logs, { nullable: true })
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 

@@ -5,7 +5,6 @@ import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { LoggerRepository } from '../repositories/repository/logger.repository';
 import { LoggerEntity } from '../repositories/entities/logger.entity';
 import { LogNotFoundException } from '../errors/log.notfound.error';
-import { CreateLogDto } from '../dtos/log.create.dto';
 
 @Injectable()
 export class LoggerService {
@@ -27,8 +26,8 @@ export class LoggerService {
     );
   }
 
-  async save(createLogDto: CreateLogDto): Promise<LoggerEntity> {
-    return this.loggerRepository.save(createLogDto);
+  async save(log: Partial<LoggerEntity>): Promise<LoggerEntity> {
+    return this.loggerRepository.save(log);
   }
 
   async softDelete(id: number): Promise<LoggerEntity> {
