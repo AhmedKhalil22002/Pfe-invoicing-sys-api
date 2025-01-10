@@ -8,6 +8,12 @@ export enum EVENT_TYPE {
   FIRM_UPDATED = 'firm_updated',
   FIRM_DELETED = 'firm_deleted',
 
+  //interlocutor
+  INTERLOCUTOR_CREATED = 'interlocutor_created',
+  INTERLOCUTOR_UPDATED = 'interlocutor_updated',
+  INTERLOCUTOR_DELETED = 'interlocutor_deleted',
+  INTERLOCUTOR_PROMOTED = 'interlocutor_promoted',
+
   //Selling Quotation
   SELLING_QUOTATION_CREATED = 'quotation_created',
   SELLING_QUOTATION_UPDATED = 'quotation_updated',
@@ -30,4 +36,13 @@ export enum EVENT_TYPE {
   ACTIVITY_CREATED = 'activity_created',
   ACTIVITY_UPDATED = 'activity_updated',
   ACTIVITY_DELETED = 'activity_deleted',
+
+  BANK_ACCOUNT_CREATED = 'bank_account_created',
+  BANK_ACCOUNT_UPDATED = 'bank_account_updated',
+  BANK_ACCOUNT_DELETED = 'bank_account_deleted',
+
+  DEFAULT_CONDITION_CREATED = 'default_condition_created',
+  DEFAULT_CONDITION_UPDATED = 'default_condition_updated',
+  DEFAULT_CONDITION_MASS_UPDATED = 'default_conditions_updated',
+  DEFAULT_CONDITION_DELETED = 'default_condition_deleted',
 }
