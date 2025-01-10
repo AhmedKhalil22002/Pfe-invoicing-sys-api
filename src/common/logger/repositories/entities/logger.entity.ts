@@ -30,6 +30,9 @@ export class LoggerEntity {
   @Column({ type: 'int', nullable: true })
   userId: number;
 
+  @Column({ type: 'json', nullable: true })
+  logInfo: any;
+
   @CreateDateColumn()
   loggedAt?: Date;
 }
