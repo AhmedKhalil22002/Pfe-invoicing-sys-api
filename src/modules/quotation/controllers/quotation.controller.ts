@@ -8,6 +8,8 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { QuotationService } from '../services/quotation.service';
@@ -22,12 +24,17 @@ import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { Request as ExpressRequest } from 'express';
 
 @ApiTags('quotation')
 @Controller({
   version: '1',
   path: '/quotation',
 })
+@UseInterceptors(LogInterceptor)
 export class QuotationController {
   constructor(
     private readonly quotationService: QuotationService,
@@ -38,7 +45,7 @@ export class QuotationController {
   async findAll(
     @Query() options: IQueryObject,
   ): Promise<ResponseQuotationDto[]> {
-    return await this.quotationService.findAll(options);
+    return this.quotationService.findAll(options);
   }
 
   @Get('/list')
@@ -46,7 +53,7 @@ export class QuotationController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseQuotationDto>> {
-    return await this.quotationService.findAllPaginated(query);
+    return this.quotationService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -62,31 +69,44 @@ export class QuotationController {
     query.filter
       ? (query.filter += `,id||$eq||${id}`)
       : (query.filter = `id||$eq||${id}`);
-    return await this.quotationService.findOneByCondition(query);
+    return this.quotationService.findOneByCondition(query);
   }
 
   @Get('/:id/download')
   @Header('Content-Type', 'application/json')
   @Header('Content-Disposition', 'attachment; filename="quotation.pdf"')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_PRINTED)
   async generatePdf(
     @Param('id') id: number,
     @Query() query: { template: string },
+    @Request() req: ExpressRequest,
   ) {
+    req.logInfo = { id };
     return this.quotationService.downloadPdf(id, query.template);
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_CREATED)
   async save(
     @Body() createQuotationDto: CreateQuotationDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseQuotationDto> {
-    return await this.quotationService.save(createQuotationDto);
+    const quotation = await this.quotationService.save(createQuotationDto);
+    req.logInfo = { id: quotation.id };
+    return quotation;
   }
 
   @Post('/duplicate')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_DUPLICATED)
   async duplicate(
     @Body() duplicateQuotationDto: DuplicateQuotationDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseQuotationDto> {
-    return await this.quotationService.duplicate(duplicateQuotationDto);
+    const quotation = await this.quotationService.duplicate(
+      duplicateQuotationDto,
+    );
+    req.logInfo = { id: duplicateQuotationDto.id, duplicateId: quotation.id };
+    return quotation;
   }
 
   @Put('/update-quotation-sequences')
@@ -98,12 +118,9 @@ export class QuotationController {
   async updateQuotationSequences(
     @Body() updatedSequenceDto: UpdateQuotationSequenceDto,
   ): Promise<QuotationSequence> {
-    return await this.quotationService.updateQuotationSequence(
-      updatedSequenceDto,
-    );
+    return this.quotationService.updateQuotationSequence(updatedSequenceDto);
   }
 
-  @Put('/invoice/:id/:create')
   @ApiParam({
     name: 'id',
     type: 'number',
@@ -114,10 +131,14 @@ export class QuotationController {
     type: 'boolean',
     required: false,
   })
+  @Put('/invoice/:id/:create')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_INVOICED)
   async invoice(
     @Param('id') id: number,
     @Param('create') create: boolean,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseQuotationDto> {
+    req.logInfo = { quotationId: id, invoiceId: null };
     const quotation = await this.quotationService.findOneByCondition({
       filter: `id||$eq||${id}`,
       join:
@@ -128,35 +149,44 @@ export class QuotationController {
         `articleQuotationEntries.articleQuotationEntryTaxes.tax`,
     });
     if (quotation.status === QUOTATION_STATUS.Invoiced || create) {
-      await this.invoiceService.saveFromQuotation(quotation);
+      const invoice = await this.invoiceService.saveFromQuotation(quotation);
+      req.logInfo.invoiceId = invoice.id;
     }
     await this.quotationService.updateStatus(id, QUOTATION_STATUS.Invoiced);
-    return await this.quotationService.findOneByCondition({
+    return this.quotationService.findOneByCondition({
       filter: `id||$eq||${id}`,
       join: 'invoices',
     });
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateQuotationDto: UpdateQuotationDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseQuotationDto> {
-    return await this.quotationService.update(id, updateQuotationDto);
+    req.logInfo = { id };
+    return this.quotationService.update(id, updateQuotationDto);
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponseQuotationDto> {
-    return await this.quotationService.softDelete(id);
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.SELLING_QUOTATION_DELETED)
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseQuotationDto> {
+    req.logInfo = { id };
+    return this.quotationService.softDelete(id);
   }
 }

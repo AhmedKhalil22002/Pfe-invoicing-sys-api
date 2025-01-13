@@ -7,6 +7,8 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
@@ -16,12 +18,17 @@ import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { Request as ExpressRequest } from 'express';
 
 @ApiTags('bank-account')
 @Controller({
   version: '1',
   path: '/bank-account',
 })
+@UseInterceptors(LogInterceptor)
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
@@ -57,32 +64,44 @@ export class BankAccountController {
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.BANK_ACCOUNT_CREATED)
   async save(
     @Body() createBankAccountDto: CreateBankAccountDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseBankAccountDto> {
-    return await this.bankAccountService.save(createBankAccountDto);
+    const bank = await this.bankAccountService.save(createBankAccountDto);
+    req.logInfo = { id: bank.id };
+    return bank;
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.BANK_ACCOUNT_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateBankAccountDto: UpdateBankAccountDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseBankAccountDto> {
+    req.logInfo = { id };
     return await this.bankAccountService.update(id, updateBankAccountDto);
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponseBankAccountDto> {
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.BANK_ACCOUNT_DELETED)
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseBankAccountDto> {
+    req.logInfo = { id };
     return await this.bankAccountService.softDelete(id);
   }
 }
