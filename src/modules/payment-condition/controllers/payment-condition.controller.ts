@@ -7,6 +7,8 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PaymentConditionService } from '../services/payment-condition.service';
@@ -16,12 +18,17 @@ import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { Request as ExpressRequest } from 'express';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('payment-condition')
 @Controller({
   version: '1',
   path: '/payment-condition',
 })
+@UseInterceptors(LogInterceptor)
 export class PaymentConditionController {
   constructor(
     private readonly paymentConditionService: PaymentConditionService,
@@ -31,7 +38,7 @@ export class PaymentConditionController {
   async findAll(
     @Query() options: IQueryObject,
   ): Promise<ResponsePaymentConditionDto[]> {
-    return await this.paymentConditionService.findAll(options);
+    return this.paymentConditionService.findAll(options);
   }
 
   @Get('/list')
@@ -39,7 +46,7 @@ export class PaymentConditionController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponsePaymentConditionDto>> {
-    return await this.paymentConditionService.findAllPaginated(query);
+    return this.paymentConditionService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -55,39 +62,49 @@ export class PaymentConditionController {
     query.filter
       ? (query.filter += `,id||$eq||${id}`)
       : (query.filter = `id||$eq||${id}`);
-    return await this.paymentConditionService.findOneByCondition(query);
+    return this.paymentConditionService.findOneByCondition(query);
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.PAYMENT_CONDITION_CREATED)
   async save(
     @Body() createPaymentConditionDto: CreatePaymentConditionDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponsePaymentConditionDto> {
-    return await this.paymentConditionService.save(createPaymentConditionDto);
+    const condition = await this.paymentConditionService.save(
+      createPaymentConditionDto,
+    );
+    req.logInfo = { id: condition.id };
+    return condition;
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.PAYMENT_CONDITION_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updatePaymentConditionDto: UpdatePaymentConditionDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponsePaymentConditionDto> {
-    return await this.paymentConditionService.update(
-      id,
-      updatePaymentConditionDto,
-    );
+    req.logInfo = { id };
+    return this.paymentConditionService.update(id, updatePaymentConditionDto);
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponsePaymentConditionDto> {
-    return await this.paymentConditionService.softDelete(id);
+  @Delete('/:id')
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponsePaymentConditionDto> {
+    req.logInfo = { id };
+    return this.paymentConditionService.softDelete(id);
   }
 }

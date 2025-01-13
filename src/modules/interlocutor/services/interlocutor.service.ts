@@ -21,7 +21,7 @@ export class InterlocutorService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<ResponseInterlocutorDto | null> {
+  ): Promise<InterlocutorEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const interlocutor = await this.interlocutorRepository.findOne(
@@ -89,36 +89,34 @@ export class InterlocutorService {
     return interlocutor;
   }
 
-  async promote(id: number, firmId: number): Promise<boolean> {
+  async promote(id: number, firmId: number): Promise<InterlocutorEntity> {
+    const interlocutor = await this.findOneByCondition({
+      filter: `id||$eq||${id}`,
+    });
     const firmInterlocutor =
       await this.firmInterlocutorService.findOneByCondition({
         filter: `interlocutorId||$eq||${id};firmId||$eq||${firmId}`,
       });
-    try {
-      await this.firmInterlocutorService.save({
-        ...firmInterlocutor,
-        isMain: true,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+    await this.firmInterlocutorService.save({
+      ...firmInterlocutor,
+      isMain: true,
+    });
+    return interlocutor;
   }
 
-  async demote(firmId: number): Promise<boolean> {
+  async demote(firmId: number): Promise<InterlocutorEntity> {
     const firmInterlocutor =
       await this.firmInterlocutorService.findOneByCondition({
         filter: `isMain||$eq||1;firmId||$eq||${firmId}`,
       });
-    try {
-      await this.firmInterlocutorService.save({
-        ...firmInterlocutor,
-        isMain: false,
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+    const demoted = await this.findOneByCondition({
+      filter: `id||$eq||${firmInterlocutor.interlocutorId}`,
+    });
+    await this.firmInterlocutorService.save({
+      ...firmInterlocutor,
+      isMain: false,
+    });
+    return demoted;
   }
 
   async update(

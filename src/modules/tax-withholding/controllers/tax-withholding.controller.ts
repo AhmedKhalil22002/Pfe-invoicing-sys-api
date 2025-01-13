@@ -9,6 +9,8 @@ import {
   Body,
   ConflictException,
   Query,
+  UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
@@ -18,12 +20,17 @@ import { TaxWithholdingService } from '../services/tax-withholding.service';
 import { ResponseTaxWithholdingDto } from '../dtos/tax-withholding.response.dto';
 import { CreateTaxWithholdingDto } from '../dtos/tax-withholding.create.dto';
 import { UpdateTaxWithholdingDto } from '../dtos/tax-withholding.update.dto';
+import { Request as ExpressRequest } from 'express';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
 
 @ApiTags('tax-withholding')
 @Controller({
   version: '1',
   path: '/tax-withholding',
 })
+@UseInterceptors(LogInterceptor)
 export class TaxWithholdingController {
   constructor(private readonly taxWithholdingService: TaxWithholdingService) {}
 
@@ -31,7 +38,7 @@ export class TaxWithholdingController {
   async findAll(
     @Query() options: IQueryObject,
   ): Promise<ResponseTaxWithholdingDto[]> {
-    return await this.taxWithholdingService.findAll(options);
+    return this.taxWithholdingService.findAll(options);
   }
 
   @Get('/list')
@@ -39,7 +46,7 @@ export class TaxWithholdingController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseTaxWithholdingDto>> {
-    return await this.taxWithholdingService.findAllPaginated(query);
+    return this.taxWithholdingService.findAllPaginated(query);
   }
 
   @Get('/:id')
@@ -55,14 +62,16 @@ export class TaxWithholdingController {
     query.filter
       ? (query.filter += `,id||$eq||${id}`)
       : (query.filter = `id||$eq||${id}`);
-    return await this.taxWithholdingService.findOneByCondition(query);
+    return this.taxWithholdingService.findOneByCondition(query);
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_CREATED)
   async save(
     @Body() createTaxWithholdingDto: CreateTaxWithholdingDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseTaxWithholdingDto> {
-    const tax = await this.taxWithholdingService.findOneByCondition({
+    let tax = await this.taxWithholdingService.findOneByCondition({
       filter: `label||$eq||${createTaxWithholdingDto.label}`,
     });
     if (tax) {
@@ -70,18 +79,22 @@ export class TaxWithholdingController {
         `Tax withholding with label "${createTaxWithholdingDto.label}" already exists`,
       );
     }
-    return await this.taxWithholdingService.save(createTaxWithholdingDto);
+    tax = await this.taxWithholdingService.save(createTaxWithholdingDto);
+    req.logInfo = { id: tax.id };
+    return tax;
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateTaxWithholdingDto: UpdateTaxWithholdingDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseTaxWithholdingDto> {
     const tax = await this.taxWithholdingService.update(
       id,
@@ -90,20 +103,22 @@ export class TaxWithholdingController {
     if (!tax) {
       throw new NotFoundException(`Tax withholding with ID ${id} not found`);
     }
+    req.logInfo = { id };
     return tax;
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponseTaxWithholdingDto> {
-    const tax = await this.taxWithholdingService.softDelete(id);
-    if (!tax) {
-      throw new NotFoundException(`Tax withholding with ID ${id} not found`);
-    }
-    return tax;
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_DELETED)
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseTaxWithholdingDto> {
+    req.logInfo = { id };
+    return this.taxWithholdingService.softDelete(id);
   }
 }

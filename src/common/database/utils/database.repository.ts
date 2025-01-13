@@ -10,12 +10,11 @@ import {
   UpdateResult,
 } from 'typeorm';
 import { DatabaseInterfaceRepository } from '../interfaces/database.repository.interface';
-import { EntityHelper } from '../interfaces/database.entity.interface';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export abstract class DatabaseAbstractRepository<T extends EntityHelper>
+export abstract class DatabaseAbstractRepository<T>
   implements DatabaseInterfaceRepository<T>
 {
   protected txHost?: TransactionHost<TransactionalAdapterTypeOrm>;
@@ -169,6 +168,59 @@ export abstract class DatabaseAbstractRepository<T extends EntityHelper>
     // Identify new items
     for (const updatedItem of updatedItems) {
       if (!updatedItem.id) {
+        newItems.push(await onCreate(updatedItem));
+      }
+    }
+
+    return {
+      keptItems,
+      newItems,
+      eliminatedItems,
+    };
+  }
+
+  async updateAssociations2<U extends Record<string, any>>({
+    existingItems,
+    updatedItems,
+    keys,
+    onDelete,
+    onCreate,
+  }: {
+    existingItems: U[];
+    updatedItems: U[];
+    keys: [keyof U, keyof U];
+    onCreate: (item: U) => Promise<any>;
+    onDelete: (id: number) => Promise<any>;
+  }): Promise<{
+    keptItems: U[];
+    newItems: U[];
+    eliminatedItems: U[];
+  }> {
+    const newItems: U[] = [];
+    const keptItems: U[] = [];
+    const eliminatedItems: U[] = [];
+
+    const [key1, key2] = keys;
+
+    const isSameCombination = (a: U, b: U) =>
+      a[key1] === b[key1] && a[key2] === b[key2];
+
+    for (const existingItem of existingItems) {
+      const existsInUpdate = updatedItems.some((updatedItem) =>
+        isSameCombination(updatedItem, existingItem),
+      );
+      if (!existsInUpdate) {
+        eliminatedItems.push(await onDelete(existingItem.id));
+      } else {
+        keptItems.push(existingItem);
+      }
+    }
+
+    for (const updatedItem of updatedItems) {
+      const existsInExisting = existingItems.some((existingItem) =>
+        isSameCombination(updatedItem, existingItem),
+      );
+      if (!existsInExisting) {
         newItems.push(await onCreate(updatedItem));
       }
     }

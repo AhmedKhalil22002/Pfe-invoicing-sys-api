@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ActivityService } from '../services/activity.service';
@@ -16,12 +17,16 @@ import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginate
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('activity')
 @Controller({
   version: '1',
   path: '/activity',
 })
+@UseInterceptors(LogInterceptor)
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
 
@@ -57,18 +62,20 @@ export class ActivityController {
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.ACTIVITY_CREATED)
   async save(
     @Body() createActivityDto: CreateActivityDto,
   ): Promise<ResponseActivityDto> {
     return await this.activityService.save(createActivityDto);
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.ACTIVITY_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdateActivityDto,
@@ -76,12 +83,13 @@ export class ActivityController {
     return await this.activityService.update(id, updateActivityDto);
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.ACTIVITY_DELETED)
   async delete(@Param('id') id: number): Promise<ResponseActivityDto> {
     return await this.activityService.softDelete(id);
   }
