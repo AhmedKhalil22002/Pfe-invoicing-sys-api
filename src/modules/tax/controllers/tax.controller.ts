@@ -9,6 +9,8 @@ import {
   Body,
   ConflictException,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { TaxService } from '../services/tax.service';
@@ -18,12 +20,17 @@ import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { Request as ExpressRequest } from 'express';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('tax')
 @Controller({
   version: '1',
   path: '/tax',
 })
+@UseInterceptors(LogInterceptor)
 export class TaxController {
   constructor(private readonly taxService: TaxService) {}
 
@@ -57,8 +64,12 @@ export class TaxController {
   }
 
   @Post('')
-  async save(@Body() createTaxDto: CreateTaxDto): Promise<ResponseTaxDto> {
-    const tax = await this.taxService.findOneByCondition({
+  @LogEvent(EVENT_TYPE.TAX_CREATED)
+  async save(
+    @Body() createTaxDto: CreateTaxDto,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseTaxDto> {
+    let tax = await this.taxService.findOneByCondition({
       filter: `label||$eq||${createTaxDto.label}`,
     });
     if (tax) {
@@ -66,37 +77,47 @@ export class TaxController {
         `Tax with label "${createTaxDto.label}" already exists`,
       );
     }
-    return await this.taxService.save(createTaxDto);
+    tax = await this.taxService.save(createTaxDto);
+    req.logInfo = { id: tax.id };
+    return tax;
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.TAX_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateTaxDto: UpdateTaxDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseTaxDto> {
     const tax = await this.taxService.update(id, updateTaxDto);
     if (!tax) {
       throw new NotFoundException(`Tax with ID ${id} not found`);
     }
+    req.logInfo = { id };
     return tax;
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponseTaxDto> {
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.TAX_DELETED)
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseTaxDto> {
     const tax = await this.taxService.softDelete(id);
     if (!tax) {
       throw new NotFoundException(`Tax with ID ${id} not found`);
     }
+    req.logInfo = { id };
     return tax;
   }
 }

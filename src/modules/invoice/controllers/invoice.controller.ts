@@ -8,6 +8,8 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
@@ -21,18 +23,23 @@ import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { UpdateInvoiceDto } from '../dtos/invoice.update.dto';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { Request as ExpressRequest } from 'express';
 
 @ApiTags('invoice')
 @Controller({
   version: '1',
   path: '/invoice',
 })
+@UseInterceptors(LogInterceptor)
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   @Get('/all')
   async findAll(@Query() options: IQueryObject): Promise<ResponseInvoiceDto[]> {
-    return await this.invoiceService.findAll(options);
+    return this.invoiceService.findAll(options);
   }
 
   @Get('/list')
@@ -40,14 +47,14 @@ export class InvoiceController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseInvoiceDto>> {
-    return await this.invoiceService.findAllPaginated(query);
+    return this.invoiceService.findAllPaginated(query);
   }
 
   @Get('/sequential-range/:id')
   async findInvoicesByRange(
     @Param('id') id: number,
   ): Promise<ResponseInvoiceRangeDto> {
-    return await this.invoiceService.findInvoicesByRange(id);
+    return this.invoiceService.findInvoicesByRange(id);
   }
 
   @Get('/:id')
@@ -63,65 +70,84 @@ export class InvoiceController {
     query.filter
       ? (query.filter += `,id||$eq||${id}`)
       : (query.filter = `id||$eq||${id}`);
-    return await this.invoiceService.findOneByCondition(query);
+    return this.invoiceService.findOneByCondition(query);
   }
 
   @Get('/:id/download')
   @Header('Content-Type', 'application/json')
   @Header('Content-Disposition', 'attachment; filename="invoice.pdf"')
+  @LogEvent(EVENT_TYPE.SELLING_INVOICE_PRINTED)
   async generatePdf(
     @Param('id') id: number,
     @Query() query: { template: string },
+    @Request() req: ExpressRequest,
   ) {
+    req.logInfo = { id };
     return this.invoiceService.downloadPdf(id, query.template);
   }
 
   @Post('')
+  @LogEvent(EVENT_TYPE.SELLING_INVOICE_CREATED)
   async save(
     @Body() createInvoiceDto: CreateInvoiceDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseInvoiceDto> {
-    return await this.invoiceService.save(createInvoiceDto);
+    const invoice = await this.invoiceService.save(createInvoiceDto);
+    req.logInfo = { id: invoice.id };
+    return invoice;
   }
 
   @Post('/duplicate')
+  @LogEvent(EVENT_TYPE.SELLING_INVOICE_DUPLICATED)
   async duplicate(
     @Body() duplicateInvoiceDto: DuplicateInvoiceDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseInvoiceDto> {
-    return await this.invoiceService.duplicate(duplicateInvoiceDto);
+    const invoice = await this.invoiceService.duplicate(duplicateInvoiceDto);
+    req.logInfo = { id: duplicateInvoiceDto.id, duplicateId: invoice.id };
+    return invoice;
   }
 
-  @Put('/update-invoice-sequences')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/update-invoice-sequences')
   async updateInvoiceSequences(
     @Body() updatedSequenceDto: UpdateInvoiceSequenceDto,
   ): Promise<InvoiceSequence> {
-    return await this.invoiceService.updateInvoiceSequence(updatedSequenceDto);
+    return this.invoiceService.updateInvoiceSequence(updatedSequenceDto);
   }
 
-  @Put('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
+  @Put('/:id')
+  @LogEvent(EVENT_TYPE.SELLING_INVOICE_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateInvoiceDto: UpdateInvoiceDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseInvoiceDto> {
-    return await this.invoiceService.update(id, updateInvoiceDto);
+    req.logInfo = { id };
+    return this.invoiceService.update(id, updateInvoiceDto);
   }
 
-  @Delete('/:id')
   @ApiParam({
     name: 'id',
     type: 'number',
     required: true,
   })
-  async delete(@Param('id') id: number): Promise<ResponseInvoiceDto> {
-    return await this.invoiceService.softDelete(id);
+  @Delete('/:id')
+  @LogEvent(EVENT_TYPE.SELLING_INVOICE_DELETED)
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseInvoiceDto> {
+    req.logInfo = { id };
+    return this.invoiceService.softDelete(id);
   }
 }

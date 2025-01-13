@@ -8,6 +8,8 @@ import {
   Post,
   Put,
   Query,
+  Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
@@ -18,12 +20,17 @@ import { UserEntity } from '../repositories/entities/user.entity';
 import { UserService } from '../services/user.service';
 import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { Request as ExpressRequest } from 'express';
+import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('user')
 @Controller({
   version: '1',
   path: '/user',
 })
+@UseInterceptors(LogInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -32,12 +39,12 @@ export class UserController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseUserDto>> {
-    return await this.userService.findAllPaginated(query);
+    return this.userService.findAllPaginated(query);
   }
 
   @Get('/all')
   async findAll(@Query() options: IQueryObject): Promise<ResponseUserDto[]> {
-    return await this.userService.findAll(options);
+    return this.userService.findAll(options);
   }
 
   @Get(':id')
@@ -54,10 +61,9 @@ export class UserController {
   ): Promise<ResponseUserDto> {
     if (query.filter) query.filter += `,id||$eq||${id}`;
     else query.filter = `id||$eq||${id}`;
-    return await this.userService.findOneByCondition(query);
+    return this.userService.findOneByCondition(query);
   }
 
-  @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
@@ -65,11 +71,17 @@ export class UserController {
     description: 'User created successfully.',
     type: UserEntity,
   })
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    return await this.userService.save(createUserDto);
+  @Post()
+  @LogEvent(EVENT_TYPE.USER_CREATED)
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Request() req: ExpressRequest,
+  ): Promise<UserEntity> {
+    const user = await this.userService.save(createUserDto);
+    req.logInfo = { id: user.id };
+    return user;
   }
 
-  @Put(':id')
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({
     status: 200,
@@ -77,20 +89,34 @@ export class UserController {
     type: UserEntity,
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
+  @Put(':id')
+  @LogEvent(EVENT_TYPE.USER_UPDATED)
   async update(
     @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @Request() req: ExpressRequest,
   ): Promise<UserEntity> {
-    return await this.userService.update(id, updateUserDto);
+    req.logInfo = { id };
+    return this.userService.update(id, updateUserDto);
   }
 
   @Put('/deactivate/:id')
-  async deactivate(@Param('id') id: number): Promise<UserEntity> {
-    return await this.userService.update(id, { isActive: false });
+  @LogEvent(EVENT_TYPE.USER_DEACTIVATED)
+  async deactivate(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<UserEntity> {
+    req.logInfo = { id };
+    return this.userService.update(id, { isActive: false });
   }
 
   @Put('/activate/:id')
-  async activate(@Param('id') id: number): Promise<UserEntity> {
-    return await this.userService.update(id, { isActive: true });
+  @LogEvent(EVENT_TYPE.USER_ACTIVATED)
+  async activate(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<UserEntity> {
+    req.logInfo = { id };
+    return this.userService.update(id, { isActive: true });
   }
 }
