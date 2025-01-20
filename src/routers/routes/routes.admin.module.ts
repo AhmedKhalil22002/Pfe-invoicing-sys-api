@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { LoggerController } from 'src/common/logger/controllers/logger.controller';
+import { LoggerModule } from 'src/common/logger/logger.module';
 
 @Module({
-  controllers: [],
+  controllers: [LoggerController],
   providers: [],
   exports: [],
-  imports: [],
+  imports: [LoggerModule],
 })
 export class RoutesAdminModule {}

@@ -5,6 +5,8 @@ import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
 import { LoggerRepository } from '../repositories/repository/logger.repository';
 import { LoggerEntity } from '../repositories/entities/logger.entity';
 import { LogNotFoundException } from '../errors/log.notfound.error';
+import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
 
 @Injectable()
 export class LoggerService {
@@ -24,6 +26,28 @@ export class LoggerService {
     return await this.loggerRepository.findAll(
       queryOptions as FindManyOptions<LoggerEntity>,
     );
+  }
+
+  async findAllPaginated(query: IQueryObject): Promise<PageDto<LoggerEntity>> {
+    const queryBuilder = new QueryBuilder();
+    const queryOptions = queryBuilder.build(query);
+    const count = await this.loggerRepository.getTotalCount({
+      where: queryOptions.where,
+    });
+
+    const entities = await this.loggerRepository.findAll(
+      queryOptions as FindManyOptions<LoggerEntity>,
+    );
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: {
+        page: parseInt(query.page),
+        take: parseInt(query.limit),
+      },
+      itemCount: count,
+    });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async save(log: Partial<LoggerEntity>): Promise<LoggerEntity> {
