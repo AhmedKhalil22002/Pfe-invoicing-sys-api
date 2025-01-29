@@ -5,7 +5,7 @@ import { EventsGateway } from 'src/common/gateways/events/events.gateway';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequentialNotFoundException } from '../errors/invoice-sequential.error';
 import { formSequential } from 'src/utils/sequence.utils';
-import { SocketRoom } from 'src/common/gateways/enum/room.enum';
+import { WSRoom } from 'src/app/enums/ws-room.enum';
 
 @Injectable()
 export class InvoiceSequenceService {
@@ -37,7 +37,7 @@ export class InvoiceSequenceService {
     const sequence = await this.get();
     this.set({ ...sequence.value, next: sequence.value.next + 1 });
     this.wsGateway.sendToRoom(
-      SocketRoom.INVOICE_SEQUENCE,
+      WSRoom.INVOICE_SEQUENCE,
       'invoice-sequence-updated',
       {
         value: sequence.value.next + 1,

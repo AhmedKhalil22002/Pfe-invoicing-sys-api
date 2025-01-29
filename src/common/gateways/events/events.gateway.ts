@@ -11,7 +11,7 @@ import {
 import { Server, Socket as IoSocket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { SocketRoom } from '../enum/room.enum';
+import { WSRoom } from '../../../app/enums/ws-room.enum';
 import { Logger } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 
@@ -72,7 +72,7 @@ export class EventsGateway
   @SubscribeMessage('joinRoom')
   joinRoom(
     @ConnectedSocket() client: IoSocket,
-    @MessageBody() roomName: SocketRoom,
+    @MessageBody() roomName: WSRoom,
   ): void {
     if (!client.data.user) {
       client.disconnect(true);
@@ -89,7 +89,7 @@ export class EventsGateway
   @SubscribeMessage('leaveRoom')
   leaveRoom(
     @ConnectedSocket() client: IoSocket,
-    @MessageBody() roomName: SocketRoom,
+    @MessageBody() roomName: WSRoom,
   ): void {
     if (!client.data.user) {
       client.disconnect(true);
@@ -106,7 +106,7 @@ export class EventsGateway
     console.log(`${client.data.user.email} left room ${roomName}`);
   }
 
-  sendToRoom(roomName: SocketRoom, message: string, data: any): void {
+  sendToRoom(roomName: WSRoom, message: string, data: any): void {
     if (this.rooms.has(roomName)) {
       this.server.to(roomName).emit(message, data);
       console.log(`Message sent to room ${roomName}: ${message}`);
@@ -115,7 +115,7 @@ export class EventsGateway
     }
   }
 
-  getRoomMembers(roomName: SocketRoom): string[] {
+  getRoomMembers(roomName: WSRoom): string[] {
     return this.rooms.has(roomName)
       ? Array.from(this.rooms.get(roomName)!)
       : [];
