@@ -1,4 +1,3 @@
-import { isMatch } from 'date-fns';
 import {
   Between,
   In,
@@ -11,7 +10,6 @@ import {
   Not,
 } from 'typeorm';
 import {
-  EDateType,
   ILooseObject,
   IOptionsObject,
   IQueryObject,
@@ -218,9 +216,13 @@ export class QueryBuilder {
     return obj;
   }
 
-  private parseDateOrNumber(value: string) {
-    return isMatch(value, EDateType.Date) || isMatch(value, EDateType.Datetime)
-      ? value
-      : +value;
+  private parseDateOrNumber(value: string): Date | number {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+
+    if (dateRegex.test(value)) return new Date(value);
+    if (datetimeRegex.test(value)) return new Date(value);
+
+    return parseInt(value, 10);
   }
 }

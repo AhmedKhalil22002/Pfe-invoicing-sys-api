@@ -39,8 +39,3 @@ export interface IQueryObject {
 export interface ILooseObject {
   [key: string]: any;
 }
-
-export enum EDateType {
-  Date = 'yyyy-MM-dd',
-  Datetime = 'yyyy-MM-dd HH:MM:ss',
-}
