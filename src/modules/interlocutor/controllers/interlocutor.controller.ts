@@ -90,7 +90,11 @@ export class InterlocutorController {
   ): Promise<ResponseInterlocutorDto> {
     const demoted = await this.interlocutorService.demote(firmId);
     const promoted = await this.interlocutorService.promote(id, firmId);
-    req.logInfo = { demoted: demoted.id, promoted: promoted.id };
+    req.logInfo = {
+      demoted: demoted.id,
+      promoted: promoted.id,
+      firmId: firmId,
+    };
     return await this.interlocutorService.findOneById(id);
   }
 

@@ -5,6 +5,7 @@ import { AppConfigEntity } from 'src/common/app-config/repositories/entities/app
 import { EventsGateway } from 'src/common/gateways/events/events.gateway';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { formSequential } from 'src/utils/sequence.utils';
+import { WSRoom } from 'src/app/enums/ws-room.enum';
 
 @Injectable()
 export class QuotationSequenceService {
@@ -35,9 +36,13 @@ export class QuotationSequenceService {
   async getSequential(): Promise<string> {
     const sequence = await this.get();
     this.set({ ...sequence.value, next: sequence.value.next + 1 });
-    this.wsGateway.server.emit('quotation-sequence-updated', {
-      value: sequence.value,
-    });
+    this.wsGateway.sendToRoom(
+      WSRoom.QUOTATION_SEQUENCE,
+      'quotation-sequence-updated',
+      {
+        value: sequence.value.next + 1,
+      },
+    );
     return formSequential(
       sequence.value.prefix,
       sequence.value.dynamicSequence,
