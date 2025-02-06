@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
@@ -20,6 +21,7 @@ import { IQueryObject } from 'src/common/database/interfaces/database-query-opti
 import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { Request as ExpressRequest } from 'express';
 
 @ApiTags('activity')
 @Controller({
@@ -65,8 +67,11 @@ export class ActivityController {
   @LogEvent(EVENT_TYPE.ACTIVITY_CREATED)
   async save(
     @Body() createActivityDto: CreateActivityDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseActivityDto> {
-    return await this.activityService.save(createActivityDto);
+    const activty = await this.activityService.save(createActivityDto);
+    req.logInfo = { id: activty.id };
+    return activty;
   }
 
   @ApiParam({
@@ -79,7 +84,9 @@ export class ActivityController {
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdateActivityDto,
+    @Request() req: ExpressRequest,
   ): Promise<ResponseActivityDto> {
+    req.logInfo = { id };
     return await this.activityService.update(id, updateActivityDto);
   }
 
@@ -90,7 +97,11 @@ export class ActivityController {
   })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.ACTIVITY_DELETED)
-  async delete(@Param('id') id: number): Promise<ResponseActivityDto> {
+  async delete(
+    @Param('id') id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<ResponseActivityDto> {
+    req.logInfo = { id };
     return await this.activityService.softDelete(id);
   }
 }
