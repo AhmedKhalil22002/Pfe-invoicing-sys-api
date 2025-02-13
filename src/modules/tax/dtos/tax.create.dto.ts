@@ -18,4 +18,7 @@ export class CreateTaxDto {
   @ApiProperty({ example: 'true', type: Boolean })
   @IsBoolean()
   isSpecial: boolean;
+
+  @ApiProperty({ example: 1, type: Number })
+  currencyId?: number;
 }
