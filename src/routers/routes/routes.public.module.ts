@@ -44,6 +44,8 @@ import { TaxWithholdingController } from 'src/modules/tax-withholding/controller
 import { TaxWithholdingModule } from 'src/modules/tax-withholding/tax-withholding.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
+import { TemplateCategoryController } from 'src/modules/template/controllers/template-category.controller';
+import { TemplateModule } from 'src/modules/template/template.module';
 import { UserController } from 'src/modules/user/controllers/user.controller';
 import { UsersModule } from 'src/modules/user/user.module';
 
@@ -71,6 +73,7 @@ import { UsersModule } from 'src/modules/user/user.module';
     StorageController,
     TaxController,
     TaxWithholdingController,
+    TemplateCategoryController,
     UserController,
   ],
   providers: [],
@@ -99,6 +102,7 @@ import { UsersModule } from 'src/modules/user/user.module';
     StorageModule,
     TaxModule,
     TaxWithholdingModule,
+    TemplateModule,
     UsersModule,
   ],
 })
