@@ -89,35 +89,33 @@ async function bootstrap() {
   app.useGlobalFilters(new SentryFilter(httpAdapter));
 
   //Migrations ==========================================================
-  const migrationService = app.get(MigrationService);
-  const migrationPath = join(__dirname, 'migrations');
-  try {
-    // Create migrations table if it does not exist
-    await migrationService.createMigrationsTableIfNotExists();
+  const synchronize = configService.get<boolean>('database.synchronize');
+  if (!synchronize) {
+    const migrationService = app.get(MigrationService);
+    const migrationPath = join(__dirname, 'migrations');
+    try {
+      // Create migrations table if it does not exist
+      await migrationService.createMigrationsTableIfNotExists();
 
-    const migrationFiles =
-      await migrationService.loadMigrationFiles(migrationPath);
+      const migrationFiles =
+        await migrationService.loadMigrationFiles(migrationPath);
 
-    const existingMigrations = await migrationService.findAll({});
+      const existingMigrations = await migrationService.findAll({});
 
-    // Check if there are any migrations to run
-    const needToRunMigrations = await migrationService.runNeeded(
-      migrationFiles,
-      existingMigrations,
-    );
+      // Check if there are any migrations to run
+      const needToRunMigrations = await migrationService.runNeeded(
+        migrationFiles,
+        existingMigrations,
+      );
 
-    if (needToRunMigrations) {
-      await migrationService.runMigrations(migrationPath, migrationFiles);
+      if (needToRunMigrations) {
+        await migrationService.runMigrations(migrationPath, migrationFiles);
+      }
+    } catch (error) {
+      logger.error('Migration process failed', error.stack);
     }
-  } catch (error) {
-    logger.error('Migration process failed', error.stack);
   }
   //===================================================================
-
-  // logger.log(`==========================================================`);
-  // logger.log(`Environment Variable`, 'NestApplication');
-  // logger.log(JSON.parse(JSON.stringify(process.env)), 'NestApplication');
-  // logger.log(`==========================================================`);
 
   await app.listen(port);
   logger.log(`==========================================================`);
