@@ -1,9 +1,4 @@
-import {
-  HttpAdapterHost,
-  NestApplication,
-  NestFactory,
-  Reflector,
-} from '@nestjs/core';
+import { NestApplication, NestFactory, Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import {
@@ -13,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
-import * as Sentry from '@sentry/node';
-import { SentryFilter } from './filters/sentry.filter';
 import { MigrationService } from './common/database/services/database-migration.service';
 import { join } from 'path';
 
@@ -28,7 +21,6 @@ async function bootstrap() {
 
   //Config Variables =====================================================
   const configService = app.get(ConfigService);
-  // const env: string = configService.get<string>('app.env');
   const host: string = configService.get<string>('app.http.host');
   const port: number = configService.get<number>('app.http.port');
 
@@ -36,8 +28,6 @@ async function bootstrap() {
   const docDesc: string = configService.get<string>('doc.description');
   const docVersion: string = configService.get<string>('doc.version');
   const docPrefix: string = configService.get<string>('doc.prefix');
-
-  const sentryDSN: string = configService.get<string>('sentry.dsn');
 
   //Swagger ==============================================================
 
@@ -78,16 +68,6 @@ async function bootstrap() {
     customSiteTitle: docName,
   });
 
-  //Sentry ==============================================================
-
-  // Initialize Sentry by passing the DNS included in the .env
-  Sentry.init({
-    dsn: sentryDSN,
-  });
-  // Import the filter globally, capturing all exceptions on all routes
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new SentryFilter(httpAdapter));
-
   //Migrations ==========================================================
   const synchronize = configService.get<boolean>('database.synchronize');
   if (!synchronize) {
@@ -119,7 +99,6 @@ async function bootstrap() {
 
   await app.listen(port);
   logger.log(`==========================================================`);
-  logger.log(`Sentry is Enabled ${sentryDSN}`);
   logger.log(`Http Server running on ${await app.getUrl()}`, 'NestApplication');
   logger.log(`==========================================================`);
 }

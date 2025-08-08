@@ -36,8 +36,6 @@
     "@nestjs/throttler": "^5.1.2",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.4.1",
-    "@sentry/node": "^8.26.0",
-    "@sentry/tracing": "^7.114.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
