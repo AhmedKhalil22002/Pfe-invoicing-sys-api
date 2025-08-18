@@ -16,4 +16,7 @@ export class ResponseTaxDto extends ResponseDtoHelper {
 
   @ApiProperty({ example: 'true', type: Boolean })
   isSpecial: boolean;
+
+  @ApiProperty({ example: 1, type: Number })
+  currencyId?: number;
 }

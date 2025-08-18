@@ -1,5 +1,12 @@
 import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('tax')
 export class TaxEntity extends EntityHelper {
@@ -17,4 +24,11 @@ export class TaxEntity extends EntityHelper {
 
   @Column({ type: 'boolean', default: false })
   isSpecial: boolean;
+
+  @ManyToOne(() => CurrencyEntity)
+  @JoinColumn({ name: 'currencyId' })
+  currency: CurrencyEntity;
+
+  @Column({ type: 'int', nullable: true })
+  currencyId: number;
 }

@@ -84,10 +84,8 @@ export class TaxService {
 
   async update(id: number, updateTaxDto: UpdateTaxDto): Promise<TaxEntity> {
     const tax = await this.findOneById(id);
-    return this.taxRepository.save({
-      ...tax,
-      ...updateTaxDto,
-    });
+    await this.taxRepository.update(id, updateTaxDto);
+    return tax;
   }
 
   async softDelete(id: number): Promise<TaxEntity> {

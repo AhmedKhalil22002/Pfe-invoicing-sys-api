@@ -68,4 +68,12 @@ export enum EVENT_TYPE {
   TAX_CREATED = 'tax_created',
   TAX_UPDATED = 'tax_updated',
   TAX_DELETED = 'tax_deleted',
+
+  TEMPLATE_CATEGORY_CREATED = 'template_category_created',
+  TEMPLATE_CATEGORY_UPDATED = 'template_category_updated',
+  TEMPLATE_CATEGORY_DELETED = 'template_category_deleted',
+
+  FIRM_BANK_ACCOUNT_CREATED = 'firm_bank_account_created',
+  FIRM_BANK_ACCOUNT_UPDATED = 'firm_bank_account_updated',
+  FIRM_BANK_ACCOUNT_DELETED = 'firm_bank_account_deleted',
 }
