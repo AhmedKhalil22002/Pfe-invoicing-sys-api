@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActivityRepository } from '../repositories/repository/activity.repository';
-import { ActivityEntity } from '../repositories/entities/activity.entity';
+import { ActivityEntity } from '../entities/activity.entity';
 import { CreateActivityDto } from '../dtos/activity.create.dto';
 import { PageDto } from 'src/common/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
@@ -11,6 +10,7 @@ import { ResponseActivityDto } from '../dtos/activity.response.dto';
 import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { ActivityRepository } from '../repositories/activity.repository';
 
 @Injectable()
 export class ActivityService {
