@@ -21,12 +21,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('database.name', {
         infer: true,
       }),
-      synchronize: this.configService.get<string>('database.synchronize', {
-        infer: true,
-      }),
-      dropSchema: this.configService.get<string>('database.dropSchema', {
-        infer: true,
-      }),
+      synchronize:
+        this.configService.get<boolean>('database.synchronize', {
+          infer: true,
+        }) === true,
+      dropSchema:
+        this.configService.get<boolean>('database.dropSchema', {
+          infer: true,
+        }) === true,
       keepConnectionAlive: true,
       logging: false,
       entities: [
