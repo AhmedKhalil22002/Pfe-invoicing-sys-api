@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { QuotationUploadRepository } from '../repositories/repository/quotation-upload.repository';
 import { QuotationUploadEntity } from '../repositories/entities/quotation-file.entity';
 import { QuotationUploadNotFoundException } from '../errors/quotation-upload.notfound';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import { StorageService } from 'src/common/storage/services/storage.service';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
 export class QuotationUploadService {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { LoggerController } from 'src/common/logger/controllers/logger.controller';
-import { LoggerModule } from 'src/common/logger/logger.module';
+import { LoggerController } from 'src/shared/logger/controllers/logger.controller';
+import { LoggerModule } from 'src/shared/logger/logger.module';
 
 @Module({
   controllers: [LoggerController],

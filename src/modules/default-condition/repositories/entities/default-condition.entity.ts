@@ -1,6 +1,6 @@
 import { ACTIVITY_TYPE } from 'src/app/enums/activity-types.enum';
 import { DOCUMENT_TYPE } from 'src/app/enums/document-types.enum';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('default-condition')

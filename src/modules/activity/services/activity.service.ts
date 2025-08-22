@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ActivityEntity } from '../entities/activity.entity';
 import { CreateActivityDto } from '../dtos/activity.create.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ActivityNotFoundException } from '../errors/activity.notfound.error';
 import { ActivityAlreadyExistsException } from '../errors/activity.alreadyexists.error';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { ActivityRepository } from '../repositories/activity.repository';
 
 @Injectable()

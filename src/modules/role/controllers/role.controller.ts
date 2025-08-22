@@ -11,16 +11,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { UpdateRoleDto } from '../dtos/role.update.dto';
 import { ResponseRoleDto } from '../dtos/role.response.dto';
 import { CreateRoleDto } from '../dtos/role.create.dto';
 import { RoleService } from '../services/role.service';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
 
 @ApiTags('role')

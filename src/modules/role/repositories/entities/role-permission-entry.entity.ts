@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RoleEntity } from './role.entity';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { PermissionEntity } from 'src/modules/permission/repositories/entities/permission.entity';
 
 @Entity('role_permission')

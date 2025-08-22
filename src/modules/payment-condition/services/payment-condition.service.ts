@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
 import { FindManyOptions, FindOneOptions, Not } from 'typeorm';
 import { PaymentConditionEntity } from '../repositories/entity/payment-condition.entity';
@@ -10,8 +10,8 @@ import { PaymentConditionNotFoundException } from '../errors/payment-condition.n
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { PaymentConditionAlreadyExistsException } from '../errors/payment-condition.alreadyexists.error';
 import { PaymentConditionRestrictedDeleteException } from '../errors/payment-condition.restricted-delete.error';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class PaymentConditionService {

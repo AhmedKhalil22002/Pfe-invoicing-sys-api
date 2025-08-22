@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseAbstractRepository } from 'src/common/database/utils/database.repository';
+import { DatabaseAbstractRepository } from 'src/shared/database/utils/database.repository';
 import { TemplateCategoryEntity } from '../entities/template-category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

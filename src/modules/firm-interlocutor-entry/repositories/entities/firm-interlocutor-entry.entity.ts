@@ -5,7 +5,7 @@ import {
   JoinColumn,
   Column,
 } from 'typeorm';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 

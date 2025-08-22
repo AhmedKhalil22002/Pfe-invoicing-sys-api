@@ -13,17 +13,17 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { TaxWithholdingService } from '../services/tax-withholding.service';
 import { ResponseTaxWithholdingDto } from '../dtos/tax-withholding.response.dto';
 import { CreateTaxWithholdingDto } from '../dtos/tax-withholding.create.dto';
 import { UpdateTaxWithholdingDto } from '../dtos/tax-withholding.update.dto';
 import { Request as ExpressRequest } from 'express';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 
 @ApiTags('tax-withholding')
 @Controller({

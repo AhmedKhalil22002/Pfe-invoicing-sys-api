@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 

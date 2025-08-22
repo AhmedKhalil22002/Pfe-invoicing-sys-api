@@ -11,16 +11,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
 import { BankAccountService } from '../services/bank-account.service';
 import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
 
 @ApiTags('bank-account')

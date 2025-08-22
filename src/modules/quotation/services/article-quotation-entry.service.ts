@@ -5,14 +5,14 @@ import { TaxService } from 'src/modules/tax/services/tax.service';
 import { ArticleService } from 'src/modules/article/services/article.service';
 import { ResponseArticleDto } from 'src/modules/article/dtos/article.response.dto';
 import { UpdateArticleQuotationEntryDto } from '../dtos/article-quotation-entry.update.dto';
-import { InvoicingCalculationsService } from 'src/common/calculations/services/invoicing.calculations.service';
+import { InvoicingCalculationsService } from 'src/shared/calculations/services/invoicing.calculations.service';
 import { ResponseArticleQuotationEntryDto } from '../dtos/article-quotation-entry.response.dto';
 import { ArticleQuotationEntryRepository } from '../repositories/repository/article-quotation-entry.repository';
 import { ArticleQuotationEntryTaxService } from './article-quotation-entry-tax.service';
 import { ArticleQuotationEntryNotFoundException } from '../errors/article-quotation-entry.notfound.error';
-import { LineItem } from 'src/common/calculations/interfaces/line-item.interface';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { LineItem } from 'src/shared/calculations/interfaces/line-item.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 
 @Injectable()

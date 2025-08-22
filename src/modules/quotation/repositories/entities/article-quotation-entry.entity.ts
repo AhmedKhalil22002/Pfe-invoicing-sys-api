@@ -1,5 +1,5 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { ArticleEntity } from 'src/modules/article/repositories/entities/article.entity';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
 import {

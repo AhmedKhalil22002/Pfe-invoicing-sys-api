@@ -15,12 +15,12 @@ import { InterlocutorService } from '../services/interlocutor.service';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
 
 @ApiTags('interlocutor')

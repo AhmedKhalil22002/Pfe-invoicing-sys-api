@@ -5,8 +5,8 @@ import {
   JoinColumn,
   Column,
 } from 'typeorm';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
 import { PaymentEntity } from './payment.entity';
 
 @Entity('payment-upload')

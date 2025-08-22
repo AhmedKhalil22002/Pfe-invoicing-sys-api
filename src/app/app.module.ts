@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CommonModule } from 'src/common/common.module';
+import { CommonModule } from 'src/shared/common.module';
 import { HelloController } from './controllers/app.controller';
 import { ConfigModule } from '@nestjs/config';
 import configs from 'src/configs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from 'src/common/database/services/database-config.service';
+import { TypeOrmConfigService } from 'src/shared/database/services/database-config.service';
 import { RouterModule } from 'src/routers/router.module';
 import { HeaderResolver, I18nModule } from 'nestjs-i18n';
-import { TranslationConfigService } from 'src/common/translation/services/translation-config.service';
-import { TranslationModule } from 'src/common/translation/translation.module';
+import { TranslationConfigService } from 'src/shared/translation/services/translation-config.service';
+import { TranslationModule } from 'src/shared/translation/translation.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DataSource } from 'typeorm';
 import { ClsModule } from 'nestjs-cls';

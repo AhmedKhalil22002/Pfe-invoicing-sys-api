@@ -8,14 +8,14 @@ import { ArticleQuotationEntryService } from './services/article-quotation-entry
 import { ArticleQuotationEntryTaxService } from './services/article-quotation-entry-tax.service';
 import { TaxModule } from '../tax/tax.module';
 import { ArticleModule } from '../article/article.module';
-import { PdfModule } from 'src/common/pdf/pdf.module';
-import { CalculationsModule } from 'src/common/calculations/calculations.module';
-import { AppConfigModule } from 'src/common/app-config/app-config.module';
+import { PdfModule } from 'src/shared/pdf/pdf.module';
+import { CalculationsModule } from 'src/shared/calculations/calculations.module';
+import { AppConfigModule } from 'src/shared/app-config/app-config.module';
 import { QuotationSequenceService } from './services/quotation-sequence.service';
-import { GatewaysModule } from 'src/common/gateways/gateways.module';
+import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
 import { BankAccountModule } from '../bank-account/bank-account.module';
-import { StorageModule } from 'src/common/storage/storage.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 import { QuotationUploadService } from './services/quotation-upload.service';
 import { InvoiceModule } from '../invoice/invoice.module';
 

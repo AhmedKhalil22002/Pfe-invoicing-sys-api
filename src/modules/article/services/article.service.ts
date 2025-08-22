@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { ArticleRepository } from '../repositories/repository/article.repository';
 import { ArticleEntity } from '../repositories/entities/article.entity';
 import { ArticleNotFoundException } from '../errors/article.notfound.error';
 import { ResponseArticleDto } from '../dtos/article.response.dto';
 import { CreateArticleDto } from '../dtos/article.create.dto';
 import { UpdateArticleDto } from '../dtos/article.update.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class ArticleService {

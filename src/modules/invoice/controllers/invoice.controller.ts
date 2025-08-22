@@ -12,9 +12,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { InvoiceService } from '../services/invoice.service';
 import { ResponseInvoiceDto } from '../dtos/invoice.response.dto';
 import { CreateInvoiceDto } from '../dtos/invoice.create.dto';
@@ -23,9 +23,9 @@ import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { UpdateInvoiceDto } from '../dtos/invoice.update.dto';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
 
 @ApiTags('invoice')

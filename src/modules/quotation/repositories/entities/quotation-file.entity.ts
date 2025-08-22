@@ -5,9 +5,9 @@ import {
   JoinColumn,
   Column,
 } from 'typeorm';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { QuotationEntity } from './quotation.entity';
-import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
+import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
 
 @Entity('quotation-upload')
 export class QuotationUploadEntity extends EntityHelper {

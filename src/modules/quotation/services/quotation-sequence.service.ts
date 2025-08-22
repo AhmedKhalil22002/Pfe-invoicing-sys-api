@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfigService } from 'src/common/app-config/services/app-config.service';
+import { AppConfigService } from 'src/shared/app-config/services/app-config.service';
 import { QuotationSequentialNotFoundException } from '../errors/quotation.sequential.error';
-import { AppConfigEntity } from 'src/common/app-config/repositories/entities/app-config.entity';
-import { EventsGateway } from 'src/common/gateways/events/events.gateway';
+import { AppConfigEntity } from 'src/shared/app-config/repositories/entities/app-config.entity';
+import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { formSequential } from 'src/utils/sequence.utils';
 import { WSRoom } from 'src/app/enums/ws-room.enum';

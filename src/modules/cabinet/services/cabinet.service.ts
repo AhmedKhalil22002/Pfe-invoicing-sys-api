@@ -11,7 +11,7 @@ import { CabinetNotFoundException } from '../errors/cabinet.notfound.error';
 import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
-import { StorageService } from 'src/common/storage/services/storage.service';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
 export class CabinetService {

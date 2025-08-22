@@ -1,6 +1,6 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { LoggerEntity } from 'src/common/logger/repositories/entities/logger.entity';
-import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { LoggerEntity } from 'src/shared/logger/repositories/entities/logger.entity';
+import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
 import { RoleEntity } from 'src/modules/role/repositories/entities/role.entity';
 import {
   Column,

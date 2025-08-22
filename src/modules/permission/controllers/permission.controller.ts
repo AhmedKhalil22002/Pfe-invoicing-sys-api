@@ -10,12 +10,12 @@ import {
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { PermissionService } from '../services/permission.service';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePermissionDto } from '../dtos/permission.response.dto';
 import { CreatePermissionDto } from '../dtos/permission.create.dto';
 import { UpdatePermissionDto } from '../dtos/permission.update.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 
 @ApiTags('permission')
 @Controller({

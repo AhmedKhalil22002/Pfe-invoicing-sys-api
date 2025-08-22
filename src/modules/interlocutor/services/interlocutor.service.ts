@@ -5,11 +5,11 @@ import { InterlocutorEntity } from '../repositories/entity/interlocutor.entity';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
 
 @Injectable()

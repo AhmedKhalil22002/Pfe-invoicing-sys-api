@@ -13,19 +13,19 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { QuotationService } from '../services/quotation.service';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
 import { ResponseQuotationDto } from '../dtos/quotation.response.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
 

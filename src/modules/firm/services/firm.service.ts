@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { FirmRepository } from '../repositories/repository/firm.repository';
 import { FirmEntity } from '../repositories/entities/firm.entity';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
 import { FirmNotFoundException } from '../errors/firm.notfound.error';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
@@ -18,8 +18,8 @@ import { ActivityService } from 'src/modules/activity/services/activity.service'
 import { PaymentConditionService } from 'src/modules/payment-condition/services/payment-condition.service';
 import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class FirmService {

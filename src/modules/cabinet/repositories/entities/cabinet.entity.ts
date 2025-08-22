@@ -1,5 +1,5 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
-import { UploadEntity } from 'src/common/storage/repositories/entities/upload.entity';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';

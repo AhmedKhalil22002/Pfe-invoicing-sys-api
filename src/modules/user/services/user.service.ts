@@ -1,16 +1,16 @@
 import { Transactional } from '@nestjs-cls/transactional';
 import { Injectable } from '@nestjs/common';
-import { encryptPasswordWithSalt10 } from 'src/common/auth/utils/encrypt-password';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { encryptPasswordWithSalt10 } from 'src/shared/auth/utils/encrypt-password';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { CreateUserDto } from '../dtos/user.create.dto';
 import { UpdateUserDto } from '../dtos/user.update.dto';
 import { UserEntity } from '../repositories/entities/user.entity';
 import { UserNotFoundException } from '../errors/user.notfound.error';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { UserRepository } from '../repositories/repository/user.repository';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 
 @Injectable()
 export class UserService {

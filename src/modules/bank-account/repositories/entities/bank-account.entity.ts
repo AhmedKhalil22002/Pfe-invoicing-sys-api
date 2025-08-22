@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import {
   Entity,

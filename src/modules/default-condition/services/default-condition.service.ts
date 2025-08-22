@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { DefaultConditionRepository } from '../repositories/repository/default-condition.repository';
 import { DefaultConditionEntity } from '../repositories/entities/default-condition.entity';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponseDefaultConditionDto } from '../dtos/default-condition.response.dto';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { CreateDefaultConditionDto } from '../dtos/default-condition.create.dto';
 import { UpdateDefaultConditionDto } from '../dtos/default-condition.update.dto';
 import { QuotationService } from 'src/modules/quotation/services/quotation.service';

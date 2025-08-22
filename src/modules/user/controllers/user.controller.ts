@@ -12,17 +12,17 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { CreateUserDto } from '../dtos/user.create.dto';
 import { ResponseUserDto } from '../dtos/user.response.dto';
 import { UpdateUserDto } from '../dtos/user.update.dto';
 import { UserEntity } from '../repositories/entities/user.entity';
 import { UserService } from '../services/user.service';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { Request as ExpressRequest } from 'express';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('user')

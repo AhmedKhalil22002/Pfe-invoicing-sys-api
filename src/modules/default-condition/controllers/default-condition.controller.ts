@@ -11,15 +11,15 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { DefaultConditionService } from '../services/default-condition.service';
 import { ResponseDefaultConditionDto } from '../dtos/default-condition.response.dto';
 import { CreateDefaultConditionDto } from '../dtos/default-condition.create.dto';
 import { UpdateDefaultConditionDto } from '../dtos/default-condition.update.dto';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
 

@@ -14,15 +14,15 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { TaxService } from '../services/tax.service';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
-import { ApiPaginatedResponse } from 'src/common/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { LogInterceptor } from 'src/common/logger/decorators/logger.interceptor';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { Request as ExpressRequest } from 'express';
-import { LogEvent } from 'src/common/logger/decorators/log-event.decorator';
+import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 
 @ApiTags('tax')

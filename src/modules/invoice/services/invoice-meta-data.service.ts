@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { InvoiceMetaDataRepository } from '../repositories/repository/invoice-meta-data.repository';
 import { InvoiceMetaDataEntity } from '../repositories/entities/invoice-meta-data.entity';
 import { InvoiceMetaDataNotFoundException } from '../errors/invoice-meta-data.notfound.error';

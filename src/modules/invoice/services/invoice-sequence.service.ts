@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfigService } from 'src/common/app-config/services/app-config.service';
-import { AppConfigEntity } from 'src/common/app-config/repositories/entities/app-config.entity';
-import { EventsGateway } from 'src/common/gateways/events/events.gateway';
+import { AppConfigService } from 'src/shared/app-config/services/app-config.service';
+import { AppConfigEntity } from 'src/shared/app-config/repositories/entities/app-config.entity';
+import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequentialNotFoundException } from '../errors/invoice-sequential.error';
 import { formSequential } from 'src/utils/sequence.utils';

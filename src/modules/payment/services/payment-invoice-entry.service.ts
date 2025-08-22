@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PaymentInvoiceEntryRepository } from '../repositories/repository/payment-invoice-entry.entity';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.response.dto';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 import { PaymentInvoiceEntryEntity } from '../repositories/entities/payment-invoice-entry.entity';
 import { PaymentInvoiceEntryNotFoundException } from '../errors/payment-invoice-entry.notfound.error';

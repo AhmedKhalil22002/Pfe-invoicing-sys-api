@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { RolePermissionEntryEntity } from './role-permission-entry.entity';
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { UserEntity } from 'src/modules/user/repositories/entities/user.entity';
 
 @Entity('role')

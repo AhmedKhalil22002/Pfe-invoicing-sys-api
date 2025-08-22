@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { QuotationMetaDataRepository } from '../repositories/repository/quotation-meta-data-repository';
 import { QuotationMetaDataEntity } from '../repositories/entities/quotation-meta-data.entity';
 import { QuotationMetaDataNotFoundException } from '../errors/quoation-meta-data.notfound.error';
-import { IQueryObject } from 'src/common/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponseQuotationMetaDataDto } from '../dtos/quotation-meta-data.response.dto';
-import { QueryBuilder } from 'src/common/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageMetaDto } from 'src/common/database/dtos/database.page-meta.dto';
-import { PageDto } from 'src/common/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateQuotationMetaDataDto } from '../dtos/quotation-meta-data.create.dto';
 import { UpdateQuotationMetaDataDto } from '../dtos/quotation-meta-data.update.dto';
 

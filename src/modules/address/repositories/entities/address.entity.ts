@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { CountryEntity } from 'src/modules/country/repositories/entities/country.entity';
 import {
   Entity,

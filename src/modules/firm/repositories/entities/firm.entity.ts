@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
 import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';

@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/common/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { InvoiceEntity } from './invoice.entity';
 
