@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { AddressRepository } from '../repositories/repository/address.repository';
-import { AddressEntity } from '../repositories/entities/address.entity';
+import { AddressRepository } from '../repositories/address.repository';
 import { CreateAddressDto } from '../dtos/address.create.dto';
 import { UpdateAddressDto } from '../dtos/address.update.dto';
 import { CountryService } from 'src/modules/country/services/country.service';
 import { AddressNotFoundException } from '../errors/address.notfound.error';
+import { AddressEntity } from '../entities/address.entity';
 
 @Injectable()
 export class AddressService {
