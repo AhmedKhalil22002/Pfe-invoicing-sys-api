@@ -1,6 +1,5 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
-import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
@@ -16,6 +15,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { AddressEntity } from 'src/modules/address/entities/address.entity';
 
 @Entity('firm')
 export class FirmEntity extends EntityHelper {

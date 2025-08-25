@@ -1,7 +1,6 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
-import { AddressEntity } from 'src/modules/address/repositories/entities/address.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import {
   Entity,
@@ -10,6 +9,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { AddressEntity } from 'src/modules/address/entities/address.entity';
 
 @Entity('cabinet')
 export class CabinetEntity extends EntityHelper {
