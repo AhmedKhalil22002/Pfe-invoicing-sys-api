@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { BankAccountService } from './services/bank-account.service';
-import { BankAccountRepositoryModule } from './repositories/bank-account.repository.module';
+import { BankAccountRepository } from './repositories/bank-account.repository';
+import { Type } from 'class-transformer';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BankAccountEntity } from './entities/bank-account.entity';
 
 @Module({
   controllers: [],
-  providers: [BankAccountService],
-  exports: [BankAccountService],
-  imports: [BankAccountRepositoryModule],
+  providers: [BankAccountRepository, BankAccountService],
+  exports: [BankAccountRepository,BankAccountService],
+  imports: [TypeOrmModule.forFeature([BankAccountEntity])],
 })
 export class BankAccountModule {}

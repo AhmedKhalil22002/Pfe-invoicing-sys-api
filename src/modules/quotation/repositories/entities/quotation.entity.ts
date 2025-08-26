@@ -16,7 +16,7 @@ import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
 import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
-import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
+import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { QuotationUploadEntity } from './quotation-file.entity';
 import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
 

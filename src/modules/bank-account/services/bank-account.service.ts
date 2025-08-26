@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { BankAccountRepository } from '../repositories/repository/bank-account.repository';
-import { BankAccountEntity } from '../repositories/entities/bank-account.entity';
+import { BankAccountEntity } from '../entities/bank-account.entity';
 import { BankAccountNotFoundException } from '../errors/bank-account.notfound.error';
 import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
@@ -12,6 +11,7 @@ import { IQueryObject } from 'src/shared/database/interfaces/database-query-opti
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { BankAccountCannotBeDeletedException } from '../errors/bank-account.cannotbedeleted.error';
+import { BankAccountRepository } from '../repositories/bank-account.repository';
 
 @Injectable()
 export class BankAccountService {

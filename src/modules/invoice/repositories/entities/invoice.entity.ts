@@ -14,7 +14,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
-import { BankAccountEntity } from 'src/modules/bank-account/repositories/entities/bank-account.entity';
+import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { InvoiceUploadEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
