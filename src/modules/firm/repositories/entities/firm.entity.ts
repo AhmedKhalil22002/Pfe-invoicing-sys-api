@@ -1,6 +1,6 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
-import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
+import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
 import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';

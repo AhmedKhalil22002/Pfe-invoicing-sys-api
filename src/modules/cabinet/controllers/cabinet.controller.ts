@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CabinetService } from '../services/cabinet.service';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { CabinetEntity } from '../repositories/entities/cabinet.entity';
+import { CabinetEntity } from '../entities/cabinet.entity';
 import { CreateCabinetDto } from '../dtos/cabinet.create.dto';
 import { ResponseCabinetDto } from '../dtos/cabinet.response.dto';
 import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';

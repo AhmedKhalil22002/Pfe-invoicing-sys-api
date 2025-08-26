@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CabinetRepository } from '../repositories/repository/cabinet.repository';
 import { CreateCabinetDto } from '../dtos/cabinet.create.dto';
-import { CabinetEntity } from '../repositories/entities/cabinet.entity';
+import { CabinetEntity } from '../entities/cabinet.entity';
 import { AddressService } from 'src/modules/address/services/address.service';
 import {
   EnterpriseNameAlreadyExistsException,
@@ -12,6 +11,7 @@ import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { StorageService } from 'src/shared/storage/services/storage.service';
+import { CabinetRepository } from '../repositories/cabinet.repository';
 
 @Injectable()
 export class CabinetService {

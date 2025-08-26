@@ -14,7 +14,7 @@ import {
 } from 'typeorm';
 import { QUOTATION_STATUS } from '../../enums/quotation-status.enum';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
-import { CabinetEntity } from 'src/modules/cabinet/repositories/entities/cabinet.entity';
+import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { QuotationMetaDataEntity } from './quotation-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { QuotationUploadEntity } from './quotation-file.entity';
