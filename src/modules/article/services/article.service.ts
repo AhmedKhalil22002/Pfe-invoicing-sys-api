@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { ArticleRepository } from '../repositories/repository/article.repository';
-import { ArticleEntity } from '../repositories/entities/article.entity';
+import { ArticleRepository } from '../repositories/article.repository';
+import { ArticleEntity } from '../entities/article.entity';
 import { ArticleNotFoundException } from '../errors/article.notfound.error';
 import { ResponseArticleDto } from '../dtos/article.response.dto';
 import { CreateArticleDto } from '../dtos/article.create.dto';

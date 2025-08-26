@@ -1,6 +1,6 @@
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { ArticleEntity } from 'src/modules/article/repositories/entities/article.entity';
+import { ArticleEntity } from 'src/modules/article/entities/article.entity';
 import {
   Entity,
   Column,
