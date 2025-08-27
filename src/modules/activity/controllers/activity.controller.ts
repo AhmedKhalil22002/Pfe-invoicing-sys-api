@@ -13,15 +13,15 @@ import {
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ActivityService } from '../services/activity.service';
 import { CreateActivityDto } from '../dtos/activity.create.dto';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('activity')
 @Controller({

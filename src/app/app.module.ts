@@ -4,7 +4,6 @@ import { HelloController } from './controllers/app.controller';
 import { ConfigModule } from '@nestjs/config';
 import configs from 'src/configs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from 'src/shared/database/services/database-config.service';
 import { RouterModule } from 'src/routers/router.module';
 import { HeaderResolver, I18nModule } from 'nestjs-i18n';
 import { TranslationConfigService } from 'src/shared/translation/services/translation-config.service';
@@ -16,6 +15,7 @@ import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmConfigService } from 'src/shared/database-v2/services/database-config.service';
 
 @Module({
   controllers: [HelloController],

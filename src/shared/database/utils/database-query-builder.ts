@@ -8,6 +8,8 @@ import {
   MoreThan,
   MoreThanOrEqual,
   Not,
+  Brackets,
+  Raw
 } from 'typeorm';
 import {
   ILooseObject,
@@ -38,7 +40,9 @@ export class QueryBuilder {
         IN: '$in',
         BETWEEN: '$between',
         OR: '$or',
+      //  AND: '$and',
         DEFAULT_LIMIT: '25',
+        JSON_CONTAINS: '$jsoncontains', // Nouvel opérateur JSON
       },
       ...configuration,
     };
@@ -107,7 +111,6 @@ export class QueryBuilder {
     });
     return order;
   }
-
   private createWhere(filterString: string): object[] {
     const queryToAdd: object[] = [];
     const orArray = filterString.split(
@@ -139,7 +142,6 @@ export class QueryBuilder {
 
     return queryToAdd;
   }
-
   private assignObjectKey(obj: ILooseObject, field: string, value: any) {
     const keyParts = field.split('.');
 
@@ -204,6 +206,14 @@ export class QueryBuilder {
           this.parseDateOrNumber(end),
         );
         break;
+       // Gestion du JSON_CONTAINS pour MySQL
+      case this.options.JSON_CONTAINS:
+        condition = Raw(
+          (alias) => `JSON_CONTAINS(${alias}, CAST(:value AS JSON))`,
+          { value },
+        );
+        break;
+
       default:
         throw new Error(`Unsupported filter task: ${task}`);
     }

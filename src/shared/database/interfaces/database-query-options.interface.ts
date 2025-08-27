@@ -14,6 +14,7 @@ export interface IOptionsObject {
   IN?: string;
   BETWEEN?: string;
   OR?: string;
+  JSON_CONTAINS?: string;
   CONDITION_DELIMITER?: string;
   VALUE_DELIMITER?: string;
   DEFAULT_LIMIT?: string;

@@ -10,7 +10,7 @@ import {
   DATABASE_DELETED_AT_FIELD_NAME,
   DATABASE_RESTRICT_DELETE_FIELD_NAME,
   DATABASE_UPDATED_AT_FIELD_NAME,
-} from 'src/shared/database/constants/database.constant';
+} from 'src/common/database/constants/database.constant';
 import { Expose } from 'class-transformer';
 
 export class EntityHelper extends BaseEntity {
