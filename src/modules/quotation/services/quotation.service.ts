@@ -1,6 +1,6 @@
 import { Injectable, StreamableFile } from '@nestjs/common';
-import { QuotationRepository } from '../repositories/repository/quotation.repository';
-import { QuotationEntity } from '../repositories/entities/quotation.entity';
+import { QuotationRepository } from '../repositories/quotation.repository';
+import { QuotationEntity } from '../entities/quotation.entity';
 import { QuotationNotFoundException } from '../errors/quotation.notfound.error';
 import { ResponseQuotationDto } from '../dtos/quotation.response.dto';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
@@ -14,7 +14,7 @@ import { InvoicingCalculationsService } from 'src/shared/calculations/services/i
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
-import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
+import { ArticleQuotationEntryEntity } from '../entities/article-quotation-entry.entity';
 import { PdfService } from 'src/shared/pdf/services/pdf.service';
 import { format, isAfter } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
@@ -89,7 +89,7 @@ export class QuotationService {
       };
 
       const pdfBuffer = await this.pdfService.generatePdf(data, template);
-      return new StreamableFile(pdfBuffer);
+      return new StreamableFile(new Uint8Array(pdfBuffer));
     } else {
       throw new QuotationNotFoundException();
     }

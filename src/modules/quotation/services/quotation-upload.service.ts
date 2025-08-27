@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { QuotationUploadRepository } from '../repositories/repository/quotation-upload.repository';
-import { QuotationUploadEntity } from '../repositories/entities/quotation-file.entity';
+import { QuotationUploadRepository } from '../repositories/quotation-upload.repository';
+import { QuotationUploadEntity } from '../entities/quotation-file.entity';
 import { QuotationUploadNotFoundException } from '../errors/quotation-upload.notfound';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';

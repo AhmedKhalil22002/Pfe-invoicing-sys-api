@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuotationMetaDataRepository } from '../repositories/repository/quotation-meta-data-repository';
-import { QuotationMetaDataEntity } from '../repositories/entities/quotation-meta-data.entity';
+import { QuotationMetaDataEntity } from '../entities/quotation-meta-data.entity';
 import { QuotationMetaDataNotFoundException } from '../errors/quoation-meta-data.notfound.error';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponseQuotationMetaDataDto } from '../dtos/quotation-meta-data.response.dto';
