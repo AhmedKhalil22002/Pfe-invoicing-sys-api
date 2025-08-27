@@ -19,9 +19,9 @@ import { InvoiceUploadEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
 import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
-import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
+import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
 import { PaymentInvoiceEntryEntity } from 'src/modules/payment/repositories/entities/payment-invoice-entry.entity';
-import { TaxWithholdingEntity } from 'src/modules/tax-withholding/repositories/entities/tax-withholding.entity';
+import { TaxWithholdingEntity } from 'src/modules/tax-withholding/entities/tax-withholding.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {

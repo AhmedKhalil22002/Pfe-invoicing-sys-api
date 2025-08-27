@@ -5,10 +5,10 @@ import { IQueryObject } from 'src/shared/database/interfaces/database-query-opti
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { CreateUserDto } from '../dtos/user.create.dto';
 import { UpdateUserDto } from '../dtos/user.update.dto';
-import { UserEntity } from '../repositories/entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { UserNotFoundException } from '../errors/user.notfound.error';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { UserRepository } from '../repositories/repository/user.repository';
+import { UserRepository } from '../repositories/user.repository';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 

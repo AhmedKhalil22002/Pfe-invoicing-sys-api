@@ -6,7 +6,7 @@ import {
   Column,
 } from 'typeorm';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
-import { TaxEntity } from 'src/modules/tax/repositories/entities/tax.entity';
+import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 
 @Entity('article-quotation-entry-tax')

@@ -16,7 +16,7 @@ import { IQueryObject } from 'src/shared/database/interfaces/database-query-opti
 import { CreateUserDto } from '../dtos/user.create.dto';
 import { ResponseUserDto } from '../dtos/user.response.dto';
 import { UpdateUserDto } from '../dtos/user.update.dto';
-import { UserEntity } from '../repositories/entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
