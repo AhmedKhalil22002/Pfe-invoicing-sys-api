@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { RolePermissionEntryRepository } from '../repositories/repository/role-permission.repository';
-import { RolePermissionEntryEntity } from '../repositories/entities/role-permission-entry.entity';
+import { RolePermissionEntryRepository } from '../repositories/role-permission.repository';
+import { RolePermissionEntryEntity } from '../entities/role-permission-entry.entity';
 import { RolePermissionEntryNotFoundException } from '../errors/role-premission-entry.notfound.error';
 import { ResponseRolePermissionEntryDto } from '../dtos/role-permission-entry.response.dto';
 import { CreateRolePermissionEntryDto } from '../dtos/role-permission-entry.create.dto';

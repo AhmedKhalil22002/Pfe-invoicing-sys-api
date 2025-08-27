@@ -1,7 +1,7 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { LoggerEntity } from 'src/shared/logger/repositories/entities/logger.entity';
 import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
-import { RoleEntity } from 'src/modules/role/repositories/entities/role.entity';
+import { RoleEntity } from 'src/modules/role/entities/role.entity';
 import {
   Column,
   Entity,
