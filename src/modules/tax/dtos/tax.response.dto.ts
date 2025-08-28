@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
+import { ResponseDtoHelper } from 'src/shared/database-v2/dtos/database.response.dto';
 
 export class ResponseTaxDto extends ResponseDtoHelper {
   @ApiProperty({ example: 1, type: Number })
