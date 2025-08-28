@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TemplateCategoryRepository } from '../repositories/repository/template-category.repository';
-import { TemplateCategoryEntity } from '../repositories/entities/template-category.entity';
+import { TemplateCategoryRepository } from '../repositories/template-category.repository';
+import { TemplateCategoryEntity } from '../entities/template-category.entity';
 import { TemplateCategoryNotFoundException } from '../errors/template-category.notfound.error';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';

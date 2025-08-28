@@ -1,5 +1,5 @@
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { UserEntity } from 'src/modules/user/repositories/entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,

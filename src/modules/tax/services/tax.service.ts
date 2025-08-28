@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TaxRepository } from '../repositories/repository/tax.repository';
-import { TaxEntity } from '../repositories/entities/tax.entity';
+import { TaxRepository } from '../repositories/tax.repository';
+import { TaxEntity } from '../entities/tax.entity';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
