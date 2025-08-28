@@ -11,8 +11,8 @@ import { ArticleQuotationEntryRepository } from '../repositories/article-quotati
 import { ArticleQuotationEntryTaxService } from './article-quotation-entry-tax.service';
 import { ArticleQuotationEntryNotFoundException } from '../errors/article-quotation-entry.notfound.error';
 import { LineItem } from 'src/shared/calculations/interfaces/line-item.interface';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 
 @Injectable()

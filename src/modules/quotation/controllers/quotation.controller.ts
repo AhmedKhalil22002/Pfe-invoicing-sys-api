@@ -13,12 +13,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { QuotationService } from '../services/quotation.service';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
 import { ResponseQuotationDto } from '../dtos/quotation.response.dto';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
@@ -28,6 +25,9 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @ApiTags('quotation')
 @Controller({

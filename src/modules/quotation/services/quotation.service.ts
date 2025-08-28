@@ -1,24 +1,23 @@
 import { Injectable, StreamableFile } from '@nestjs/common';
-import { QuotationRepository } from '../repositories/quotation.repository';
 import { QuotationEntity } from '../entities/quotation.entity';
 import { QuotationNotFoundException } from '../errors/quotation.notfound.error';
 import { ResponseQuotationDto } from '../dtos/quotation.response.dto';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
 import { CreateQuotationDto } from '../dtos/quotation.create.dto';
 import { UpdateQuotationDto } from '../dtos/quotation.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import { InvoicingCalculationsService } from 'src/shared/calculations/services/invoicing.calculations.service';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ArticleQuotationEntryService } from './article-quotation-entry.service';
 import { ArticleQuotationEntryEntity } from '../entities/article-quotation-entry.entity';
 import { PdfService } from 'src/shared/pdf/services/pdf.service';
 import { format, isAfter } from 'date-fns';
 import { QuotationSequenceService } from './quotation-sequence.service';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
@@ -30,6 +29,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { DuplicateQuotationDto } from '../dtos/quotation.duplicate.dto';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { QuotationRepository } from '../repositories/quotation.repository';
 
 @Injectable()
 export class QuotationService {
