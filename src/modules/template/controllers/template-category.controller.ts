@@ -11,9 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
@@ -22,6 +21,7 @@ import { TemplateCategoryService } from '../services/template-category.service';
 import { ResponseTemplateCategoryDto } from '../dtos/template-category.response.dto';
 import { CreateTemplateCategoryDto } from '../dtos/template-category.create.dto';
 import { UpdateTemplateCategoryDto } from '../dtos/template-category.update.dto';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('template-category')
 @Controller({
