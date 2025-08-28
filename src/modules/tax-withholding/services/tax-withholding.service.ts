@@ -73,7 +73,7 @@ export class TaxWithholdingService {
   async save(
     createTaxWithholdingDto: CreateTaxWithholdingDto,
   ): Promise<TaxWithholdingEntity> {
-    const tax = await this.taxWithholdingRepository.findByCondition({
+    const tax = await this.taxWithholdingRepository.findOne({
       where: { label: createTaxWithholdingDto.label },
     });
     if (tax) {
