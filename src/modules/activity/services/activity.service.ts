@@ -69,7 +69,7 @@ export class ActivityService {
   }
 
   async findOneByLabel(label: string): Promise<ActivityEntity | null> {
-    const activity = await this.activityRepository.findByCondition({
+    const activity = await this.activityRepository.findOne({
       where: { label },
     });
     if (!activity) {
