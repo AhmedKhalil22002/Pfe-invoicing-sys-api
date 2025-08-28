@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { QuotationService } from './services/quotation.service';
-import { QuotationRepositoryModule } from './repositories/quotation.repository.module';
+import { QuotationRepository } from './repositories/quotation.repository'
 import { CurrencyModule } from '../currency/currency.module';
 import { FirmModule } from '../firm/firm.module';
 import { InterlocutorModule } from '../interlocutor/Interlocutor.module';
@@ -32,7 +32,7 @@ import { InvoiceModule } from '../invoice/invoice.module';
   exports: [QuotationService],
   imports: [
     //repositories
-    QuotationRepositoryModule,
+    QuotationRepository,
     //entities
     ArticleModule,
     AppConfigModule,

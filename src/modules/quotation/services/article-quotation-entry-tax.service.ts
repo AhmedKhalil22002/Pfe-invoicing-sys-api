@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { CreateArticleQuotationEntryTaxDto } from '../dtos/article-quotation-entry-tax.create.dto';
-import { ArticleQuotationEntryTaxEntity } from '../repositories/entities/article-quotation-entry-tax.entity';
-import { ArticleQuotationEntryTaxRepository } from '../repositories/repository/article-quotation-entry-tax.repository';
+import { ArticleQuotationEntryTaxEntity } from '../entities/article-quotation-entry-tax.entity';
+import { ArticleQuotationEntryTaxRepository } from '../repositories/article-quotation-entry-tax.repository';
 
 @Injectable()
 export class ArticleQuotationEntryTaxService {

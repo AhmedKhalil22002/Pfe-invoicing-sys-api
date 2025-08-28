@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PermissionEntity } from '../repositories/entities/permission.entity';
+import { PermissionEntity } from '../entities/permission.entity';
 import { PermissionNotFoundException } from '../errors/permission.notfound.error';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePermissionDto } from '../dtos/permission.response.dto';

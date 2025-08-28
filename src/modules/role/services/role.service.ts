@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { RoleRepository } from '../repositories/repository/role.repository';
-import { RoleEntity } from '../repositories/entities/role.entity';
+import { RoleRepository } from '../repositories/role.repository';
+import { RoleEntity } from '../entities/role.entity';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { RoleNotFoundException } from '../errors/role.notfound.error';

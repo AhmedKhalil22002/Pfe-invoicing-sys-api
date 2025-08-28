@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ArticleQuotationEntryEntity } from '../repositories/entities/article-quotation-entry.entity';
+import { ArticleQuotationEntryEntity } from '../entities/article-quotation-entry.entity';
 import { CreateArticleQuotationEntryDto } from '../dtos/article-quotation-entry.create.dto';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { ArticleService } from 'src/modules/article/services/article.service';
@@ -7,7 +7,7 @@ import { ResponseArticleDto } from 'src/modules/article/dtos/article.response.dt
 import { UpdateArticleQuotationEntryDto } from '../dtos/article-quotation-entry.update.dto';
 import { InvoicingCalculationsService } from 'src/shared/calculations/services/invoicing.calculations.service';
 import { ResponseArticleQuotationEntryDto } from '../dtos/article-quotation-entry.response.dto';
-import { ArticleQuotationEntryRepository } from '../repositories/repository/article-quotation-entry.repository';
+import { ArticleQuotationEntryRepository } from '../repositories/article-quotation-entry.repository';
 import { ArticleQuotationEntryTaxService } from './article-quotation-entry-tax.service';
 import { ArticleQuotationEntryNotFoundException } from '../errors/article-quotation-entry.notfound.error';
 import { LineItem } from 'src/shared/calculations/interfaces/line-item.interface';

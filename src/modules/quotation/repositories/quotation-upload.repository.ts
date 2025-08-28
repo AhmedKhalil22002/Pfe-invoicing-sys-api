@@ -2,17 +2,17 @@ import { Repository } from 'typeorm';
 import { DatabaseAbstractRepository } from 'src/shared/database/utils/database.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuotationMetaDataEntity } from '../entities/quotation-meta-data.entity';
+import { QuotationUploadEntity } from '../entities/quotation-file.entity';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 
 @Injectable()
-export class QuotationMetaDataRepository extends DatabaseAbstractRepository<QuotationMetaDataEntity> {
+export class QuotationUploadRepository extends DatabaseAbstractRepository<QuotationUploadEntity> {
   constructor(
-    @InjectRepository(QuotationMetaDataEntity)
-    private readonly quotationMetaDataRespository: Repository<QuotationMetaDataEntity>,
+    @InjectRepository(QuotationUploadEntity)
+    private readonly quotationUploadRespository: Repository<QuotationUploadEntity>,
     txHost: TransactionHost<TransactionalAdapterTypeOrm>,
   ) {
-    super(quotationMetaDataRespository, txHost);
+    super(quotationUploadRespository, txHost);
   }
 }
