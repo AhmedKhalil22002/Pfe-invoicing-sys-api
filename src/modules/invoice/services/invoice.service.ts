@@ -29,7 +29,7 @@ import { DuplicateInvoiceDto } from '../dtos/invoice.duplicate.dto';
 import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
-import { QuotationEntity } from 'src/modules/quotation/repositories/entities/quotation.entity';
+import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { TaxWithholdingService } from 'src/modules/tax-withholding/services/tax-withholding.service';
 import { ciel } from 'src/utils/number.utils';

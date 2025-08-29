@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuotationMetaDataEntity } from '../entities/quotation-meta-data.entity';
+import { QuotationMetaDataRepository } from '../repositories/quotation-meta-data-repository';
 import { QuotationMetaDataNotFoundException } from '../errors/quoation-meta-data.notfound.error';
 import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { ResponseQuotationMetaDataDto } from '../dtos/quotation-meta-data.response.dto';
@@ -13,7 +14,7 @@ import { UpdateQuotationMetaDataDto } from '../dtos/quotation-meta-data.update.d
 @Injectable()
 export class QuotationMetaDataService {
   constructor(
-    private readonly quotationMetaDataRepository: QuotationMetaDataEntity,
+    private readonly quotationMetaDataRepository: QuotationMetaDataRepository,
   ) {}
 
   async findOneById(id: number): Promise<QuotationMetaDataEntity> {

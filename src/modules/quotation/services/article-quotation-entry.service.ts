@@ -249,7 +249,7 @@ export class ArticleQuotationEntryService {
   }
 
   async softDelete(id: number): Promise<ArticleQuotationEntryEntity> {
-    const entry = await this.articleQuotationEntryRepository.findByCondition({
+    const entry = await this.articleQuotationEntryRepository.findOne({
       where: { id, deletedAt: null },
       relations: { articleQuotationEntryTaxes: true },
     });

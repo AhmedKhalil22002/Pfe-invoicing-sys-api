@@ -67,7 +67,6 @@ import { QuotationUploadRepository } from './repositories/quotation-upload.repos
     InterlocutorModule,
     InvoiceModule,
     TaxModule,
-    // Abstract modules
     PdfModule,
     GatewaysModule,
     CalculationsModule,

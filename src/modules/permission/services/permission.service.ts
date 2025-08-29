@@ -9,7 +9,7 @@ import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { PermissionRepository } from '../repositories/repository/permission.repository';
+import { PermissionRepository } from '../repositories/permission.repository';
 
 @Injectable()
 export class PermissionService {
