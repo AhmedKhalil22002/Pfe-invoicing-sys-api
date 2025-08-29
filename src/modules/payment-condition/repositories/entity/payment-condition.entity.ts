@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('payment_condition')
