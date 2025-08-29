@@ -16,12 +16,28 @@ import { InvoiceUploadService } from './services/invoice-upload.service';
 import { InvoiceSequenceService } from './services/invoice-sequence.service';
 import { ArticleInvoiceEntryService } from './services/article-invoice-entry.service';
 import { ArticleInvoiceEntryTaxService } from './services/article-invoice-entry-tax.service';
-import { InvoiceRepositoryModule } from './repositories/invoice.repository.module';
 import { TaxWithholdingModule } from '../tax-withholding/tax-withholding.module';
+import { InvoiceRepository } from './repositories/invoice.repository';
+import { InvoiceMetaDataRepository } from './repositories/invoice-meta-data.repository';
+import { InvoiceUploadRepository } from './repositories/invoice-upload.repository';
+import { ArticleInvoiceEntryRepository } from './repositories/article-invoice-entry.repository';
+import { ArticleInvoiceEntryTaxRepository } from './repositories/article-invoice-entry-tax.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { InvoiceEntity } from './entities/invoice.entity';
+import { ArticleInvoiceEntryTaxEntity } from './entities/article-invoice-entry-tax.entity';
+import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.entity';
+import { InvoiceUploadEntity } from './entities/invoice-file.entity';
+import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
 
 @Module({
   controllers: [],
   providers: [
+    InvoiceRepository,
+    InvoiceMetaDataRepository,
+    InvoiceUploadRepository,
+    ArticleInvoiceEntryRepository,
+    ArticleInvoiceEntryTaxRepository,
+
     InvoiceService,
     InvoiceMetaDataService,
     InvoiceUploadService,
@@ -29,10 +45,23 @@ import { TaxWithholdingModule } from '../tax-withholding/tax-withholding.module'
     ArticleInvoiceEntryService,
     ArticleInvoiceEntryTaxService,
   ],
-  exports: [InvoiceService],
+  exports: [
+    InvoiceRepository,
+    InvoiceMetaDataRepository,
+    InvoiceUploadRepository,
+    ArticleInvoiceEntryRepository,
+    ArticleInvoiceEntryTaxRepository,
+    InvoiceService,
+  ],
   imports: [
-    //repositories
-    InvoiceRepositoryModule,
+    TypeOrmModule.forFeature([
+      InvoiceEntity,
+      ArticleInvoiceEntryTaxEntity,
+      ArticleInvoiceEntryEntity,
+      InvoiceUploadEntity,
+      InvoiceMetaDataEntity,
+    ]),
+
     //entities
     ArticleModule,
     AppConfigModule,

@@ -1,27 +1,27 @@
+import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
-import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
-import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
-import { InvoiceUploadEntity } from './invoice-file.entity';
-import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
-import { INVOICE_STATUS } from '../../enums/invoice-status.enum';
-import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
-import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
+import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { TaxWithholdingEntity } from 'src/modules/tax-withholding/entities/tax-withholding.entity';
 import { PaymentInvoiceEntryEntity } from 'src/modules/payment/entities/payment-invoice-entry.entity';
+import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
+import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
+import { InvoiceUploadEntity } from './invoice-file.entity';
+import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
+import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
+import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {

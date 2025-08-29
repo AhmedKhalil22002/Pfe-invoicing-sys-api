@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TaxService } from 'src/modules/tax/services/tax.service';
-import { ArticleInvoiceEntryTaxRepository } from '../repositories/repository/article-invoice-entry-tax.repository';
-import { ArticleInvoiceEntryTaxEntity } from '../repositories/entities/article-invoice-entry-tax.entity';
+import { ArticleInvoiceEntryTaxRepository } from '../repositories/article-invoice-entry-tax.repository';
+import { ArticleInvoiceEntryTaxEntity } from '../entities/article-invoice-entry-tax.entity';
 import { CreateArticleInvoiceEntryTaxDto } from '../dtos/article-invoice-entry-tax.create.dto';
 
 @Injectable()

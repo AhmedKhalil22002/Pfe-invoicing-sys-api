@@ -12,9 +12,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { InvoiceService } from '../services/invoice.service';
 import { ResponseInvoiceDto } from '../dtos/invoice.response.dto';
 import { CreateInvoiceDto } from '../dtos/invoice.create.dto';
@@ -27,6 +26,7 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('invoice')
 @Controller({

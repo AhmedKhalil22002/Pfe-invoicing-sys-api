@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
 import { StorageService } from 'src/shared/storage/services/storage.service';
-import { InvoiceUploadRepository } from '../repositories/repository/invoice-upload.repository';
-import { InvoiceUploadEntity } from '../repositories/entities/invoice-file.entity';
+import { InvoiceUploadRepository } from '../repositories/invoice-upload.repository';
+import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
 import { InvoiceUploadNotFoundException } from '../errors/invoice-upload.notfound';
 
 @Injectable()

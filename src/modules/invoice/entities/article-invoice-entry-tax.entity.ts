@@ -6,7 +6,7 @@ import {
   Column,
 } from 'typeorm';
 import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
-import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
 import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
 
 @Entity('article-invoice-entry-tax')

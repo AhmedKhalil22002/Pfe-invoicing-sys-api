@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PaymentEntity } from './payment.entity';
-import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
+import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
 
 @Entity('payment-invoice_entry')
 export class PaymentInvoiceEntryEntity extends EntityHelper {
