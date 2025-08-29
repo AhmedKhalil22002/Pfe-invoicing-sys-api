@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentInvoiceEntryRepository } from '../repositories/repository/payment-invoice-entry.entity';
+import { PaymentInvoiceEntryRepository } from '../repositories/payment-invoice-entry.entity';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.response.dto';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
-import { PaymentInvoiceEntryEntity } from '../repositories/entities/payment-invoice-entry.entity';
 import { PaymentInvoiceEntryNotFoundException } from '../errors/payment-invoice-entry.notfound.error';
 import { CreatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.create.dto';
 import { UpdatePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.update.dto';
@@ -13,6 +12,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { INVOICE_STATUS } from 'src/modules/invoice/enums/invoice-status.enum';
 import { createDineroAmountFromFloatWithDynamicCurrency } from 'src/utils/money.utils';
 import * as dinero from 'dinero.js';
+import { PaymentInvoiceEntryEntity } from '../entities/payment-invoice-entry.entity';
 
 @Injectable()
 export class PaymentInvoiceEntryService {

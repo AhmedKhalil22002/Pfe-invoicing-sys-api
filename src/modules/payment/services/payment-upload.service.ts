@@ -5,9 +5,9 @@ import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { StorageService } from 'src/shared/storage/services/storage.service';
-import { PaymentUploadRepository } from '../repositories/repository/payment.repository';
-import { PaymentUploadEntity } from '../repositories/entities/payment-file.entity';
+import { PaymentUploadRepository } from '../repositories/payment.repository';
 import { PaymentUploadNotFoundException } from '../errors/payment-upload.notfound.error';
+import { PaymentUploadEntity } from '../entities/payment-file.entity';
 
 @Injectable()
 export class PaymentUploadService {

@@ -4,8 +4,7 @@ import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { PaymentRepository } from '../repositories/repository/payment-file.entity';
-import { PaymentEntity } from '../repositories/entities/payment.entity';
+import { PaymentRepository } from '../repositories/payment-file.entity';
 import { PaymentNotFoundException } from '../errors/payment.notfound.error';
 import { ResponsePaymentDto } from '../dtos/payment.response.dto';
 import { CreatePaymentDto } from '../dtos/payment.create.dto';
@@ -16,6 +15,7 @@ import { PaymentInvoiceEntryService } from './payment-invoice-entry.service';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { PaymentUploadService } from './payment-upload.service';
 import { ResponsePaymentUploadDto } from '../dtos/payment-upload.response.dto';
+import { PaymentEntity } from '../entities/payment.entity';
 
 @Injectable()
 export class PaymentService {
