@@ -114,7 +114,7 @@ export class InvoiceService {
   ): Promise<InvoiceEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
-    const invoice = await this.invoiceRepository.findByCondition(
+    const invoice = await this.invoiceRepository.findOne(
       queryOptions as FindOneOptions<InvoiceEntity>,
     );
     if (!invoice) return null;

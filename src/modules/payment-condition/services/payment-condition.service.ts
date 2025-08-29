@@ -4,7 +4,6 @@ import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
 import { FindManyOptions, FindOneOptions, Not } from 'typeorm';
 import { PaymentConditionEntity } from '../entity/payment-condition.entity';
-import { PaymentConditionRepository } from '../repositories/repository/payment-condition.repository';
 import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.dto';
 import { PaymentConditionNotFoundException } from '../errors/payment-condition.notfound.error';
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
@@ -12,6 +11,7 @@ import { PaymentConditionAlreadyExistsException } from '../errors/payment-condit
 import { PaymentConditionRestrictedDeleteException } from '../errors/payment-condition.restricted-delete.error';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { PaymentConditionRepository } from '../repositories/payment-condition.repository';
 
 @Injectable()
 export class PaymentConditionService {
@@ -75,7 +75,7 @@ export class PaymentConditionService {
   async findOneByLabel(
     label: string,
   ): Promise<ResponsePaymentConditionDto | null> {
-    const activity = await this.paymentConditionRepository.findByCondition({
+    const activity = await this.paymentConditionRepository.findOne({
       where: { label },
     });
     if (!activity) {
@@ -114,7 +114,7 @@ export class PaymentConditionService {
     updatePaymentConditionDto: UpdatePaymentConditionDto,
   ): Promise<PaymentConditionEntity> {
     const existingPaymentCondition =
-      await this.paymentConditionRepository.findByCondition({
+      await this.paymentConditionRepository.findOne({
         where: {
           label: updatePaymentConditionDto.label,
           id: Not(id),

@@ -249,7 +249,7 @@ export class ArticleInvoiceEntryService {
   }
 
   async softDelete(id: number): Promise<ArticleInvoiceEntryEntity> {
-    const entry = await this.articleInvoiceEntryRepository.findByCondition({
+    const entry = await this.articleInvoiceEntryRepository.findOne({
       where: { id, deletedAt: null },
       relations: { articleInvoiceEntryTaxes: true },
     });
