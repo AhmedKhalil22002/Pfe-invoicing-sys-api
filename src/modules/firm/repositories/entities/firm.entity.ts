@@ -4,7 +4,7 @@ import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
 import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
 import { InvoiceEntity } from 'src/modules/invoice/repositories/entities/invoice.entity';
-import { PaymentConditionEntity } from 'src/modules/payment-condition/repositories/entity/payment-condition.entity';
+import { PaymentConditionEntity } from 'src/modules/payment-condition/entity/payment-condition.entity';
 import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
 import {
   Column,

@@ -3,7 +3,7 @@ import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
 import { FindManyOptions, FindOneOptions, Not } from 'typeorm';
-import { PaymentConditionEntity } from '../repositories/entity/payment-condition.entity';
+import { PaymentConditionEntity } from '../entity/payment-condition.entity';
 import { PaymentConditionRepository } from '../repositories/repository/payment-condition.repository';
 import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.dto';
 import { PaymentConditionNotFoundException } from '../errors/payment-condition.notfound.error';

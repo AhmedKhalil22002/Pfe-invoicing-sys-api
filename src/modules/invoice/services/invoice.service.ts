@@ -95,7 +95,7 @@ export class InvoiceService {
       };
 
       const pdfBuffer = await this.pdfService.generatePdf(data, template);
-      return new StreamableFile(pdfBuffer);
+      return new StreamableFile(new Uint8Array(pdfBuffer));
     } else {
       throw new InvoiceNotFoundException();
     }

@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { PAYMENT_MODE } from '../../enums/payment-mode.enum';
+import { PAYMENT_MODE } from '../enums/payment-mode.enum';
 import { PaymentUploadEntity } from './payment-file.entity';
 import { PaymentInvoiceEntryEntity } from './payment-invoice-entry.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';

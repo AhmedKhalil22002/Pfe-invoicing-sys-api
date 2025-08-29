@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PaymentConditionService } from './services/payment-condition.service';
-import { PaymentConditionRepository } from './repositories/repository/payment-condition.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PaymentConditionEntity } from './repositories/entity/payment-condition.entity';
+import { PaymentConditionEntity } from './entity/payment-condition.entity';
+import { PaymentConditionRepository } from './repositories/payment-condition.repository';
 
 @Module({
   controllers: [],
