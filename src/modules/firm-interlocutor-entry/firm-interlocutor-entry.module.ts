@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { FirmInterlocutorEntryService } from './services/firm-interlocutor-entry.service';
-import { FirmInterlocutorEntryRepositoryModule } from './repositories/firm-interlocutor-entry.repository.module';
+import { FirmInterlocutorEntryRepository } from './repositories/firm-interlocutor-entry.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { FirmInterlocutorEntryEntity } from './entities/firm-interlocutor-entry.entity';
 
 @Module({
   controllers: [],
-  providers: [FirmInterlocutorEntryService],
-  exports: [FirmInterlocutorEntryService],
-  imports: [FirmInterlocutorEntryRepositoryModule],
+  providers: [FirmInterlocutorEntryRepository,FirmInterlocutorEntryService],
+  exports: [FirmInterlocutorEntryRepository,FirmInterlocutorEntryService],
+  imports: [TypeOrmModule.forFeature([FirmInterlocutorEntryEntity])]
 })
 export class FirmInterlocutorEntryModule {}

@@ -2,7 +2,7 @@ import { EntityHelper } from 'src/shared/database/interfaces/database.entity.int
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
 import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
-import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/repositories/entities/firm-interlocutor-entry.entity';
+import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/entities/firm-interlocutor-entry.entity';
 import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
 import { PaymentConditionEntity } from 'src/modules/payment-condition/entity/payment-condition.entity';
 import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';

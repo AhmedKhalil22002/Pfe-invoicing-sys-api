@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { FirmInterlocutorEntryRepository } from '../repositories/repository/firm-interlocutor-entry.repository';
+import { FirmInterlocutorEntryRepository } from '../repositories/firm-interlocutor-entry.repository';
 import { ResponseFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.response.dto';
 import { FirmInterlocutorEntryNotFoundException } from '../errors/firm-interlocutor-entry.notfound.error';
 import { CreateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.create.dto';
-import { FirmInterlocutorEntryEntity } from '../repositories/entities/firm-interlocutor-entry.entity';
+import { FirmInterlocutorEntryEntity } from '../entities/firm-interlocutor-entry.entity';
 import { UpdateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.update.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
