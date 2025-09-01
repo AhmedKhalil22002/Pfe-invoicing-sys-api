@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InterlocutorRepository } from '../repositories/repository/interlocutor.repository';
+import { InterlocutorRepository } from '../repositories/interlocutor.repository';
 import { InterlocutorNotFoundException } from '../errors/interlocutor.notfound.error';
-import { InterlocutorEntity } from '../repositories/entity/interlocutor.entity';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
@@ -11,6 +10,7 @@ import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FirmInterlocutorEntryService } from 'src/modules/firm-interlocutor-entry/services/firm-interlocutor-entry.service';
+import { InterlocutorEntity } from '../entities/interlocutor.entity';
 
 @Injectable()
 export class InterlocutorService {
