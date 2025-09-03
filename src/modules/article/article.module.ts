@@ -6,8 +6,8 @@ import { ArticleRepository } from './repositories/article.repository';
 
 @Module({
   controllers: [],
-  providers: [ArticleRepository ,ArticleService],
-  exports: [ArticleRepository ,ArticleService],
+  providers: [ArticleRepository, ArticleService],
+  exports: [ArticleRepository, ArticleService],
   imports: [TypeOrmModule.forFeature([ArticleEntity])],
 })
 export class ArticleModule {}

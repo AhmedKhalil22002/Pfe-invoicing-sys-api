@@ -8,8 +8,12 @@ import { FirmBankAccountEntity } from './entities/firm-bank-account.entity';
 
 @Module({
   controllers: [],
-  providers: [FirmBankAccountRepository,FirmBankAccountService],
-  exports: [FirmBankAccountRepository,FirmBankAccountService],
-  imports: [TypeOrmModule.forFeature([FirmBankAccountEntity]), PermissionModule, UsersModule],
+  providers: [FirmBankAccountRepository, FirmBankAccountService],
+  exports: [FirmBankAccountRepository, FirmBankAccountService],
+  imports: [
+    TypeOrmModule.forFeature([FirmBankAccountEntity]),
+    PermissionModule,
+    UsersModule,
+  ],
 })
 export class FirmBankAccountModule {}

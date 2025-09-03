@@ -46,10 +46,7 @@ import { QuotationUploadRepository } from './repositories/quotation-upload.repos
     ArticleQuotationEntryService,
     ArticleQuotationEntryTaxService,
   ],
-  exports: [
-    QuotationRepository,
-    QuotationService,
-  ],
+  exports: [QuotationRepository, QuotationService],
   imports: [
     // TypeORM Entities
     TypeOrmModule.forFeature([

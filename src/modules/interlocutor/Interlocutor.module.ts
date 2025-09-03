@@ -7,9 +7,12 @@ import { InterlocutorEntity } from './entities/interlocutor.entity';
 
 @Module({
   controllers: [],
-  providers: [InterlocutorRepository,InterlocutorService],
-  exports: [InterlocutorRepository,InterlocutorService],
+  providers: [InterlocutorRepository, InterlocutorService],
+  exports: [InterlocutorRepository, InterlocutorService],
 
-  imports: [TypeOrmModule.forFeature([InterlocutorEntity]) , FirmInterlocutorEntryModule],
+  imports: [
+    TypeOrmModule.forFeature([InterlocutorEntity]),
+    FirmInterlocutorEntryModule,
+  ],
 })
 export class InterlocutorModule {}

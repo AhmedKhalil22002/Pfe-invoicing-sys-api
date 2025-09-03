@@ -12,10 +12,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [],
-  providers: [FirmRepository,FirmService],
-  exports: [FirmRepository,FirmService],
+  providers: [FirmRepository, FirmService],
+  exports: [FirmRepository, FirmService],
   imports: [
-   TypeOrmModule.forFeature([FirmEntity]) ,
+    TypeOrmModule.forFeature([FirmEntity]),
     ActivityModule,
     AddressModule,
     CurrencyModule,
