@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
-import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
+import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';

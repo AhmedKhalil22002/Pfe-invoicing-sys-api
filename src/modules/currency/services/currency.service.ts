@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CurrencyRepository } from '../repositories/repository/currency.repository';
-import { CurrencyEntity } from '../repositories/entities/currency.entity';
+import { CurrencyRepository } from '../repositories/currency.repository';
+import { CurrencyEntity } from '../entities/currency.entity';
 import { CreateCurrencyDto } from '../dtos/currency.create.dto';
 import { CurrencyNotFoundException } from '../errors/currency.notfound.error';
 import { ConfigService } from '@nestjs/config';

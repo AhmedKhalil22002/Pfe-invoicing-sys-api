@@ -1,5 +1,5 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { CurrencyEntity } from 'src/modules/currency/repositories/entities/currency.entity';
+import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import {
   Entity,
   Column,
