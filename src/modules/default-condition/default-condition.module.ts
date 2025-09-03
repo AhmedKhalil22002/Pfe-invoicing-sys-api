@@ -7,8 +7,11 @@ import { DefaultConditionEntity } from './entities/default-condition.entity';
 
 @Module({
   controllers: [],
-  providers: [DefaultConditionRepository,DefaultConditionService],
-  exports: [DefaultConditionRepository,DefaultConditionService],
-  imports: [TypeOrmModule.forFeature([DefaultConditionEntity]), QuotationModule],
+  providers: [DefaultConditionRepository, DefaultConditionService],
+  exports: [DefaultConditionRepository, DefaultConditionService],
+  imports: [
+    TypeOrmModule.forFeature([DefaultConditionEntity]),
+    QuotationModule,
+  ],
 })
 export class DefaultConditionModule {}

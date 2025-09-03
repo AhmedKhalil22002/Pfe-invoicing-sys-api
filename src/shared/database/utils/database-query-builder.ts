@@ -8,8 +8,7 @@ import {
   MoreThan,
   MoreThanOrEqual,
   Not,
-  Brackets,
-  Raw
+  Raw,
 } from 'typeorm';
 import {
   ILooseObject,
@@ -40,7 +39,7 @@ export class QueryBuilder {
         IN: '$in',
         BETWEEN: '$between',
         OR: '$or',
-      //  AND: '$and',
+        //  AND: '$and',
         DEFAULT_LIMIT: '25',
         JSON_CONTAINS: '$jsoncontains', // Nouvel opérateur JSON
       },
@@ -206,7 +205,7 @@ export class QueryBuilder {
           this.parseDateOrNumber(end),
         );
         break;
-       // Gestion du JSON_CONTAINS pour MySQL
+      // Gestion du JSON_CONTAINS pour MySQL
       case this.options.JSON_CONTAINS:
         condition = Raw(
           (alias) => `JSON_CONTAINS(${alias}, CAST(:value AS JSON))`,

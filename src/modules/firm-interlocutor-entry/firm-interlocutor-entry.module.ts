@@ -6,8 +6,8 @@ import { FirmInterlocutorEntryEntity } from './entities/firm-interlocutor-entry.
 
 @Module({
   controllers: [],
-  providers: [FirmInterlocutorEntryRepository,FirmInterlocutorEntryService],
-  exports: [FirmInterlocutorEntryRepository,FirmInterlocutorEntryService],
-  imports: [TypeOrmModule.forFeature([FirmInterlocutorEntryEntity])]
+  providers: [FirmInterlocutorEntryRepository, FirmInterlocutorEntryService],
+  exports: [FirmInterlocutorEntryRepository, FirmInterlocutorEntryService],
+  imports: [TypeOrmModule.forFeature([FirmInterlocutorEntryEntity])],
 })
 export class FirmInterlocutorEntryModule {}

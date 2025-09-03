@@ -6,7 +6,6 @@ import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto'
 import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ActivityNotFoundException } from '../errors/activity.notfound.error';
 import { ActivityAlreadyExistsException } from '../errors/activity.alreadyexists.error';
-import { ResponseActivityDto } from '../dtos/activity.response.dto';
 import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
@@ -26,7 +25,7 @@ export class ActivityService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<ResponseActivityDto | null> {
+  ): Promise<ActivityEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const activity = await this.activityRepository.findOne(
@@ -36,7 +35,7 @@ export class ActivityService {
     return activity;
   }
 
-  async findAll(query: IQueryObject): Promise<ResponseActivityDto[]> {
+  async findAll(query: IQueryObject): Promise<ActivityEntity[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.activityRepository.findAll(
@@ -46,7 +45,7 @@ export class ActivityService {
 
   async findAllPaginated(
     query: IQueryObject,
-  ): Promise<PageDto<ResponseActivityDto>> {
+  ): Promise<PageDto<ActivityEntity>> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const count = await this.activityRepository.getTotalCount({
@@ -106,14 +105,10 @@ export class ActivityService {
     if (activity) {
       throw new ActivityAlreadyExistsException();
     }
-    await this.activityRepository.update(id, {
-      ...updateActivityDto,
-    });
-    return this.findOneById(id);
+    return this.activityRepository.update(id, { ...updateActivityDto });
   }
 
   async softDelete(id: number): Promise<ActivityEntity> {
-    await this.findOneById(id);
     return this.activityRepository.softDelete(id);
   }
 

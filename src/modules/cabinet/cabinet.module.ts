@@ -10,8 +10,8 @@ import { CabinetEntity } from './entities/cabinet.entity';
 
 @Module({
   controllers: [],
-  providers: [CabinetRepository,CabinetService],
-  exports: [CabinetRepository,CabinetService],
+  providers: [CabinetRepository, CabinetService],
+  exports: [CabinetRepository, CabinetService],
   imports: [
     TypeOrmModule.forFeature([CabinetEntity]),
     ActivityModule,

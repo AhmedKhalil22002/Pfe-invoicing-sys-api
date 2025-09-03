@@ -47,14 +47,12 @@ export class FirmInterlocutorEntryService {
   async save(
     createFirmInterlocutorEntryDto: CreateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
-    const existing = await this.firmInterlocutorEntryRepository.findOne(
-      {
-        where: {
-          firmId: createFirmInterlocutorEntryDto.firmId,
-          interlocutorId: createFirmInterlocutorEntryDto.interlocutorId,
-        },
+    const existing = await this.firmInterlocutorEntryRepository.findOne({
+      where: {
+        firmId: createFirmInterlocutorEntryDto.firmId,
+        interlocutorId: createFirmInterlocutorEntryDto.interlocutorId,
       },
-    );
+    });
 
     if (existing) {
       return await this.firmInterlocutorEntryRepository.save({
@@ -83,10 +81,9 @@ export class FirmInterlocutorEntryService {
     id: number,
     updateFirmInterlocutorEntryDto: UpdateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
-    const existingEntry =
-      await this.firmInterlocutorEntryRepository.findOne({
-        where: { id },
-      });
+    const existingEntry = await this.firmInterlocutorEntryRepository.findOne({
+      where: { id },
+    });
     return await this.firmInterlocutorEntryRepository.save({
       ...existingEntry,
       ...updateFirmInterlocutorEntryDto,

@@ -55,11 +55,9 @@ export class CabinetService {
       throw new EnterpriseNameAlreadyExistsException();
     }
 
-    const existingCabinetByTaxId = await this.cabinetRepository.findOne(
-      {
-        where: { taxIdNumber: createCabinetDto.taxIdNumber },
-      },
-    );
+    const existingCabinetByTaxId = await this.cabinetRepository.findOne({
+      where: { taxIdNumber: createCabinetDto.taxIdNumber },
+    });
     if (existingCabinetByTaxId) {
       throw new TaxIdNumberDuplicateException();
     }

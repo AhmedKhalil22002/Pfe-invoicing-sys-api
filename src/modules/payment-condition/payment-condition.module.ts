@@ -6,8 +6,8 @@ import { PaymentConditionRepository } from './repositories/payment-condition.rep
 
 @Module({
   controllers: [],
-  providers: [PaymentConditionRepository,PaymentConditionService],
-  exports: [PaymentConditionRepository,PaymentConditionService],
+  providers: [PaymentConditionRepository, PaymentConditionService],
+  exports: [PaymentConditionRepository, PaymentConditionService],
   imports: [TypeOrmModule.forFeature([PaymentConditionEntity])],
 })
 export class PaymentConditionModule {}

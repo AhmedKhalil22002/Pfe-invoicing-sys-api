@@ -45,9 +45,7 @@ export abstract class DatabaseAbstractRepository<T>
       )
       .map((relation) => relation.propertyName);
   }
-  public async find(
-    options: FindManyOptions<T>,
-  ): Promise<T[]> {
+  public async find(options: FindManyOptions<T>): Promise<T[]> {
     return await this.getRepository().find(options);
   }
 
@@ -112,7 +110,6 @@ export abstract class DatabaseAbstractRepository<T>
   public async getTotalCount(options: FindOneOptions<T> = {}): Promise<number> {
     return this.getRepository().count(options);
   }
-
 
   public async delete(id: string | number): Promise<void> {
     await this.getRepository().delete(id);
