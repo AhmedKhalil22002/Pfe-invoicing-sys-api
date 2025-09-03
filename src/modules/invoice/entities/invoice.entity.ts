@@ -12,7 +12,6 @@ import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/entities/firm.entity';
-import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { TaxWithholdingEntity } from 'src/modules/tax-withholding/entities/tax-withholding.entity';
 import { PaymentInvoiceEntryEntity } from 'src/modules/payment/entities/payment-invoice-entry.entity';
@@ -22,6 +21,7 @@ import { InvoiceUploadEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
+import { InterlocutorEntity } from 'src/modules/interlocutor/entities/interlocutor.entity';
 
 @Entity('invoice')
 export class InvoiceEntity extends EntityHelper {

@@ -2,7 +2,6 @@ import { DISCOUNT_TYPES } from 'src/app/enums/discount-types.enum';
 import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
 import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/entities/firm.entity';
-import { InterlocutorEntity } from 'src/modules/interlocutor/repositories/entity/interlocutor.entity';
 import {
   Entity,
   Column,
@@ -19,6 +18,7 @@ import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-accoun
 import { QuotationUploadEntity } from './quotation-file.entity';
 import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
 import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
+import { InterlocutorEntity } from 'src/modules/interlocutor/entities/interlocutor.entity';
 
 @Entity('quotation')
 export class QuotationEntity extends EntityHelper {
