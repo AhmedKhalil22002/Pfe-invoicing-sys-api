@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { PaymentRepository } from '../repositories/payment-file.entity';
 import { PaymentNotFoundException } from '../errors/payment.notfound.error';
 import { ResponsePaymentDto } from '../dtos/payment.response.dto';

@@ -15,19 +15,16 @@ import { InterlocutorService } from '../services/interlocutor.service';
 import { ResponseInterlocutorDto } from '../dtos/interlocutor.response.dto';
 import { CreateInterlocutorDto } from '../dtos/interlocutor.create.dto';
 import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('interlocutor')
-@Controller({
-  version: '1',
-  path: '/interlocutor',
-})
+@Controller({ version: '1', path: '/interlocutor' })
 @UseInterceptors(LogInterceptor)
 export class InterlocutorController {
   constructor(private readonly interlocutorService: InterlocutorService) {}
@@ -48,11 +45,7 @@ export class InterlocutorController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -76,11 +69,7 @@ export class InterlocutorController {
     return interlocutor;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Post('/promote/:id/:firmId')
   @LogEvent(EVENT_TYPE.INTERLOCUTOR_PROMOTED)
   async promote(
@@ -98,11 +87,7 @@ export class InterlocutorController {
     return await this.interlocutorService.findOneById(id);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.INTERLOCUTOR_UPDATED)
   async update(
@@ -114,11 +99,7 @@ export class InterlocutorController {
     return await this.interlocutorService.update(id, updateInterlocutorDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.INTERLOCUTOR_DELETED)
   async delete(

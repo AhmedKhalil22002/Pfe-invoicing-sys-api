@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { QuotationEntity } from './quotation.entity';
 

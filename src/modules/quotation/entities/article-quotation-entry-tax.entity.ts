@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { ArticleQuotationEntryEntity } from './article-quotation-entry.entity';
 import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 
 @Entity('article-quotation-entry-tax')
 export class ArticleQuotationEntryTaxEntity extends EntityHelper {

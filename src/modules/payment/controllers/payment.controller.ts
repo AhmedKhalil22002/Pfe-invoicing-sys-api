@@ -11,8 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { PaymentService } from '../services/payment.service';
 import { ResponsePaymentDto } from '../dtos/payment.response.dto';
 import { CreatePaymentDto } from '../dtos/payment.create.dto';
@@ -21,13 +21,10 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('payment')
-@Controller({
-  version: '1',
-  path: '/payment',
-})
+@Controller({ version: '1', path: '/payment' })
 @UseInterceptors(LogInterceptor)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
@@ -46,11 +43,7 @@ export class PaymentController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -72,11 +65,7 @@ export class PaymentController {
     return payment;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.SELLING_PAYMENT_UPDATED)
   async update(
@@ -88,11 +77,7 @@ export class PaymentController {
     return this.paymentService.update(id, updateActivityDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.SELLING_PAYMENT_DELETED)
   async delete(

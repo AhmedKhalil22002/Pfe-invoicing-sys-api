@@ -5,8 +5,8 @@ import { FirmInterlocutorEntryNotFoundException } from '../errors/firm-interlocu
 import { CreateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.create.dto';
 import { FirmInterlocutorEntryEntity } from '../entities/firm-interlocutor-entry.entity';
 import { UpdateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 
 @Injectable()

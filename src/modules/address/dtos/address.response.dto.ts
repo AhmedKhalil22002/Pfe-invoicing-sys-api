@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { ResponseDtoHelper } from 'src/shared/database-v2/dtos/database.response.dto';
+import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
 import { ResponseCountryDto } from 'src/modules/country/dtos/country.response.dto';
 
 export class ResponseAddressDto extends ResponseDtoHelper {

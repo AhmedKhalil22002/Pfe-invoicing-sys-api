@@ -2,15 +2,12 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StoreService } from '../services/store.service';
 import { StoreEntity } from '../entites/store.entity';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 
 @ApiTags('store')
-@Controller({
-  version: '1',
-  path: '/store',
-})
+@Controller({ version: '1', path: '/store' })
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PermissionEntity } from '../entities/permission.entity';
 import { PermissionNotFoundException } from '../errors/permission.notfound.error';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePermissionDto } from '../dtos/permission.response.dto';
 import { CreatePermissionDto } from '../dtos/permission.create.dto';
 import { UpdatePermissionDto } from '../dtos/permission.update.dto';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PermissionRepository } from '../repositories/permission.repository';
 
 @Injectable()
@@ -77,9 +77,7 @@ export class PermissionService {
     id: number,
     updatePermissionDto: UpdatePermissionDto,
   ): Promise<PermissionEntity> {
-    await this.permisisonRepository.update(id, {
-      ...updatePermissionDto,
-    });
+    await this.permisisonRepository.update(id, { ...updatePermissionDto });
     return this.findOneById(id);
   }
 

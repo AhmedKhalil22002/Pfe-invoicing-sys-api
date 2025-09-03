@@ -12,24 +12,21 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { CreateUserDto } from '../dtos/user.create.dto';
 import { ResponseUserDto } from '../dtos/user.response.dto';
 import { UpdateUserDto } from '../dtos/user.update.dto';
 import { UserEntity } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { Request as ExpressRequest } from 'express';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('user')
-@Controller({
-  version: '1',
-  path: '/user',
-})
+@Controller({ version: '1', path: '/user' })
 @UseInterceptors(LogInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}

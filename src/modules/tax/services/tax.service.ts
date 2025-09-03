@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { TaxRepository } from '../repositories/tax.repository';
 import { TaxEntity } from '../entities/tax.entity';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
 import { TaxNotFoundException } from '../errors/tax.notfound.error';
 import { TaxAlreadyExistsException } from '../errors/tax.alreadyexists.error';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class TaxService {

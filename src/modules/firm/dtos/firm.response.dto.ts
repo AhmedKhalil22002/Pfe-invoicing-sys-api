@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { ResponseDtoHelper } from 'src/shared/database-v2/dtos/database.response.dto';
+import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
 import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response.dto';
 import { ResponseAddressDto } from 'src/modules/address/dtos/address.response.dto';
 import { ResponseCabinetDto } from 'src/modules/cabinet/dtos/cabinet.response.dto';
@@ -24,10 +24,7 @@ export class ResponseFirmDto extends ResponseDtoHelper {
   @ApiProperty({ example: faker.phone.number(), type: String })
   phone: string;
 
-  @ApiProperty({
-    example: 'Notes',
-    type: String,
-  })
+  @ApiProperty({ example: 'Notes', type: String })
   notes?: string;
 
   @ApiProperty({ example: true })

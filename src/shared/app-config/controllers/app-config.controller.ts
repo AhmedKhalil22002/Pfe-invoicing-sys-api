@@ -13,7 +13,7 @@ import { AppConfigService } from '../services/app-config.service';
 import { ResponseAppConfigDto } from '../dtos/app-config.response';
 import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 
 @ApiTags('app-config')
 @Controller({ version: '1', path: '/app-config' })

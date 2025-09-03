@@ -25,15 +25,12 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 
 @ApiTags('quotation')
-@Controller({
-  version: '1',
-  path: '/quotation',
-})
+@Controller({ version: '1', path: '/quotation' })
 @UseInterceptors(LogInterceptor)
 export class QuotationController {
   constructor(
@@ -57,11 +54,7 @@ export class QuotationController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -110,27 +103,15 @@ export class QuotationController {
   }
 
   @Put('/update-quotation-sequences')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async updateQuotationSequences(
     @Body() updatedSequenceDto: UpdateQuotationSequenceDto,
   ): Promise<QuotationSequence> {
     return this.quotationService.updateQuotationSequence(updatedSequenceDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
-  @ApiParam({
-    name: 'create',
-    type: 'boolean',
-    required: false,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
+  @ApiParam({ name: 'create', type: 'boolean', required: false })
   @Put('/invoice/:id/:create')
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_INVOICED)
   async invoice(
@@ -159,11 +140,7 @@ export class QuotationController {
     });
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_UPDATED)
   async update(
@@ -175,11 +152,7 @@ export class QuotationController {
     return this.quotationService.update(id, updateQuotationDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_DELETED)
   async delete(

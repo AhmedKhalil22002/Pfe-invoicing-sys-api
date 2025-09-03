@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { InvoiceMetaDataRepository } from '../repositories/invoice-meta-data.repository';
 import { InvoiceMetaDataEntity } from '../entities/invoice-meta-data.entity';
 import { InvoiceMetaDataNotFoundException } from '../errors/invoice-meta-data.notfound.error';
@@ -88,10 +88,7 @@ export class InvoiceMetaDataService {
 
   async duplicate(id: number): Promise<InvoiceMetaDataEntity> {
     const existingData = await this.findOneById(id);
-    const duplicatedData = {
-      ...existingData,
-      id: undefined,
-    };
+    const duplicatedData = { ...existingData, id: undefined };
     return this.invoiceMetaDataRepository.save(duplicatedData);
   }
 

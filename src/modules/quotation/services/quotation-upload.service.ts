@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { QuotationUploadRepository } from '../repositories/quotation-upload.repository';
 import { QuotationUploadEntity } from '../entities/quotation-file.entity';
 import { QuotationUploadNotFoundException } from '../errors/quotation-upload.notfound';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
@@ -89,10 +89,7 @@ export class QuotationUploadService {
 
     //Save the duplicated QuotationUploadEntity
     const duplicatedQuotationUpload = await this.quotationUploadRepository.save(
-      {
-        quotationId: quotationId,
-        uploadId: duplicatedUpload.id,
-      },
+      { quotationId: quotationId, uploadId: duplicatedUpload.id },
     );
 
     return duplicatedQuotationUpload;

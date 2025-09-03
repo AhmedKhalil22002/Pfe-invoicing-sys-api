@@ -11,8 +11,8 @@ import { ArticleQuotationEntryRepository } from '../repositories/article-quotati
 import { ArticleQuotationEntryTaxService } from './article-quotation-entry-tax.service';
 import { ArticleQuotationEntryNotFoundException } from '../errors/article-quotation-entry.notfound.error';
 import { LineItem } from 'src/shared/calculations/interfaces/line-item.interface';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 
 @Injectable()
@@ -108,10 +108,7 @@ export class ArticleQuotationEntryService {
 
     await this.articleQuotationEntryTaxService.saveMany(
       taxes.map((tax) => {
-        return {
-          taxId: tax.id,
-          articleQuotationEntryId: entry.id,
-        };
+        return { taxId: tax.id, articleQuotationEntryId: entry.id };
       }),
     );
     return entry;
@@ -185,10 +182,7 @@ export class ArticleQuotationEntryService {
     //save the new tax entries for the article entry
     await this.articleQuotationEntryTaxService.saveMany(
       taxes.map((tax) => {
-        return {
-          taxId: tax.id,
-          articleQuotationEntryId: entry.id,
-        };
+        return { taxId: tax.id, articleQuotationEntryId: entry.id };
       }),
     );
     return entry;
@@ -206,9 +200,7 @@ export class ArticleQuotationEntryService {
 
     // Duplicate the taxes associated with this entry
     const duplicatedTaxes = existingEntry.articleQuotationEntryTaxes.map(
-      (taxEntry) => ({
-        taxId: taxEntry.taxId,
-      }),
+      (taxEntry) => ({ taxId: taxEntry.taxId }),
     );
 
     // Create the duplicated entry

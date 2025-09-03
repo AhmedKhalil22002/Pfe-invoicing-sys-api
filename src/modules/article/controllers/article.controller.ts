@@ -9,19 +9,16 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { ArticleService } from '../services/article.service';
 import { ResponseArticleDto } from '../dtos/article.response.dto';
 import { CreateArticleDto } from '../dtos/article.create.dto';
 import { UpdateArticleDto } from '../dtos/article.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('article')
-@Controller({
-  version: '1',
-  path: '/article',
-})
+@Controller({ version: '1', path: '/article' })
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
@@ -39,11 +36,7 @@ export class ArticleController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -62,11 +55,7 @@ export class ArticleController {
   }
 
   @Put('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async update(
     @Param('id') id: number,
     @Body() updateArticleDto: UpdateArticleDto,
@@ -75,11 +64,7 @@ export class ArticleController {
   }
 
   @Delete('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async delete(@Param('id') id: number): Promise<ResponseArticleDto> {
     return await this.articleService.softDelete(id);
   }

@@ -1,5 +1,5 @@
 import { AddressEntity } from 'src/modules/address/entities/address.entity';
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('country')

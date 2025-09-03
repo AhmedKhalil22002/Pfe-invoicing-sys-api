@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { ArticleInvoiceEntryEntity } from '../entities/article-invoice-entry.entity';
-import { DatabaseAbstractRepository } from 'src/shared/database-v2/repositories/database.repository';
+import { DatabaseAbstractRepository } from 'src/shared/database/repositories/database.repository';
 
 @Injectable()
 export class ArticleInvoiceEntryRepository extends DatabaseAbstractRepository<ArticleInvoiceEntryEntity> {

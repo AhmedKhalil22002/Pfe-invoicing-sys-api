@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FirmBankAccountRepository } from '../repositories/firm-bank-account.repository';
 import { FirmBankAccountEntity } from '../entities/firm-bank-account.entity';
 import { FirmBankAccountNotFoundException } from '../errors/firm-bank-account.notfound.error';
@@ -34,9 +34,7 @@ export class FirmBankAccountService {
     relations?: string[],
   ): Promise<FirmBankAccountEntity> {
     const account = await this.bankAccountRepository.findOne({
-      where: {
-        id,
-      },
+      where: { id },
       relations: relations,
     });
     if (!account) {
@@ -98,19 +96,13 @@ export class FirmBankAccountService {
     bankAccount: Partial<FirmBankAccountEntity>,
   ): Promise<boolean> {
     const existingBankAccount = await this.bankAccountRepository.findOne({
-      where: {
-        iban: bankAccount.iban,
-        rib: bankAccount.rib,
-        deletedAt: null,
-      },
+      where: { iban: bankAccount.iban, rib: bankAccount.rib, deletedAt: null },
     });
     return !!existingBankAccount;
   }
 
   async findMainAccount(): Promise<FirmBankAccountEntity> {
-    return this.bankAccountRepository.findOne({
-      where: { isMain: true },
-    });
+    return this.bankAccountRepository.findOne({ where: { isMain: true } });
   }
 
   //promote bank account to main account

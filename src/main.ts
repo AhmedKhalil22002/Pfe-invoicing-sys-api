@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
-import { MigrationService } from './shared/database-v2/services/database-migration.service';
+import { MigrationService } from './shared/database/services/database-migration.service';
 import { join } from 'path';
 
 async function bootstrap() {

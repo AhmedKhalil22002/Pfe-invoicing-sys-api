@@ -21,9 +21,9 @@ import { Request as ExpressRequest } from 'express';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 
 @ApiTags('tax-withholding')
 @Controller({ version: '1', path: '/tax-withholding' })

@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { QuotationMetaDataEntity } from '../entities/quotation-meta-data.entity';
 import { QuotationMetaDataRepository } from '../repositories/quotation-meta-data-repository';
 import { QuotationMetaDataNotFoundException } from '../errors/quoation-meta-data.notfound.error';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponseQuotationMetaDataDto } from '../dtos/quotation-meta-data.response.dto';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateQuotationMetaDataDto } from '../dtos/quotation-meta-data.create.dto';
 import { UpdateQuotationMetaDataDto } from '../dtos/quotation-meta-data.update.dto';
 
@@ -88,10 +88,7 @@ export class QuotationMetaDataService {
 
   async duplicate(id: number): Promise<QuotationMetaDataEntity> {
     const existingData = await this.findOneById(id);
-    const duplicatedData = {
-      ...existingData,
-      id: undefined,
-    };
+    const duplicatedData = { ...existingData, id: undefined };
     return this.quotationMetaDataRepository.save(duplicatedData);
   }
 

@@ -8,10 +8,10 @@ import { CreateRoleDto } from '../dtos/role.create.dto';
 import { UpdateRoleDto } from '../dtos/role.update.dto';
 import { RolePermissionEntryService } from './role-permission-entry.service';
 import { Transactional } from '@nestjs-cls/transactional';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 
 @Injectable()
 export class RoleService {

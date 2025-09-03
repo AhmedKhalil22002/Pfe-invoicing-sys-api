@@ -4,7 +4,7 @@ import { PaymentConditionEntity } from '../entity/payment-condition.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
-import { DatabaseAbstractRepository } from 'src/shared/database-v2/repositories/database.repository';
+import { DatabaseAbstractRepository } from 'src/shared/database/repositories/database.repository';
 
 @Injectable()
 export class PaymentConditionRepository extends DatabaseAbstractRepository<PaymentConditionEntity> {

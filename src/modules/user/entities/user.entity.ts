@@ -1,4 +1,4 @@
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { LoggerEntity } from 'src/shared/logger/entities/logger.entity';
 import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 import { RoleEntity } from 'src/modules/role/entities/role.entity';

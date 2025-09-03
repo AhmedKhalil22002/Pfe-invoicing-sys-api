@@ -5,7 +5,7 @@ import {
   JoinColumn,
   Column,
 } from 'typeorm';
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 import { InvoiceEntity } from './invoice.entity';
 

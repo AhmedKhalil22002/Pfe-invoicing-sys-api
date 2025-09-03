@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PaymentConditionService } from '../services/payment-condition.service';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.dto';
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
@@ -20,14 +20,11 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('payment-condition')
-@Controller({
-  version: '1',
-  path: '/payment-condition',
-})
+@Controller({ version: '1', path: '/payment-condition' })
 @UseInterceptors(LogInterceptor)
 export class PaymentConditionController {
   constructor(
@@ -50,11 +47,7 @@ export class PaymentConditionController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -78,11 +71,7 @@ export class PaymentConditionController {
     return condition;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.PAYMENT_CONDITION_UPDATED)
   async update(
@@ -94,11 +83,7 @@ export class PaymentConditionController {
     return this.paymentConditionService.update(id, updatePaymentConditionDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   async delete(
     @Param('id') id: number,

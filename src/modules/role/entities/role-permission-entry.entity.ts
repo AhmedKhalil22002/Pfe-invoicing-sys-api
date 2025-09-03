@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { RoleEntity } from './role.entity';
 import { PermissionEntity } from 'src/modules/permission/entities/permission.entity';
-import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 
 @Entity('role_permission')
 export class RolePermissionEntryEntity extends EntityHelper {

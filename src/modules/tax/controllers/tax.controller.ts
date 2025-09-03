@@ -14,22 +14,19 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { TaxService } from '../services/tax.service';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { CreateTaxDto } from '../dtos/tax.create.dto';
 import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('tax')
-@Controller({
-  version: '1',
-  path: '/tax',
-})
+@Controller({ version: '1', path: '/tax' })
 @UseInterceptors(LogInterceptor)
 export class TaxController {
   constructor(private readonly taxService: TaxService) {}
@@ -48,11 +45,7 @@ export class TaxController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -82,11 +75,7 @@ export class TaxController {
     return tax;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.TAX_UPDATED)
   async update(
@@ -102,11 +91,7 @@ export class TaxController {
     return tax;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.TAX_DELETED)
   async delete(

@@ -4,8 +4,8 @@ import { ArticleService } from 'src/modules/article/services/article.service';
 import { ResponseArticleDto } from 'src/modules/article/dtos/article.response.dto';
 import { InvoicingCalculationsService } from 'src/shared/calculations/services/invoicing.calculations.service';
 import { LineItem } from 'src/shared/calculations/interfaces/line-item.interface';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 import { ArticleInvoiceEntryRepository } from '../repositories/article-invoice-entry.repository';
 import { ArticleInvoiceEntryTaxService } from './article-invoice-entry-tax.service';
@@ -108,10 +108,7 @@ export class ArticleInvoiceEntryService {
 
     await this.articleInvoiceEntryTaxService.saveMany(
       taxes.map((tax) => {
-        return {
-          taxId: tax.id,
-          articleInvoiceEntryId: entry.id,
-        };
+        return { taxId: tax.id, articleInvoiceEntryId: entry.id };
       }),
     );
     return entry;
@@ -185,10 +182,7 @@ export class ArticleInvoiceEntryService {
     //save the new tax entries for the article entry
     await this.articleInvoiceEntryTaxService.saveMany(
       taxes.map((tax) => {
-        return {
-          taxId: tax.id,
-          articleInvoiceEntryId: entry.id,
-        };
+        return { taxId: tax.id, articleInvoiceEntryId: entry.id };
       }),
     );
     return entry;
@@ -206,9 +200,7 @@ export class ArticleInvoiceEntryService {
 
     // Duplicate the taxes associated with this entry
     const duplicatedTaxes = existingEntry.articleInvoiceEntryTaxes.map(
-      (taxEntry) => ({
-        taxId: taxEntry.taxId,
-      }),
+      (taxEntry) => ({ taxId: taxEntry.taxId }),
     );
 
     // Create the duplicated entry

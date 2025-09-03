@@ -14,7 +14,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { StorageService } from '../services/storage.service';
 import { UploadEntity } from '../entities/upload.entity';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 
 @ApiTags('storage')
 @Controller({ version: '1', path: '/storage' })

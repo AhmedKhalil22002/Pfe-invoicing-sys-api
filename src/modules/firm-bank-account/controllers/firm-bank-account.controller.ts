@@ -11,8 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
@@ -22,13 +22,10 @@ import { ResponseFirmBankAccountDto } from '../dtos/firm-bank-account.response.d
 import { CreateFirmBankAccountDto } from '../dtos/firm-bank-account.create.dto';
 import { UpdateFirmBankAccountDto } from '../dtos/firm-bank-account.update.dto';
 import { UserService } from 'src/modules/user/services/user.service';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('bank-account')
-@Controller({
-  version: '1',
-  path: '/firm-bank-account',
-})
+@Controller({ version: '1', path: '/firm-bank-account' })
 @UseInterceptors(LogInterceptor)
 export class FirmBankAccountController {
   constructor(
@@ -68,11 +65,7 @@ export class FirmBankAccountController {
   //   all: [PERMISSIONS.FIRM_READ, PERMISSIONS.FIRM_BANK_ACCOUNT_READ],
   // })
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -109,11 +102,7 @@ export class FirmBankAccountController {
     return bank;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   // @UseGuards(PermissionsGuard)
   // @Permissions({
   //   all: [
@@ -140,11 +129,7 @@ export class FirmBankAccountController {
     return await this.bankAccountService.update(id, updateBankAccountDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   // @UseGuards(PermissionsGuard)
   // @Permissions({
   //   all: [

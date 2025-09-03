@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GatewaysModule } from './gateways/gateways.module';
-import { DatabaseModule } from './database-v2/database.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   controllers: [],

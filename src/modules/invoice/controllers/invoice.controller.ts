@@ -12,8 +12,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { InvoiceService } from '../services/invoice.service';
 import { ResponseInvoiceDto } from '../dtos/invoice.response.dto';
 import { CreateInvoiceDto } from '../dtos/invoice.create.dto';
@@ -26,13 +26,10 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('invoice')
-@Controller({
-  version: '1',
-  path: '/invoice',
-})
+@Controller({ version: '1', path: '/invoice' })
 @UseInterceptors(LogInterceptor)
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
@@ -58,11 +55,7 @@ export class InvoiceController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -108,11 +101,7 @@ export class InvoiceController {
     return invoice;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/update-invoice-sequences')
   async updateInvoiceSequences(
     @Body() updatedSequenceDto: UpdateInvoiceSequenceDto,
@@ -120,11 +109,7 @@ export class InvoiceController {
     return this.invoiceService.updateInvoiceSequence(updatedSequenceDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.SELLING_INVOICE_UPDATED)
   async update(
@@ -136,11 +121,7 @@ export class InvoiceController {
     return this.invoiceService.update(id, updateInvoiceDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.SELLING_INVOICE_DELETED)
   async delete(

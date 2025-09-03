@@ -11,8 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
@@ -21,13 +21,10 @@ import { TemplateCategoryService } from '../services/template-category.service';
 import { ResponseTemplateCategoryDto } from '../dtos/template-category.response.dto';
 import { CreateTemplateCategoryDto } from '../dtos/template-category.create.dto';
 import { UpdateTemplateCategoryDto } from '../dtos/template-category.update.dto';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('template-category')
-@Controller({
-  version: '1',
-  path: '/template-category',
-})
+@Controller({ version: '1', path: '/template-category' })
 @UseInterceptors(LogInterceptor)
 export class TemplateCategoryController {
   constructor(
@@ -50,11 +47,7 @@ export class TemplateCategoryController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -78,11 +71,7 @@ export class TemplateCategoryController {
     return category;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.TEMPLATE_CATEGORY_UPDATED)
   async update(
@@ -94,11 +83,7 @@ export class TemplateCategoryController {
     return this.templateCategoryService.update(id, updateTemplateCategoryDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.TEMPLATE_CATEGORY_DELETED)
   async delete(

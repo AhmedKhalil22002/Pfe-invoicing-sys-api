@@ -10,18 +10,15 @@ import {
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { PermissionService } from '../services/permission.service';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePermissionDto } from '../dtos/permission.response.dto';
 import { CreatePermissionDto } from '../dtos/permission.create.dto';
 import { UpdatePermissionDto } from '../dtos/permission.update.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('permission')
-@Controller({
-  version: '1',
-  path: '/permission',
-})
+@Controller({ version: '1', path: '/permission' })
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
@@ -41,11 +38,7 @@ export class PermissionController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -63,11 +56,7 @@ export class PermissionController {
   }
 
   @Put('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async update(
     @Param('id') id: number,
     @Body() updatePermissionDto: UpdatePermissionDto,
@@ -76,11 +65,7 @@ export class PermissionController {
   }
 
   @Delete('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async delete(@Param('id') id: number): Promise<ResponsePermissionDto> {
     return await this.permissionService.softDelete(id);
   }

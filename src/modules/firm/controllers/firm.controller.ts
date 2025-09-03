@@ -14,20 +14,17 @@ import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FirmService } from '../services/firm.service';
 import { ResponseFirmDto } from '../dtos/firm.response.dto';
 import { CreateFirmDto } from '../dtos/firm.create.dto';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('firm')
-@Controller({
-  version: '1',
-  path: '/firm',
-})
+@Controller({ version: '1', path: '/firm' })
 @UseInterceptors(LogInterceptor)
 export class FirmController {
   constructor(private readonly firmService: FirmService) {}
@@ -46,11 +43,7 @@ export class FirmController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -72,11 +65,7 @@ export class FirmController {
     return firm;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.FIRM_UPDATED)
   async update(
@@ -88,11 +77,7 @@ export class FirmController {
     return await this.firmService.update(id, updateActivityDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.FIRM_DELETED)
   async delete(

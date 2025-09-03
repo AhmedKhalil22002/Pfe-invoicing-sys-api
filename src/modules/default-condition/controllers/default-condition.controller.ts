@@ -11,8 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { DefaultConditionService } from '../services/default-condition.service';
 import { ResponseDefaultConditionDto } from '../dtos/default-condition.response.dto';
 import { CreateDefaultConditionDto } from '../dtos/default-condition.create.dto';
@@ -21,13 +21,10 @@ import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor'
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('default-condition')
-@Controller({
-  version: '1',
-  path: '/default-condition',
-})
+@Controller({ version: '1', path: '/default-condition' })
 @UseInterceptors(LogInterceptor)
 export class DefaultConditionController {
   constructor(
@@ -50,11 +47,7 @@ export class DefaultConditionController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -78,11 +71,7 @@ export class DefaultConditionController {
     return condition;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/batch-update')
   @LogEvent(EVENT_TYPE.DEFAULT_CONDITION_MASS_UPDATED)
   async batchUpdate(
@@ -96,11 +85,7 @@ export class DefaultConditionController {
     );
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.DEFAULT_CONDITION_UPDATED)
   async update(
@@ -115,11 +100,7 @@ export class DefaultConditionController {
     );
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.DEFAULT_CONDITION_DELETED)
   async delete(

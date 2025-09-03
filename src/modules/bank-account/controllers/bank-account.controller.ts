@@ -11,23 +11,20 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { BankAccountService } from '../services/bank-account.service';
 import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
-import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('bank-account')
-@Controller({
-  version: '1',
-  path: '/bank-account',
-})
+@Controller({ version: '1', path: '/bank-account' })
 @UseInterceptors(LogInterceptor)
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
@@ -48,11 +45,7 @@ export class BankAccountController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -74,11 +67,7 @@ export class BankAccountController {
     return bank;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.BANK_ACCOUNT_UPDATED)
   async update(
@@ -90,11 +79,7 @@ export class BankAccountController {
     return await this.bankAccountService.update(id, updateBankAccountDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.BANK_ACCOUNT_DELETED)
   async delete(

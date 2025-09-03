@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { ArticleRepository } from '../repositories/article.repository';
 import { ArticleEntity } from '../entities/article.entity';
 import { ArticleNotFoundException } from '../errors/article.notfound.error';
 import { ResponseArticleDto } from '../dtos/article.response.dto';
 import { CreateArticleDto } from '../dtos/article.create.dto';
 import { UpdateArticleDto } from '../dtos/article.update.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class ArticleService {
@@ -82,10 +82,7 @@ export class ArticleService {
     updateActivityDto: UpdateArticleDto,
   ): Promise<ArticleEntity> {
     const article = await this.findOneById(id);
-    return this.articleRepository.save({
-      ...article,
-      ...updateActivityDto,
-    });
+    return this.articleRepository.save({ ...article, ...updateActivityDto });
   }
 
   async softDelete(id: number): Promise<ArticleEntity> {

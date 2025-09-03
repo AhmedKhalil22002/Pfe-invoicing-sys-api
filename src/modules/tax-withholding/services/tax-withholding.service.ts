@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { TaxWithholdingRepository } from '../repositories/tax-withholding.repository';
 import { TaxWithholdingEntity } from '../entities/tax-withholding.entity';
 import { TaxWithholdingNotFoundException } from '../errors/tax-withholding.notfound.error';

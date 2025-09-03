@@ -7,8 +7,8 @@ import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { AppConfigAlreadyExistsException } from '../errors/app-config.alreadyexists.error';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
 import { FindManyOptions } from 'typeorm';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class AppConfigService {

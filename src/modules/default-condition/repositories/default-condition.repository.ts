@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DefaultConditionEntity } from '../entities/default-condition.entity';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
-import { DatabaseAbstractRepository } from 'src/shared/database-v2/repositories/database.repository';
+import { DatabaseAbstractRepository } from 'src/shared/database/repositories/database.repository';
 
 @Injectable()
 export class DefaultConditionRepository extends DatabaseAbstractRepository<DefaultConditionEntity> {

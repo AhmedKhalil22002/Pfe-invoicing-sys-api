@@ -12,8 +12,8 @@ import { FileNotFoundException } from '../errors/file.not-found.error';
 import { ReadStream } from 'typeorm/platform/PlatformTools';
 import { ConfigService } from '@nestjs/config';
 import { UploadRepository } from '../repositories/upload.repository';
-import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 
 @Injectable()
 export class StorageService {

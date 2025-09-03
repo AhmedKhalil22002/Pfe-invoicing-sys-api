@@ -15,7 +15,7 @@ import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmConfigService } from 'src/shared/database-v2/services/database-config.service';
+import { TypeOrmConfigService } from 'src/shared/database/services/database-config.service';
 
 @Module({
   controllers: [HelloController],
@@ -29,9 +29,7 @@ import { TypeOrmConfigService } from 'src/shared/database-v2/services/database-c
         ? '.env'
         : `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
-    }),
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     I18nModule.forRootAsync({
       imports: [TranslationModule],
       useClass: TranslationConfigService,
