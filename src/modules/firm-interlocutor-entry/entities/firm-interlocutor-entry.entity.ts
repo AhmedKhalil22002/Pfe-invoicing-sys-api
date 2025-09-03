@@ -6,7 +6,7 @@ import {
   Column,
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
-import { FirmEntity } from 'src/modules/firm/repositories/entities/firm.entity';
+import { FirmEntity } from 'src/modules/firm/entities/firm.entity';
 import { InterlocutorEntity } from 'src/modules/interlocutor/entities/interlocutor.entity';
 
 @Entity('firm_interlocutor_entry')

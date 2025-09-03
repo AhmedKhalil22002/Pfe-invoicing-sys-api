@@ -1,19 +1,21 @@
 import { Module } from '@nestjs/common';
 import { FirmService } from './services/firm.service';
-import { FirmRepositoryModule } from './repositories/firm.repository.module';
 import { InterlocutorModule } from '../interlocutor/Interlocutor.module';
 import { AddressModule } from '../address/address.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { ActivityModule } from '../activity/activity.module';
 import { PaymentConditionModule } from '../payment-condition/payment-condition.module';
 import { FirmInterlocutorEntryModule } from '../firm-interlocutor-entry/firm-interlocutor-entry.module';
+import { FirmRepository } from './repositories/firm.repository';
+import { FirmEntity } from './entities/firm.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   controllers: [],
-  providers: [FirmService],
-  exports: [FirmService],
+  providers: [FirmRepository,FirmService],
+  exports: [FirmRepository,FirmService],
   imports: [
-    FirmRepositoryModule,
+   TypeOrmModule.forFeature([FirmEntity]) ,
     ActivityModule,
     AddressModule,
     CurrencyModule,
