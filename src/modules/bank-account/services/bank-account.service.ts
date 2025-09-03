@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
 import { BankAccountEntity } from '../entities/bank-account.entity';
 import { BankAccountNotFoundException } from '../errors/bank-account.notfound.error';
 import { ResponseBankAccountDto } from '../dtos/bank-account.response.dto';
 import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { BankAccountAlreadyExistsException } from '../errors/bank-account.alreadyexists.error';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 import { BankAccountCannotBeDeletedException } from '../errors/bank-account.cannotbedeleted.error';
 import { BankAccountRepository } from '../repositories/bank-account.repository';
 

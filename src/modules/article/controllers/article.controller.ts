@@ -9,13 +9,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 import { ArticleService } from '../services/article.service';
 import { ResponseArticleDto } from '../dtos/article.response.dto';
 import { CreateArticleDto } from '../dtos/article.create.dto';
 import { UpdateArticleDto } from '../dtos/article.update.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('article')
 @Controller({
