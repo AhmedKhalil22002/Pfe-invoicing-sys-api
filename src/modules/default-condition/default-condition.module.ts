@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { DefaultConditionService } from './services/default-condition.service';
-import { DefaultConditionRepositoryModule } from './repositories/default-condition.repository.module';
 import { QuotationModule } from '../quotation/quotation.module';
+import { DefaultConditionRepository } from './repositories/default-condition.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DefaultConditionEntity } from './entities/default-condition.entity';
 
 @Module({
   controllers: [],
-  providers: [DefaultConditionService],
-  exports: [DefaultConditionService],
-  imports: [DefaultConditionRepositoryModule, QuotationModule],
+  providers: [DefaultConditionRepository,DefaultConditionService],
+  exports: [DefaultConditionRepository,DefaultConditionService],
+  imports: [TypeOrmModule.forFeature([DefaultConditionEntity]), QuotationModule],
 })
 export class DefaultConditionModule {}
