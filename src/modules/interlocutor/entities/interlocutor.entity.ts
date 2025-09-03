@@ -1,5 +1,5 @@
 import { SOCIAL_TITLES } from 'src/app/enums/social-titles.enum';
-import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
+import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
 import { FirmInterlocutorEntryEntity } from 'src/modules/firm-interlocutor-entry/entities/firm-interlocutor-entry.entity';
 import {
   Entity,
