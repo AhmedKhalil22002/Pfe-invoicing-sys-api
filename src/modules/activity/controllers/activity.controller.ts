@@ -22,12 +22,10 @@ import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { Request as ExpressRequest } from 'express';
 import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { toDto, toDtoArray } from 'src/shared/database-v2/utils/dtos';
 
 @ApiTags('activity')
-@Controller({
-  version: '1',
-  path: '/activity',
-})
+@Controller({ version: '1', path: '/activity' })
 @UseInterceptors(LogInterceptor)
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
@@ -36,7 +34,10 @@ export class ActivityController {
   async findAll(
     @Query() options: IQueryObject,
   ): Promise<ResponseActivityDto[]> {
-    return await this.activityService.findAll(options);
+    return toDtoArray(
+      ResponseActivityDto,
+      await this.activityService.findAll(options),
+    );
   }
 
   @Get('/list')
@@ -44,23 +45,20 @@ export class ActivityController {
   async findAllPaginated(
     @Query() query: IQueryObject,
   ): Promise<PageDto<ResponseActivityDto>> {
-    return await this.activityService.findAllPaginated(query);
+    const paginated = await this.activityService.findAllPaginated(query);
+    return {
+      meta: paginated.meta,
+      data: toDtoArray(ResponseActivityDto, paginated.data),
+    };
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
-  async findOneById(
-    @Param('id') id: number,
-    @Query() query: IQueryObject,
-  ): Promise<ResponseActivityDto> {
-    query.filter
-      ? (query.filter += `,id||$eq||${id}`)
-      : (query.filter = `id||$eq||${id}`);
-    return await this.activityService.findOneByCondition(query);
+  @ApiParam({ name: 'id', type: 'number', required: true })
+  async findOneById(@Param('id') id: number): Promise<ResponseActivityDto> {
+    return toDto(
+      ResponseActivityDto,
+      await this.activityService.findOneById(id),
+    );
   }
 
   @Post('')
@@ -71,14 +69,10 @@ export class ActivityController {
   ): Promise<ResponseActivityDto> {
     const activty = await this.activityService.save(createActivityDto);
     req.logInfo = { id: activty.id };
-    return activty;
+    return toDto(ResponseActivityDto, activty);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.ACTIVITY_UPDATED)
   async update(
@@ -87,14 +81,13 @@ export class ActivityController {
     @Request() req: ExpressRequest,
   ): Promise<ResponseActivityDto> {
     req.logInfo = { id };
-    return await this.activityService.update(id, updateActivityDto);
+    return toDto(
+      ResponseActivityDto,
+      await this.activityService.update(id, updateActivityDto),
+    );
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.ACTIVITY_DELETED)
   async delete(
@@ -102,6 +95,9 @@ export class ActivityController {
     @Request() req: ExpressRequest,
   ): Promise<ResponseActivityDto> {
     req.logInfo = { id };
-    return await this.activityService.softDelete(id);
+    return toDto(
+      ResponseActivityDto,
+      await this.activityService.softDelete(id),
+    );
   }
 }
