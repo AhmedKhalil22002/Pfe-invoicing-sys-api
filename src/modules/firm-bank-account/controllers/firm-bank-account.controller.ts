@@ -11,9 +11,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
@@ -23,6 +22,7 @@ import { ResponseFirmBankAccountDto } from '../dtos/firm-bank-account.response.d
 import { CreateFirmBankAccountDto } from '../dtos/firm-bank-account.create.dto';
 import { UpdateFirmBankAccountDto } from '../dtos/firm-bank-account.update.dto';
 import { UserService } from 'src/modules/user/services/user.service';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
 
 @ApiTags('bank-account')
 @Controller({
