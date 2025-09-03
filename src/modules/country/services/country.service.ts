@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CountryRepository } from '../repositories/repository/country.repository';
-import { CountryEntity } from '../repositories/entities/country.entity';
+import { CountryRepository } from '../repositories/country.repository';
+import { CountryEntity } from '../entities/country.entity';
 import { CreateCountryDto } from '../dtos/country.create.dto';
 import { CountryNotFoundException } from '../errors/country.notfound.error';
 import { CountryAlreadyExistsException } from '../errors/country.alreadyexists.error';

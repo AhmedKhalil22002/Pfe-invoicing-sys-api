@@ -1,5 +1,5 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { CountryEntity } from 'src/modules/country/repositories/entities/country.entity';
+import { CountryEntity } from 'src/modules/country/entities/country.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
