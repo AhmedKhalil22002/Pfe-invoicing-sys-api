@@ -5,8 +5,8 @@ import { FirmInterlocutorEntryNotFoundException } from '../errors/firm-interlocu
 import { CreateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.create.dto';
 import { FirmInterlocutorEntryEntity } from '../entities/firm-interlocutor-entry.entity';
 import { UpdateFirmInterlocutorEntryDto } from '../dtos/firm-interlocutor-entry.update.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 import { FindOneOptions } from 'typeorm';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class FirmInterlocutorEntryService {
   async save(
     createFirmInterlocutorEntryDto: CreateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
-    const existing = await this.firmInterlocutorEntryRepository.findByCondition(
+    const existing = await this.firmInterlocutorEntryRepository.findOne(
       {
         where: {
           firmId: createFirmInterlocutorEntryDto.firmId,
@@ -84,7 +84,7 @@ export class FirmInterlocutorEntryService {
     updateFirmInterlocutorEntryDto: UpdateFirmInterlocutorEntryDto,
   ): Promise<FirmInterlocutorEntryEntity> {
     const existingEntry =
-      await this.firmInterlocutorEntryRepository.findByCondition({
+      await this.firmInterlocutorEntryRepository.findOne({
         where: { id },
       });
     return await this.firmInterlocutorEntryRepository.save({

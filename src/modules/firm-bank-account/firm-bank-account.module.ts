@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { FirmBankAccountRepositoryModule } from './repositories/firm-bank-account.repository.module';
 import { FirmBankAccountService } from './services/firm-bank-account.service';
 import { PermissionModule } from '../permission/permission.module';
 import { UsersModule } from '../user/user.module';
+import { FirmBankAccountRepository } from './repositories/firm-bank-account.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { FirmBankAccountEntity } from './entities/firm-bank-account.entity';
 
 @Module({
   controllers: [],
-  providers: [FirmBankAccountService],
-  exports: [FirmBankAccountService],
-  imports: [FirmBankAccountRepositoryModule, PermissionModule, UsersModule],
+  providers: [FirmBankAccountRepository,FirmBankAccountService],
+  exports: [FirmBankAccountRepository,FirmBankAccountService],
+  imports: [TypeOrmModule.forFeature([FirmBankAccountEntity]), PermissionModule, UsersModule],
 })
 export class FirmBankAccountModule {}
