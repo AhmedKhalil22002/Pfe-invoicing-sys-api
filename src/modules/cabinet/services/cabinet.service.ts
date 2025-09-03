@@ -47,7 +47,7 @@ export class CabinetService {
     await this.activityService.findOneById(createCabinetDto.activityId);
     await this.currencyService.findOneById(createCabinetDto.currencyId);
 
-    const existingCabinetByName = await this.cabinetRepository.findByCondition({
+    const existingCabinetByName = await this.cabinetRepository.findOne({
       where: { enterpriseName: createCabinetDto.enterpriseName },
     });
 
@@ -55,7 +55,7 @@ export class CabinetService {
       throw new EnterpriseNameAlreadyExistsException();
     }
 
-    const existingCabinetByTaxId = await this.cabinetRepository.findByCondition(
+    const existingCabinetByTaxId = await this.cabinetRepository.findOne(
       {
         where: { taxIdNumber: createCabinetDto.taxIdNumber },
       },

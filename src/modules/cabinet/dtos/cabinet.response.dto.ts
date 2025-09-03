@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
+import { ResponseDtoHelper } from 'src/shared/database-v2/dtos/database.response.dto';
 import { ResponseActivityDto } from 'src/modules/activity/dtos/activity.response.dto';
 import { ResponseAddressDto } from 'src/modules/address/dtos/address.response.dto';
 import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
