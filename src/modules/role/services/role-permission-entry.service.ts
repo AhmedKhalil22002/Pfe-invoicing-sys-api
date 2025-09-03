@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { RolePermissionEntryRepository } from '../repositories/role-permission.repository';
 import { RolePermissionEntryEntity } from '../entities/role-permission-entry.entity';
@@ -7,9 +6,10 @@ import { RolePermissionEntryNotFoundException } from '../errors/role-premission-
 import { ResponseRolePermissionEntryDto } from '../dtos/role-permission-entry.response.dto';
 import { CreateRolePermissionEntryDto } from '../dtos/role-permission-entry.create.dto';
 import { UpdateRolePermissionEntryDto } from '../dtos/role-permission-entry.update.dto';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @Injectable()
 export class RolePermissionEntryService {

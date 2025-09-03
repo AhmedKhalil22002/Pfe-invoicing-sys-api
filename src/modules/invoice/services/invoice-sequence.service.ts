@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppConfigService } from 'src/shared/app-config/services/app-config.service';
-import { AppConfigEntity } from 'src/shared/app-config/repositories/entities/app-config.entity';
+import { AppConfigEntity } from 'src/shared/app-config/entities/app-config.entity';
 import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequentialNotFoundException } from '../errors/invoice-sequential.error';
@@ -39,9 +39,7 @@ export class InvoiceSequenceService {
     this.wsGateway.sendToRoom(
       WSRoom.INVOICE_SEQUENCE,
       'invoice-sequence-updated',
-      {
-        value: sequence.value.next + 1,
-      },
+      { value: sequence.value.next + 1 },
     );
     return formSequential(
       sequence.value.prefix,

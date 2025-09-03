@@ -4,9 +4,6 @@ import { CreateInvoiceDto } from './invoice.create.dto';
 import { UpdateInvoiceUploadDto } from './invoice-upload.update.dto';
 
 export class UpdateInvoiceDto extends CreateInvoiceDto {
-  @ApiProperty({ example: 1, type: Number })
-  id: number;
-
   @ApiProperty({ required: false })
   @IsOptional()
   uploads?: UpdateInvoiceUploadDto[];

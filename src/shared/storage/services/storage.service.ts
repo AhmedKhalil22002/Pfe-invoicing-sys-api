@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UploadRepository } from '../repositories/repository/upload.repository';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
-import { UploadEntity } from '../repositories/entities/upload.entity';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { UploadEntity } from '../entities/upload.entity';
 import { FindManyOptions } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as mime from 'mime-types';
@@ -14,6 +11,9 @@ import { UploadNotFoundException } from '../errors/upload.not-found.error';
 import { FileNotFoundException } from '../errors/file.not-found.error';
 import { ReadStream } from 'typeorm/platform/PlatformTools';
 import { ConfigService } from '@nestjs/config';
+import { UploadRepository } from '../repositories/upload.repository';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 
 @Injectable()
 export class StorageService {

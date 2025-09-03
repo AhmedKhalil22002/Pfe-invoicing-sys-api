@@ -30,10 +30,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
           infer: true,
         }) === true,
       keepConnectionAlive: true,
-      logging: false,
+      logging: true,
       entities: [
-        __dirname + '/../../**/*.entity{.ts,.js}',
+        // __dirname + '/../../../**/*.entity{.ts,.js}',
         __dirname + '/../../../modules/**/*.entity{.ts,.js}',
+        __dirname + '/../../../shared/**/*.entity{.ts,.js}',
       ],
       extra: {
         ssl: this.configService.get('database.sslEnabled', { infer: true })

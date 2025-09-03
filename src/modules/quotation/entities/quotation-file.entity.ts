@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
 import { QuotationEntity } from './quotation.entity';
-import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
+import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 
 @Entity('quotation-upload')
 export class QuotationUploadEntity extends EntityHelper {

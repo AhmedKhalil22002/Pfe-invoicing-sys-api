@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { LoggerRepository } from '../repositories/repository/logger.repository';
-import { LoggerEntity } from '../repositories/entities/logger.entity';
+import { LoggerRepository } from '../repositories/logger.repository';
+import { LoggerEntity } from '../entities/logger.entity';
 import { LogNotFoundException } from '../errors/log.notfound.error';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { WSRoom } from 'src/app/enums/ws-room.enum';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @Injectable()
 export class LoggerService {

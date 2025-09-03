@@ -34,9 +34,7 @@ export class FirmService {
   ) {}
 
   async findOneById(id: number): Promise<FirmEntity> {
-    const firm = await this.firmRepository.findByCondition({
-      where: { id },
-    });
+    const firm = await this.firmRepository.findOneById(id);
     if (!firm) {
       throw new FirmNotFoundException();
     }
@@ -88,7 +86,7 @@ export class FirmService {
   }
 
   async save(createFirmDto: CreateFirmDto): Promise<FirmEntity> {
-    let firm = await this.firmRepository.findByCondition({
+    let firm = await this.firmRepository.findOne({
       where: { name: createFirmDto.name },
     });
     if (firm) {
@@ -96,7 +94,7 @@ export class FirmService {
     }
 
     if (!createFirmDto.isPerson) {
-      firm = await this.firmRepository.findByCondition({
+      firm = await this.firmRepository.findOne({
         where: { taxIdNumber: createFirmDto.taxIdNumber },
       });
 
@@ -145,7 +143,7 @@ export class FirmService {
   async update(id: number, updateFirmDto: UpdateFirmDto): Promise<FirmEntity> {
     //check if new taxIdNumber already exists & throw error if so
     if (updateFirmDto.taxIdNumber) {
-      const firm = await this.firmRepository.findByCondition({
+      const firm = await this.firmRepository.findOne({
         where: { taxIdNumber: updateFirmDto.taxIdNumber },
       });
       if (firm && firm.id !== id) {

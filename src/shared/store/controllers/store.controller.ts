@@ -1,10 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { StoreService } from '../services/store.service';
 import { StoreEntity } from '../entites/store.entity';
 import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 
 @ApiTags('store')
 @Controller({

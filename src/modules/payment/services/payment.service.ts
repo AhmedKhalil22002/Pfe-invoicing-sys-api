@@ -16,6 +16,7 @@ import { CurrencyService } from 'src/modules/currency/services/currency.service'
 import { PaymentUploadService } from './payment-upload.service';
 import { ResponsePaymentUploadDto } from '../dtos/payment-upload.response.dto';
 import { PaymentEntity } from '../entities/payment.entity';
+import { PaymentUploadEntity } from '../entities/payment-file.entity';
 
 @Injectable()
 export class PaymentService {
@@ -115,12 +116,20 @@ export class PaymentService {
     id: number,
     updatePaymentDto: UpdatePaymentDto,
   ): Promise<PaymentEntity> {
-    const existingPayment = await this.findOneByCondition({
-      filter: `id||$eq||${id}`,
-      join: 'invoices,uploads',
-    });
+    const { uploads: existingUploads, ...existingPayment } =
+      await this.paymentRepository.findOne({
+        where: { id },
+        relations: ['invoices', 'uploads'],
+      });
+
     await this.paymentInvoiceEntryService.softDeleteMany(
       existingPayment.invoices.map((entry) => entry.id),
+    );
+
+    const updatedUploads = await Promise.all(
+      updatePaymentDto.uploads.map((u) =>
+        this.paymentUploadService.findOneById(u.id),
+      ),
     );
 
     // Handle uploads - manage existing, new, and eliminated uploads
@@ -128,9 +137,12 @@ export class PaymentService {
       keptItems: keptUploads,
       newItems: newUploads,
       eliminatedItems: eliminatedUploads,
-    } = await this.paymentRepository.updateAssociations({
-      updatedItems: updatePaymentDto.uploads,
-      existingItems: existingPayment.uploads,
+    } = await this.paymentRepository.updateAssociations<
+      Pick<PaymentUploadEntity, 'id' | 'paymentId' | 'uploadId'>
+    >({
+      keys: ['paymentId', 'uploadId'],
+      updatedItems: updatedUploads,
+      existingItems: existingUploads,
       onDelete: (id: number) => this.paymentUploadService.softDelete(id),
       onCreate: (entity: ResponsePaymentUploadDto) =>
         this.paymentUploadService.save(entity.paymentId, entity.uploadId),

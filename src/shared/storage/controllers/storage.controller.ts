@@ -11,16 +11,13 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { StorageService } from '../services/storage.service';
-import { UploadEntity } from '../repositories/entities/upload.entity';
+import { UploadEntity } from '../entities/upload.entity';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 
 @ApiTags('storage')
-@Controller({
-  version: '1',
-  path: '/storage',
-})
+@Controller({ version: '1', path: '/storage' })
 export class StorageController {
   constructor(private readonly storageService: StorageService) {}
 
@@ -37,13 +34,7 @@ export class StorageController {
     schema: {
       type: 'object',
       properties: {
-        files: {
-          type: 'array',
-          items: {
-            type: 'string',
-            format: 'binary',
-          },
-        },
+        files: { type: 'array', items: { type: 'string', format: 'binary' } },
       },
     },
   })
@@ -59,12 +50,7 @@ export class StorageController {
   @ApiBody({
     schema: {
       type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
+      properties: { file: { type: 'string', format: 'binary' } },
     },
   })
   @Post('upload')

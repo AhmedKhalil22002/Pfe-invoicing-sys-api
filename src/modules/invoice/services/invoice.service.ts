@@ -6,7 +6,7 @@ import { FirmService } from 'src/modules/firm/services/firm.service';
 import { InterlocutorService } from 'src/modules/interlocutor/services/interlocutor.service';
 import { InvoicingCalculationsService } from 'src/shared/calculations/services/invoicing.calculations.service';
 import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
-import { FindManyOptions, FindOneOptions, UpdateResult } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PdfService } from 'src/shared/pdf/services/pdf.service';
 import { format } from 'date-fns';
 import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
@@ -23,18 +23,17 @@ import { InvoiceEntity } from '../entities/invoice.entity';
 import { ResponseInvoiceDto } from '../dtos/invoice.response.dto';
 import { CreateInvoiceDto } from '../dtos/invoice.create.dto';
 import { UpdateInvoiceDto } from '../dtos/invoice.update.dto';
-import { ResponseInvoiceUploadDto } from '../dtos/invoice-upload.response.dto';
 import { ArticleInvoiceEntryEntity } from '../entities/article-invoice-entry.entity';
 import { DuplicateInvoiceDto } from '../dtos/invoice.duplicate.dto';
 import { INVOICE_STATUS } from '../enums/invoice-status.enum';
 import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { TaxWithholdingService } from 'src/modules/tax-withholding/services/tax-withholding.service';
 import { ciel } from 'src/utils/number.utils';
 import { parseSequential } from 'src/utils/sequence.utils';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
+import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
 
 @Injectable()
 export class InvoiceService {
@@ -80,10 +79,7 @@ export class InvoiceService {
     const digitsAferComma = invoice.currency.digitAfterComma;
     if (invoice) {
       const data = {
-        meta: {
-          ...invoice.invoiceMetaData,
-          type: 'DEVIS',
-        },
+        meta: { ...invoice.invoiceMetaData, type: 'DEVIS' },
         invoice: {
           ...invoice,
           date: format(invoice.date, 'dd/MM/yyyy'),
@@ -177,10 +173,7 @@ export class InvoiceService {
           })
         : null;
 
-    return {
-      next: nextInvoice,
-      previous: previousInvoice,
-    };
+    return { next: nextInvoice, previous: previousInvoice };
   }
 
   @Transactional()
@@ -359,9 +352,16 @@ export class InvoiceService {
   ): Promise<InvoiceEntity> {
     // Retrieve the existing invoice with necessary relations
     const { uploads: existingUploads, ...existingInvoice } =
-      await this.findOneByCondition({
-        filter: `id||$eq||${id}`,
-        join: 'articleInvoiceEntries,invoiceMetaData,uploads,taxWithholding',
+      await this.invoiceRepository.findOne({
+        // filter: `id||$eq||${id}`,
+        // join: 'articleInvoiceEntries,invoiceMetaData,uploads,taxWithholding',
+        where: { id },
+        relations: [
+          'articleInvoiceEntries',
+          'invoiceMetaData',
+          'uploads',
+          'taxWithholding',
+        ],
       });
 
     // Fetch and validate related entities
@@ -459,17 +459,27 @@ export class InvoiceService {
       }
     }
 
+    const updatedUploads = await Promise.all(
+      updateInvoiceDto.uploads.map((u) =>
+        this.invoiceUploadService.findOneById(u.id),
+      ),
+    );
+
     // Handle uploads - manage existing, new, and eliminated uploads
     const {
       keptItems: keptUploads,
       newItems: newUploads,
       eliminatedItems: eliminatedUploads,
-    } = await this.invoiceRepository.updateAssociations({
-      updatedItems: updateInvoiceDto.uploads,
+    } = await this.invoiceRepository.updateAssociations<
+      Pick<InvoiceUploadEntity, 'id' | 'invoiceId' | 'uploadId'>
+    >({
+      keys: ['invoiceId', 'uploadId'],
+      updatedItems: updatedUploads,
       existingItems: existingUploads,
-      onDelete: (id: number) => this.invoiceUploadService.softDelete(id),
-      onCreate: (entity: ResponseInvoiceUploadDto) =>
+      onCreate: (entity) =>
         this.invoiceUploadService.save(entity.invoiceId, entity.uploadId),
+      onDelete: (id: number) =>
+        this.invoiceUploadService.softDelete(existingUploads[id].id),
     });
 
     // Save and return the updated invoice with all updated details
@@ -490,9 +500,9 @@ export class InvoiceService {
 
   async updateFields(
     id: number,
-    dict: QueryDeepPartialEntity<InvoiceEntity>,
-  ): Promise<UpdateResult> {
-    return this.invoiceRepository.update(id, dict);
+    updateInvoiceDto: UpdateInvoiceDto,
+  ): Promise<InvoiceEntity> {
+    return this.invoiceRepository.update(id, updateInvoiceDto);
   }
 
   async duplicate(

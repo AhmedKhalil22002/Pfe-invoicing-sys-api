@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { RoleRepository } from '../repositories/role.repository';
 import { RoleEntity } from '../entities/role.entity';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { RoleNotFoundException } from '../errors/role.notfound.error';
 import { ResponseRoleDto } from '../dtos/role.response.dto';
 import { CreateRoleDto } from '../dtos/role.create.dto';
 import { UpdateRoleDto } from '../dtos/role.update.dto';
 import { RolePermissionEntryService } from './role-permission-entry.service';
-import { ResponseRolePermissionEntryDto } from '../dtos/role-permission-entry.response.dto';
 import { Transactional } from '@nestjs-cls/transactional';
-import { CreateRolePermissionEntryDto } from '../dtos/role-permission-entry.create.dto';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
+import { PageMetaDto } from 'src/shared/database-v2/dtos/database.page-meta.dto';
 
 @Injectable()
 export class RoleService {
@@ -101,36 +99,7 @@ export class RoleService {
 
   @Transactional()
   async update(id: number, updateRoleDto: UpdateRoleDto): Promise<RoleEntity> {
-    const { permissionsIds, ...sanitizedUpdateRoleDto } = updateRoleDto;
-    const existingRole = await this.findOneByCondition({
-      filter: `id||$eq||${id}`,
-      join: 'permissionsEntries',
-    });
-
-    await this.roleRepository.update(id, {
-      ...sanitizedUpdateRoleDto,
-    });
-    const updatedPermissions = permissionsIds.map(
-      (id) =>
-        ({
-          permissionId: id,
-          roleId: existingRole.id,
-        }) as ResponseRolePermissionEntryDto,
-    );
-    this.roleRepository.updateAssociations2({
-      existingItems: existingRole.permissionsEntries,
-      updatedItems: updatedPermissions,
-      keys: ['roleId', 'permissionId'],
-      onCreate: async (
-        createRolePermissionEntryDto: CreateRolePermissionEntryDto,
-      ) => {
-        this.rolePermissionEntryService.save(createRolePermissionEntryDto);
-      },
-      onDelete: async (id: number) => {
-        this.rolePermissionEntryService.softDelete(id);
-      },
-    });
-    return this.findOneById(id);
+    return this.roleRepository.update(id, updateRoleDto);
   }
 
   async softDelete(id: number): Promise<RoleEntity> {

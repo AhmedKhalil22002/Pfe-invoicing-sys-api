@@ -51,10 +51,7 @@ export class StoreService {
     );
 
     const pageMetaDto = new PageMetaDto({
-      pageOptionsDto: {
-        page: Number(query.page),
-        take: Number(query.limit),
-      },
+      pageOptionsDto: { page: Number(query.page), take: Number(query.limit) },
       itemCount: count,
     });
 

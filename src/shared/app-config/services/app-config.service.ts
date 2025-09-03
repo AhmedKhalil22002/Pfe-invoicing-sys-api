@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfigRepository } from '../repositories/repository/app-config.repository';
-import { AppConfigEntity } from '../repositories/entities/app-config.entity';
+import { AppConfigRepository } from '../repositories/app-config.repository';
+import { AppConfigEntity } from '../entities/app-config.entity';
 import { AppConfigNotFoundException } from '../errors/app-config.notfound.error';
 import { ResponseAppConfigDto } from '../dtos/app-config.response';
 import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { AppConfigAlreadyExistsException } from '../errors/app-config.alreadyexists.error';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions } from 'typeorm';
-import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { QueryBuilder } from 'src/shared/database-v2/utils/database-query-builder';
 
 @Injectable()
 export class AppConfigService {
@@ -31,9 +31,7 @@ export class AppConfigService {
   }
 
   async findOneByName(key: string): Promise<AppConfigEntity | null> {
-    const config = await this.appConfigRepository.findByCondition({
-      where: { key },
-    });
+    const config = await this.appConfigRepository.findOne({ where: { key } });
     if (!config) {
       return null;
     }
@@ -65,10 +63,7 @@ export class AppConfigService {
     updateAppConfigDto: UpdateAppConfigDto,
   ): Promise<AppConfigEntity> {
     const config = await this.findOneById(id);
-    return this.appConfigRepository.save({
-      ...config,
-      ...updateAppConfigDto,
-    });
+    return this.appConfigRepository.save({ ...config, ...updateAppConfigDto });
   }
 
   async softDelete(id: number): Promise<AppConfigEntity> {

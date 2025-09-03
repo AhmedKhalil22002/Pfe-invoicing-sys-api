@@ -74,10 +74,7 @@ export class QuotationService {
     const digitsAferComma = quotation.currency.digitAfterComma;
     if (quotation) {
       const data = {
-        meta: {
-          ...quotation.quotationMetaData,
-          type: 'DEVIS',
-        },
+        meta: { ...quotation.quotationMetaData, type: 'DEVIS' },
         quotation: {
           ...quotation,
           date: format(quotation.date, 'dd/MM/yyyy'),
@@ -292,11 +289,7 @@ export class QuotationService {
           );
       }
     }
-    return {
-      keptUploads,
-      newUploads,
-      eliminatedUploads,
-    };
+    return { keptUploads, newUploads, eliminatedUploads };
   }
 
   @Transactional()
@@ -460,10 +453,7 @@ export class QuotationService {
     status: QUOTATION_STATUS,
   ): Promise<QuotationEntity> {
     const quotation = await this.quotationRepository.findOneById(id);
-    return this.quotationRepository.save({
-      id: quotation.id,
-      status,
-    });
+    return this.quotationRepository.save({ id: quotation.id, status });
   }
 
   async updateMany(
@@ -484,9 +474,7 @@ export class QuotationService {
     const currentDate = new Date();
     const expiredQuotations: QuotationEntity[] =
       await this.quotationRepository.findAll({
-        where: {
-          status: QUOTATION_STATUS.Sent,
-        },
+        where: { status: QUOTATION_STATUS.Sent },
       });
     const quotationsToExpire = expiredQuotations.filter((quotation) =>
       isAfter(currentDate, new Date(quotation.dueDate)),

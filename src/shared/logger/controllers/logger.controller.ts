@@ -1,16 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LoggerService } from '../services/logger.service';
-import { LoggerEntity } from '../repositories/entities/logger.entity';
+import { LoggerEntity } from '../entities/logger.entity';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @ApiTags('logger')
-@Controller({
-  version: '1',
-  path: '/logger',
-})
+@Controller({ version: '1', path: '/logger' })
 export class LoggerController {
   constructor(private readonly loggerService: LoggerService) {}
 

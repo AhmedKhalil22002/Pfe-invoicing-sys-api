@@ -5,8 +5,8 @@ import { MigrationEntity } from './entities/migration.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MigrationEntity])],
   providers: [MigrationService, MigrationRepository],
   exports: [MigrationService],
+  imports: [TypeOrmModule.forFeature([MigrationEntity])],
 })
 export class DatabaseModule {}

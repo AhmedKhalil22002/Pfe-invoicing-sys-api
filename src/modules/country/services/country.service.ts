@@ -22,7 +22,7 @@ export class CountryService {
   }
 
   async save(createCountryDto: CreateCountryDto): Promise<CountryEntity> {
-    const existingCountry = await this.countryRepository.findByCondition({
+    const existingCountry = await this.countryRepository.findOne({
       where: { alpha2code: createCountryDto.alpha2code },
     });
     if (existingCountry) {
@@ -35,7 +35,7 @@ export class CountryService {
     createCountryDto: CreateCountryDto[],
   ): Promise<CountryEntity[]> {
     for (const dto of createCountryDto) {
-      const existingCountry = await this.countryRepository.findByCondition({
+      const existingCountry = await this.countryRepository.findOne({
         where: { alpha2code: dto.alpha2code },
       });
       if (existingCountry) {

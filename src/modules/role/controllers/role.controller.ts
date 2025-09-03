@@ -11,23 +11,20 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { UpdateRoleDto } from '../dtos/role.update.dto';
 import { ResponseRoleDto } from '../dtos/role.response.dto';
 import { CreateRoleDto } from '../dtos/role.create.dto';
 import { RoleService } from '../services/role.service';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { Request as ExpressRequest } from 'express';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @ApiTags('role')
-@Controller({
-  version: '1',
-  path: '/role',
-})
+@Controller({ version: '1', path: '/role' })
 @UseInterceptors(LogInterceptor)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
@@ -46,11 +43,7 @@ export class RoleController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -60,11 +53,7 @@ export class RoleController {
     return this.roleService.findOneByCondition(query);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Post('/duplicate/:id')
   @LogEvent(EVENT_TYPE.ROLE_DUPLICATED)
   async duplicate(
@@ -86,11 +75,7 @@ export class RoleController {
     return role;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.ROLE_UPDATED)
   async update(
@@ -102,11 +87,7 @@ export class RoleController {
     return this.roleService.update(id, updateRoleDto);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.ROLE_DELETED)
   async delete(

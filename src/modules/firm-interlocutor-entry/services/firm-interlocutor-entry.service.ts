@@ -90,11 +90,11 @@ export class FirmInterlocutorEntryService {
     });
   }
 
-  async updatePosition(id: number, position: string): Promise<boolean> {
-    const result = await this.firmInterlocutorEntryRepository.update(id, {
-      position,
-    });
-    return result.affected === 1;
+  async updatePosition(
+    id: number,
+    position: string,
+  ): Promise<FirmInterlocutorEntryEntity> {
+    return this.firmInterlocutorEntryRepository.update(id, { position });
   }
 
   async updateMany(

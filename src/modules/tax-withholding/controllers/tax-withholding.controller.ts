@@ -13,9 +13,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { PageDto } from 'src/shared/database/dtos/database.page.dto';
-import { ApiPaginatedResponse } from 'src/shared/database/decorators/ApiPaginatedResponse';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { TaxWithholdingService } from '../services/tax-withholding.service';
 import { ResponseTaxWithholdingDto } from '../dtos/tax-withholding.response.dto';
 import { CreateTaxWithholdingDto } from '../dtos/tax-withholding.create.dto';
@@ -24,12 +21,12 @@ import { Request as ExpressRequest } from 'express';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
+import { ApiPaginatedResponse } from 'src/shared/database-v2/decorators/api-paginated-resposne.decorator';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
+import { PageDto } from 'src/shared/database-v2/dtos/database.page.dto';
 
 @ApiTags('tax-withholding')
-@Controller({
-  version: '1',
-  path: '/tax-withholding',
-})
+@Controller({ version: '1', path: '/tax-withholding' })
 @UseInterceptors(LogInterceptor)
 export class TaxWithholdingController {
   constructor(private readonly taxWithholdingService: TaxWithholdingService) {}
@@ -50,11 +47,7 @@ export class TaxWithholdingController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(
     @Param('id') id: number,
     @Query() query: IQueryObject,
@@ -84,11 +77,7 @@ export class TaxWithholdingController {
     return tax;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')
   @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_UPDATED)
   async update(
@@ -107,11 +96,7 @@ export class TaxWithholdingController {
     return tax;
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   @Delete('/:id')
   @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_DELETED)
   async delete(

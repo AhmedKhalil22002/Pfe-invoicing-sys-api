@@ -13,13 +13,10 @@ import { AppConfigService } from '../services/app-config.service';
 import { ResponseAppConfigDto } from '../dtos/app-config.response';
 import { CreateAppConfigDto } from '../dtos/app-config.create.dto';
 import { UpdateAppConfigDto } from '../dtos/app-config.update.dto';
-import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
+import { IQueryObject } from 'src/shared/database-v2/interfaces/database-query-options.interface';
 
 @ApiTags('app-config')
-@Controller({
-  version: '1',
-  path: '/app-config',
-})
+@Controller({ version: '1', path: '/app-config' })
 export class AppConfigController {
   constructor(private readonly appConfigService: AppConfigService) {}
 
@@ -31,11 +28,7 @@ export class AppConfigController {
   }
 
   @Get('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async findOneById(@Param('id') id: number): Promise<ResponseAppConfigDto> {
     return await this.appConfigService.findOneById(id);
   }
@@ -48,11 +41,7 @@ export class AppConfigController {
   }
 
   @Put('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdateAppConfigDto,
@@ -61,11 +50,7 @@ export class AppConfigController {
   }
 
   @Delete('/:id')
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-  })
+  @ApiParam({ name: 'id', type: 'number', required: true })
   async delete(@Param('id') id: number): Promise<ResponseAppConfigDto> {
     return await this.appConfigService.softDelete(id);
   }

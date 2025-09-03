@@ -6,7 +6,7 @@ import {
   Column,
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database-v2/interfaces/database.entity.interface';
-import { UploadEntity } from 'src/shared/storage/repositories/entities/upload.entity';
+import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 import { PaymentEntity } from './payment.entity';
 
 @Entity('payment-upload')
