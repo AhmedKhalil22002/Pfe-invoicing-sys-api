@@ -34,7 +34,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         this.configService.get<boolean>('database.dropSchema', {
           infer: true,
         }) ?? false,
-      logging: true,
+      logging:
+        this.configService.get<boolean>('database.logging', {
+          infer: true,
+        }) ?? false,
       entities: [
         __dirname + '/../../**/*.entity{.ts,.js}',
         __dirname + '/../../../modules/**/*.entity{.ts,.js}',

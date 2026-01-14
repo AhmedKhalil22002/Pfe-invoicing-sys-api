@@ -56,6 +56,10 @@ class EnvironmentVariablesValidator {
 
   @IsBoolean()
   @IsOptional()
+  DATABASE_LOGGING: boolean;
+
+  @IsBoolean()
+  @IsOptional()
   DATABASE_REJECT_UNAUTHORIZED: boolean;
 
   @IsString()
@@ -86,6 +90,7 @@ export default registerAs('database', () => {
     synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
     dropSchema: process.env.DATABASE_DROP_SCHEMA === 'true',
     sslEnabled: process.env.DATABASE_SSL_ENABLED === 'true',
+    logging: process.env.DATABASE_LOGGING === 'true',
     rejectUnauthorized: process.env.DATABASE_REJECT_UNAUTHORIZED === 'true',
     ca: process.env.DATABASE_CA,
     key: process.env.DATABASE_KEY,
