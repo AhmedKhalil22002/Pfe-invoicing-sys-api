@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentInvoiceEntryRepository } from '../repositories/payment-invoice-entry.entity';
+import { PaymentInvoiceEntryRepository } from '../repositories/payment-invoice-entry.repository';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ResponsePaymentInvoiceEntryDto } from '../dtos/payment-invoice-entry.response.dto';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';

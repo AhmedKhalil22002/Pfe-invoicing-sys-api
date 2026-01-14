@@ -23,11 +23,11 @@ import { QUOTATION_STATUS } from '../enums/quotation-status.enum';
 import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { Request as ExpressRequest } from 'express';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('quotation')
 @Controller({ version: '1', path: '/quotation' })
@@ -72,7 +72,7 @@ export class QuotationController {
   async generatePdf(
     @Param('id') id: number,
     @Query() query: { template: string },
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ) {
     req.logInfo = { id };
     return this.quotationService.downloadPdf(id, query.template);
@@ -82,7 +82,7 @@ export class QuotationController {
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_CREATED)
   async save(
     @Body() createQuotationDto: CreateQuotationDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseQuotationDto> {
     const quotation = await this.quotationService.save(createQuotationDto);
     req.logInfo = { id: quotation.id };
@@ -93,7 +93,7 @@ export class QuotationController {
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_DUPLICATED)
   async duplicate(
     @Body() duplicateQuotationDto: DuplicateQuotationDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseQuotationDto> {
     const quotation = await this.quotationService.duplicate(
       duplicateQuotationDto,
@@ -117,7 +117,7 @@ export class QuotationController {
   async invoice(
     @Param('id') id: number,
     @Param('create') create: boolean,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseQuotationDto> {
     req.logInfo = { quotationId: id, invoiceId: null };
     const quotation = await this.quotationService.findOneByCondition({
@@ -146,7 +146,7 @@ export class QuotationController {
   async update(
     @Param('id') id: number,
     @Body() updateQuotationDto: UpdateQuotationDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseQuotationDto> {
     req.logInfo = { id };
     return this.quotationService.update(id, updateQuotationDto);
@@ -157,7 +157,7 @@ export class QuotationController {
   @LogEvent(EVENT_TYPE.SELLING_QUOTATION_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseQuotationDto> {
     req.logInfo = { id };
     return this.quotationService.softDelete(id);

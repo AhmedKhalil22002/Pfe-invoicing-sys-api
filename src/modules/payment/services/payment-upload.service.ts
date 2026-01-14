@@ -4,16 +4,16 @@ import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { StorageService } from 'src/shared/storage/services/storage.service';
 import { PaymentUploadRepository } from '../repositories/payment.repository';
 import { PaymentUploadNotFoundException } from '../errors/payment-upload.notfound.error';
 import { PaymentUploadEntity } from '../entities/payment-file.entity';
+import { UploadService } from 'src/shared/uploads/services/upload.service';
 
 @Injectable()
 export class PaymentUploadService {
   constructor(
     private readonly paymentUploadRepository: PaymentUploadRepository,
-    private readonly storageService: StorageService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async findOneById(id: number): Promise<PaymentUploadEntity> {
@@ -80,7 +80,7 @@ export class PaymentUploadService {
     const originalPaymentUpload = await this.findOneById(id);
 
     //Use the StorageService to duplicate the file
-    const duplicatedUpload = await this.storageService.duplicate(
+    const duplicatedUpload = await this.uploadService.duplicate(
       originalPaymentUpload.uploadId,
     );
 
@@ -105,7 +105,7 @@ export class PaymentUploadService {
 
   async softDelete(id: number): Promise<PaymentUploadEntity> {
     const upload = await this.findOneById(id);
-    this.storageService.delete(upload.uploadId);
+    this.uploadService.delete(upload.uploadId);
     this.paymentUploadRepository.softDelete(upload.id);
     return upload;
   }
@@ -113,7 +113,7 @@ export class PaymentUploadService {
   async softDeleteMany(
     quotationUploadEntities: PaymentUploadEntity[],
   ): Promise<PaymentUploadEntity[]> {
-    this.storageService.deleteMany(
+    this.uploadService.deleteMany(
       quotationUploadEntities.map((qu) => qu.upload.id),
     );
     return this.paymentUploadRepository.softDeleteMany(

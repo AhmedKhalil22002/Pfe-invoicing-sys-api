@@ -7,13 +7,13 @@ import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { StorageService } from 'src/shared/storage/services/storage.service';
+import { UploadService } from 'src/shared/uploads/services/upload.service';
 
 @Injectable()
 export class QuotationUploadService {
   constructor(
     private readonly quotationUploadRepository: QuotationUploadRepository,
-    private readonly storageService: StorageService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async findOneById(id: number): Promise<QuotationUploadEntity> {
@@ -83,7 +83,7 @@ export class QuotationUploadService {
     const originalQuotationUpload = await this.findOneById(id);
 
     //Use the StorageService to duplicate the file
-    const duplicatedUpload = await this.storageService.duplicate(
+    const duplicatedUpload = await this.uploadService.duplicate(
       originalQuotationUpload.uploadId,
     );
 
@@ -107,7 +107,7 @@ export class QuotationUploadService {
 
   async softDelete(id: number): Promise<QuotationUploadEntity> {
     const upload = await this.findOneById(id);
-    this.storageService.delete(upload.uploadId);
+    this.uploadService.delete(upload.uploadId);
     this.quotationUploadRepository.softDelete(upload.id);
     return upload;
   }
@@ -115,7 +115,7 @@ export class QuotationUploadService {
   async softDeleteMany(
     quotationUploadEntities: QuotationUploadEntity[],
   ): Promise<QuotationUploadEntity[]> {
-    this.storageService.deleteMany(
+    this.uploadService.deleteMany(
       quotationUploadEntities.map((qu) => qu.upload.id),
     );
     return this.quotationUploadRepository.softDeleteMany(

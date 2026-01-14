@@ -14,15 +14,15 @@ import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { FirmBankAccountService } from '../services/firm-bank-account.service';
 import { ResponseFirmBankAccountDto } from '../dtos/firm-bank-account.response.dto';
 import { CreateFirmBankAccountDto } from '../dtos/firm-bank-account.create.dto';
 import { UpdateFirmBankAccountDto } from '../dtos/firm-bank-account.update.dto';
-import { UserService } from 'src/modules/user/services/user.service';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { UserService } from 'src/modules/user-management/services/user.service';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('bank-account')
 @Controller({ version: '1', path: '/firm-bank-account' })
@@ -88,11 +88,11 @@ export class FirmBankAccountController {
   @LogEvent(EVENT_TYPE.FIRM_BANK_ACCOUNT_CREATED)
   async save(
     @Body() createBankAccountDto: CreateFirmBankAccountDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmBankAccountDto> {
     const bank = await this.bankAccountService.save(createBankAccountDto);
     const lBank = await this.bankAccountService.findOneById(bank.id, ['firm']);
-    const performedBy = await this.userService.findOneById(req.user.id);
+    const performedBy = await this.userService.findOneById(req.user.sub);
     req.logInfo = {
       id: bank.id,
       rib: bank.rib,
@@ -116,10 +116,10 @@ export class FirmBankAccountController {
   async update(
     @Param('id') id: number,
     @Body() updateBankAccountDto: UpdateFirmBankAccountDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmBankAccountDto> {
     const lBank = await this.bankAccountService.findOneById(id, ['firm']);
-    const performedBy = await this.userService.findOneById(req.user.id);
+    const performedBy = await this.userService.findOneById(req.user.sub);
     req.logInfo = {
       id: id,
       rib: lBank.rib,
@@ -142,10 +142,10 @@ export class FirmBankAccountController {
   @LogEvent(EVENT_TYPE.FIRM_BANK_ACCOUNT_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmBankAccountDto> {
     const lBank = await this.bankAccountService.findOneById(id, ['firm']);
-    const performedBy = await this.userService.findOneById(req.user.id);
+    const performedBy = await this.userService.findOneById(req.user.sub);
     req.logInfo = {
       id: id,
       rib: lBank.rib,

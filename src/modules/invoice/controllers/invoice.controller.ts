@@ -23,10 +23,10 @@ import { UpdateInvoiceSequenceDto } from '../dtos/invoice-seqence.update.dto';
 import { UpdateInvoiceDto } from '../dtos/invoice.update.dto';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('invoice')
 @Controller({ version: '1', path: '/invoice' })
@@ -73,7 +73,7 @@ export class InvoiceController {
   async generatePdf(
     @Param('id') id: number,
     @Query() query: { template: string },
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ) {
     req.logInfo = { id };
     return this.invoiceService.downloadPdf(id, query.template);
@@ -83,7 +83,7 @@ export class InvoiceController {
   @LogEvent(EVENT_TYPE.SELLING_INVOICE_CREATED)
   async save(
     @Body() createInvoiceDto: CreateInvoiceDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInvoiceDto> {
     const invoice = await this.invoiceService.save(createInvoiceDto);
     req.logInfo = { id: invoice.id };
@@ -94,7 +94,7 @@ export class InvoiceController {
   @LogEvent(EVENT_TYPE.SELLING_INVOICE_DUPLICATED)
   async duplicate(
     @Body() duplicateInvoiceDto: DuplicateInvoiceDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInvoiceDto> {
     const invoice = await this.invoiceService.duplicate(duplicateInvoiceDto);
     req.logInfo = { id: duplicateInvoiceDto.id, duplicateId: invoice.id };
@@ -115,7 +115,7 @@ export class InvoiceController {
   async update(
     @Param('id') id: number,
     @Body() updateInvoiceDto: UpdateInvoiceDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInvoiceDto> {
     req.logInfo = { id };
     return this.invoiceService.update(id, updateInvoiceDto);
@@ -126,7 +126,7 @@ export class InvoiceController {
   @LogEvent(EVENT_TYPE.SELLING_INVOICE_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInvoiceDto> {
     req.logInfo = { id };
     return this.invoiceService.softDelete(id);

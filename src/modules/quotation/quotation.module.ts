@@ -15,7 +15,6 @@ import { QuotationSequenceService } from './services/quotation-sequence.service'
 import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
 import { BankAccountModule } from '../bank-account/bank-account.module';
-import { StorageModule } from 'src/shared/storage/storage.module';
 import { QuotationUploadService } from './services/quotation-upload.service';
 import { InvoiceModule } from '../invoice/invoice.module';
 import { QuotationEntity } from './entities/quotation.entity';
@@ -28,6 +27,7 @@ import { QuotationMetaDataRepository } from './repositories/quotation-meta-data-
 import { ArticleQuotationEntryRepository } from './repositories/article-quotation-entry.repository';
 import { ArticleQuotationEntryTaxRepository } from './repositories/article-quotation-entry-tax.repository';
 import { QuotationUploadRepository } from './repositories/quotation-upload.repository';
+import { UploadModule } from 'src/shared/uploads/uploads.module';
 
 @Module({
   controllers: [],
@@ -67,7 +67,7 @@ import { QuotationUploadRepository } from './repositories/quotation-upload.repos
     PdfModule,
     GatewaysModule,
     CalculationsModule,
-    StorageModule,
+    UploadModule,
   ],
 })
 export class QuotationModule {}

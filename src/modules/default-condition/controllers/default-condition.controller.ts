@@ -19,9 +19,9 @@ import { CreateDefaultConditionDto } from '../dtos/default-condition.create.dto'
 import { UpdateDefaultConditionDto } from '../dtos/default-condition.update.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('default-condition')
 @Controller({ version: '1', path: '/default-condition' })
@@ -62,7 +62,7 @@ export class DefaultConditionController {
   @LogEvent(EVENT_TYPE.DEFAULT_CONDITION_CREATED)
   async save(
     @Body() createDefaultConditionDto: CreateDefaultConditionDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseDefaultConditionDto> {
     const condition = await this.defaultConditionService.save(
       createDefaultConditionDto,
@@ -77,7 +77,7 @@ export class DefaultConditionController {
   async batchUpdate(
     @Body()
     updateDefaultConditionDtos: UpdateDefaultConditionDto[],
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseDefaultConditionDto[]> {
     req.logInfo = { ids: updateDefaultConditionDtos.map((entry) => entry.id) };
     return await this.defaultConditionService.updateMany(
@@ -91,7 +91,7 @@ export class DefaultConditionController {
   async update(
     @Param('id') id: number,
     @Body() updateDefaultConditionDto: UpdateDefaultConditionDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseDefaultConditionDto> {
     req.logInfo = { id };
     return await this.defaultConditionService.update(
@@ -105,7 +105,7 @@ export class DefaultConditionController {
   @LogEvent(EVENT_TYPE.DEFAULT_CONDITION_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseDefaultConditionDto> {
     req.logInfo = { id };
     return await this.defaultConditionService.softDelete(id);

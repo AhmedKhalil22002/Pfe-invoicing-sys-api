@@ -4,7 +4,7 @@ import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
-import { PaymentRepository } from '../repositories/payment-file.entity';
+import { PaymentRepository } from '../repositories/payment-file.repository';
 import { PaymentNotFoundException } from '../errors/payment.notfound.error';
 import { ResponsePaymentDto } from '../dtos/payment.response.dto';
 import { CreatePaymentDto } from '../dtos/payment.create.dto';

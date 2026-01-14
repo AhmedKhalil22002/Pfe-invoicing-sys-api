@@ -18,10 +18,10 @@ import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { UpdateFirmDto } from '../dtos/firm.update.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { AdvancedRequest } from 'src/types';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 
 @ApiTags('firm')
 @Controller({ version: '1', path: '/firm' })
@@ -58,7 +58,7 @@ export class FirmController {
   @LogEvent(EVENT_TYPE.FIRM_CREATED)
   async save(
     @Body() createFirmDto: CreateFirmDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmDto> {
     const firm = await this.firmService.save(createFirmDto);
     req.logInfo = { id: firm.id };
@@ -71,7 +71,7 @@ export class FirmController {
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdateFirmDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmDto> {
     req.logInfo = { id };
     return await this.firmService.update(id, updateActivityDto);
@@ -82,7 +82,7 @@ export class FirmController {
   @LogEvent(EVENT_TYPE.FIRM_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseFirmDto> {
     req.logInfo = { id };
     return await this.firmService.softDelete(id);

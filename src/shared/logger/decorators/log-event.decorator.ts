@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
+import { EventType } from 'puppeteer';
 
 // Define a custom decorator
-export const LogEvent = (event: EVENT_TYPE) => SetMetadata('event', event);
+export const LogEvent = (event: EventType) => SetMetadata('event', event);

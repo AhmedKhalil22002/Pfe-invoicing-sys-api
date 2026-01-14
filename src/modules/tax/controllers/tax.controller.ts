@@ -20,10 +20,10 @@ import { UpdateTaxDto } from '../dtos/tax.update.dto';
 import { ResponseTaxDto } from '../dtos/tax.response.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('tax')
 @Controller({ version: '1', path: '/tax' })
@@ -60,7 +60,7 @@ export class TaxController {
   @LogEvent(EVENT_TYPE.TAX_CREATED)
   async save(
     @Body() createTaxDto: CreateTaxDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxDto> {
     let tax = await this.taxService.findOneByCondition({
       filter: `label||$eq||${createTaxDto.label}`,
@@ -81,7 +81,7 @@ export class TaxController {
   async update(
     @Param('id') id: number,
     @Body() updateTaxDto: UpdateTaxDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxDto> {
     const tax = await this.taxService.update(id, updateTaxDto);
     if (!tax) {
@@ -96,7 +96,7 @@ export class TaxController {
   @LogEvent(EVENT_TYPE.TAX_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxDto> {
     const tax = await this.taxService.softDelete(id);
     if (!tax) {

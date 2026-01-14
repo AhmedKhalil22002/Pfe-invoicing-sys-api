@@ -3,10 +3,10 @@ import { CabinetService } from './services/cabinet.service';
 import { AddressModule } from '../address/address.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { ActivityModule } from '../activity/activity.module';
-import { StorageModule } from 'src/shared/storage/storage.module';
 import { CabinetRepository } from './repositories/cabinet.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CabinetEntity } from './entities/cabinet.entity';
+import { UploadModule } from 'src/shared/uploads/uploads.module';
 
 @Module({
   controllers: [],
@@ -17,7 +17,7 @@ import { CabinetEntity } from './entities/cabinet.entity';
     ActivityModule,
     AddressModule,
     CurrencyModule,
-    StorageModule,
+    UploadModule,
   ],
 })
 export class CabinetModule {}

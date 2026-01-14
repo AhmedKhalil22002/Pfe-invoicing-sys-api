@@ -18,10 +18,10 @@ import { UpdateInterlocutorDto } from '../dtos/interlocutor.update.dto';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('interlocutor')
 @Controller({ version: '1', path: '/interlocutor' })
@@ -60,7 +60,7 @@ export class InterlocutorController {
   @LogEvent(EVENT_TYPE.INTERLOCUTOR_CREATED)
   async save(
     @Body() createInterlocutorDto: CreateInterlocutorDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInterlocutorDto> {
     const interlocutor = await this.interlocutorService.save(
       createInterlocutorDto,
@@ -75,7 +75,7 @@ export class InterlocutorController {
   async promote(
     @Param('id') id: number,
     @Param('firmId') firmId: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInterlocutorDto> {
     const demoted = await this.interlocutorService.demote(firmId);
     const promoted = await this.interlocutorService.promote(id, firmId);
@@ -93,7 +93,7 @@ export class InterlocutorController {
   async update(
     @Param('id') id: number,
     @Body() updateInterlocutorDto: UpdateInterlocutorDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInterlocutorDto> {
     req.logInfo = { id };
     return await this.interlocutorService.update(id, updateInterlocutorDto);
@@ -104,7 +104,7 @@ export class InterlocutorController {
   @LogEvent(EVENT_TYPE.INTERLOCUTOR_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseInterlocutorDto> {
     req.logInfo = { id };
     return await this.interlocutorService.softDelete(id);

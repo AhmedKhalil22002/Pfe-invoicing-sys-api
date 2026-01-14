@@ -1,22 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+import { UserManagementModule } from 'src/modules/user-management/user-management.module';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './services/auth.service';
-import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from 'src/modules/user/user.module';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { StoreModule } from '../store/store.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), UsersModule, ConfigModule],
+  imports: [UserManagementModule, ConfigModule, StoreModule, MailModule],
   controllers: [],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    AuthService,
-  ],
+  providers: [{ provide: APP_GUARD, useClass: AuthGuard }, AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}

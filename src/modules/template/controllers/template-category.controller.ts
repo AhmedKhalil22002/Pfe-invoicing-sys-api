@@ -14,14 +14,15 @@ import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { TemplateCategoryService } from '../services/template-category.service';
 import { ResponseTemplateCategoryDto } from '../dtos/template-category.response.dto';
 import { CreateTemplateCategoryDto } from '../dtos/template-category.create.dto';
 import { UpdateTemplateCategoryDto } from '../dtos/template-category.update.dto';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EventType } from 'src/app/enums/logger/event-types.enum';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('template-category')
 @Controller({ version: '1', path: '/template-category' })
@@ -59,10 +60,10 @@ export class TemplateCategoryController {
   }
 
   @Post('')
-  @LogEvent(EVENT_TYPE.TEMPLATE_CATEGORY_CREATED)
+  @LogEvent(EventType.TEMPLATE_CATEGORY_CREATED)
   async save(
     @Body() createTemplateCategoryDto: CreateTemplateCategoryDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTemplateCategoryDto> {
     const category = await this.templateCategoryService.save(
       createTemplateCategoryDto,
@@ -77,7 +78,7 @@ export class TemplateCategoryController {
   async update(
     @Param('id') id: number,
     @Body() updateTemplateCategoryDto: UpdateTemplateCategoryDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTemplateCategoryDto> {
     req.logInfo = { id };
     return this.templateCategoryService.update(id, updateTemplateCategoryDto);
@@ -88,7 +89,7 @@ export class TemplateCategoryController {
   @LogEvent(EVENT_TYPE.TEMPLATE_CATEGORY_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTemplateCategoryDto> {
     req.logInfo = { id };
     return this.templateCategoryService.softDelete(id);

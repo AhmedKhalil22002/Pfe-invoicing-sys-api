@@ -1,5 +1,4 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 import { ActivityEntity } from 'src/modules/activity/entities/activity.entity';
 import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import {
@@ -10,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { AddressEntity } from 'src/modules/address/entities/address.entity';
+import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
 
 @Entity('cabinet')
 export class CabinetEntity extends EntityHelper {

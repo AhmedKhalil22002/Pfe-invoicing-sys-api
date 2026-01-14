@@ -8,10 +8,14 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: this.configService.get<string>('database.type', { infer: true }),
-      url: this.configService.get<string>('database.url', { infer: true }),
+      type: this.configService.get<string>('database.type', {
+        infer: true,
+      }) as any,
       host: this.configService.get<string>('database.host', { infer: true }),
-      port: this.configService.get<string>('database.port', { infer: true }),
+      port: parseInt(
+        this.configService.get<string>('database.port', { infer: true }),
+        10,
+      ),
       username: this.configService.get<string>('database.username', {
         infer: true,
       }),
@@ -21,43 +25,40 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('database.name', {
         infer: true,
       }),
+      url: this.configService.get<string>('database.url', { infer: true }),
       synchronize:
         this.configService.get<boolean>('database.synchronize', {
           infer: true,
-        }) === true,
+        }) ?? false,
       dropSchema:
         this.configService.get<boolean>('database.dropSchema', {
           infer: true,
-        }) === true,
-      keepConnectionAlive: true,
+        }) ?? false,
       logging: true,
       entities: [
-        // __dirname + '/../../../**/*.entity{.ts,.js}',
+        __dirname + '/../../**/*.entity{.ts,.js}',
         __dirname + '/../../../modules/**/*.entity{.ts,.js}',
-        __dirname + '/../../../shared/**/*.entity{.ts,.js}',
       ],
-      extra: {
-        ssl: this.configService.get('database.sslEnabled', { infer: true })
-          ? {
-              rejectUnauthorized: this.configService.get<string>(
-                'database.rejectUnauthorized',
-                { infer: true },
-              ),
-              ca:
-                this.configService.get<string>('database.ca', {
-                  infer: true,
-                }) ?? undefined,
-              key:
-                this.configService.get<string>('database.key', {
-                  infer: true,
-                }) ?? undefined,
-              cert:
-                this.configService.get<string>('database.cert', {
-                  infer: true,
-                }) ?? undefined,
-            }
-          : undefined,
-      },
-    } as TypeOrmModuleOptions;
+      extra: this.configService.get<boolean>('database.sslEnabled', {
+        infer: true,
+      })
+        ? {
+            rejectUnauthorized: this.configService.get<boolean>(
+              'database.rejectUnauthorized',
+              { infer: true },
+            ),
+            ca:
+              this.configService.get<string>('database.ca', { infer: true }) ??
+              undefined,
+            key:
+              this.configService.get<string>('database.key', { infer: true }) ??
+              undefined,
+            cert:
+              this.configService.get<string>('database.cert', {
+                infer: true,
+              }) ?? undefined,
+          }
+        : undefined,
+    };
   }
 }

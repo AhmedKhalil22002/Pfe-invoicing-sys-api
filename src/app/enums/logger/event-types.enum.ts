@@ -1,5 +1,7 @@
-export enum EVENT_TYPE {
+export enum EventType {
   //Auth
+  SIGNIN = 'signin',
+
   USER_CREATED = 'user_created',
   USER_UPDATED = 'user_updated',
   USER_DELETED = 'user_deleted',

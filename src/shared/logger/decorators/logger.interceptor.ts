@@ -3,10 +3,10 @@ import { Reflector } from '@nestjs/core';
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import { tap } from 'rxjs';
 import { LoggerService } from '../services/logger.service';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { getTokenPayload } from 'src/shared/auth/utils/token-payload';
 import { AccessTokenPayload } from 'src/shared/auth/interfaces/access-token-payload.interface';
-import { Request } from 'express';
+import { getTokenPayload } from 'src/shared/auth/utils/token-payload';
+import { EventType } from 'src/app/enums/logger/event-types.enum';
+import { AdvancedRequest } from 'src/types';
 
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
@@ -15,26 +15,42 @@ export class LogInterceptor implements NestInterceptor {
     private readonly loggerService: LoggerService,
   ) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
+  intercept(context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
-      tap(async () => {
-        const event = this.reflector.get<EVENT_TYPE>(
+      tap(() => {
+        const event = this.reflector.get<EventType>(
           'event',
           context.getHandler(),
         );
-        if (event) {
-          const request: Request = context.switchToHttp().getRequest();
-          const { method, url, logInfo } = request;
+
+        if (!event) return;
+
+        const request: AdvancedRequest = context.switchToHttp().getRequest();
+        const { method, url, logInfo } = request;
+
+        if (event === EventType.SIGNIN) {
           const payload: AccessTokenPayload = getTokenPayload(request);
 
-          await this.loggerService.save({
+          void this.loggerService.save({
             event,
             logInfo,
             api: url,
             method,
-            userId: payload.sub,
+            userId: payload?.sub,
           });
+
+          return;
         }
+
+        const payload: AccessTokenPayload = getTokenPayload(request);
+
+        void this.loggerService.save({
+          event,
+          logInfo,
+          api: url,
+          method,
+          userId: payload?.sub,
+        });
       }),
     );
   }

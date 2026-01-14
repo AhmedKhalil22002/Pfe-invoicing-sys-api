@@ -17,11 +17,11 @@ import { ResponsePaymentConditionDto } from '../dtos/payment-condition.response.
 import { CreatePaymentConditionDto } from '../dtos/payment-condition.create.dto';
 import { UpdatePaymentConditionDto } from '../dtos/payment-condition.update.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { Request as ExpressRequest } from 'express';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { AdvancedRequest } from 'src/types';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 
 @ApiTags('payment-condition')
 @Controller({ version: '1', path: '/payment-condition' })
@@ -62,7 +62,7 @@ export class PaymentConditionController {
   @LogEvent(EVENT_TYPE.PAYMENT_CONDITION_CREATED)
   async save(
     @Body() createPaymentConditionDto: CreatePaymentConditionDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentConditionDto> {
     const condition = await this.paymentConditionService.save(
       createPaymentConditionDto,
@@ -77,7 +77,7 @@ export class PaymentConditionController {
   async update(
     @Param('id') id: number,
     @Body() updatePaymentConditionDto: UpdatePaymentConditionDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentConditionDto> {
     req.logInfo = { id };
     return this.paymentConditionService.update(id, updatePaymentConditionDto);
@@ -87,7 +87,7 @@ export class PaymentConditionController {
   @Delete('/:id')
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentConditionDto> {
     req.logInfo = { id };
     return this.paymentConditionService.softDelete(id);

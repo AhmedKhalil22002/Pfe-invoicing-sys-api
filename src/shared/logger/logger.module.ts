@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { LoggerService } from './services/logger.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LoggerEntity } from './entities/logger.entity';
-import { LoggerRepository } from './repositories/logger.repository';
+import { LogEntity } from './entities/log.entity';
+import { LogRepository } from './repositories/log.repository';
+import { LogInterceptor } from './decorators/logger.interceptor';
 
 @Module({
   controllers: [],
-  providers: [LoggerService, LoggerRepository],
-  exports: [LoggerService, LoggerRepository],
-  imports: [TypeOrmModule.forFeature([LoggerEntity])],
+  providers: [LogRepository, LoggerService, LogInterceptor],
+  exports: [LoggerService, LogInterceptor],
+  imports: [TypeOrmModule.forFeature([LogEntity])],
 })
 export class LoggerModule {}

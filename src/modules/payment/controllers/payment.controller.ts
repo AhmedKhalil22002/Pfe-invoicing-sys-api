@@ -18,10 +18,10 @@ import { ResponsePaymentDto } from '../dtos/payment.response.dto';
 import { CreatePaymentDto } from '../dtos/payment.create.dto';
 import { UpdatePaymentDto } from '../dtos/payment.update.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('payment')
 @Controller({ version: '1', path: '/payment' })
@@ -58,7 +58,7 @@ export class PaymentController {
   @LogEvent(EVENT_TYPE.SELLING_PAYMENT_CREATED)
   async save(
     @Body() createPaymentDto: CreatePaymentDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentDto> {
     const payment = await this.paymentService.save(createPaymentDto);
     req.logInfo = { id: payment.id };
@@ -71,7 +71,7 @@ export class PaymentController {
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdatePaymentDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentDto> {
     req.logInfo = { id };
     return this.paymentService.update(id, updateActivityDto);
@@ -82,7 +82,7 @@ export class PaymentController {
   @LogEvent(EVENT_TYPE.SELLING_PAYMENT_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponsePaymentDto> {
     req.logInfo = { id };
     return this.paymentService.softDelete(id);

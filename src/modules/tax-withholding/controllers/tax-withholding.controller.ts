@@ -17,13 +17,13 @@ import { TaxWithholdingService } from '../services/tax-withholding.service';
 import { ResponseTaxWithholdingDto } from '../dtos/tax-withholding.response.dto';
 import { CreateTaxWithholdingDto } from '../dtos/tax-withholding.create.dto';
 import { UpdateTaxWithholdingDto } from '../dtos/tax-withholding.update.dto';
-import { Request as ExpressRequest } from 'express';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('tax-withholding')
 @Controller({ version: '1', path: '/tax-withholding' })
@@ -62,7 +62,7 @@ export class TaxWithholdingController {
   @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_CREATED)
   async save(
     @Body() createTaxWithholdingDto: CreateTaxWithholdingDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxWithholdingDto> {
     let tax = await this.taxWithholdingService.findOneByCondition({
       filter: `label||$eq||${createTaxWithholdingDto.label}`,
@@ -83,7 +83,7 @@ export class TaxWithholdingController {
   async update(
     @Param('id') id: number,
     @Body() updateTaxWithholdingDto: UpdateTaxWithholdingDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxWithholdingDto> {
     const tax = await this.taxWithholdingService.update(
       id,
@@ -101,7 +101,7 @@ export class TaxWithholdingController {
   @LogEvent(EVENT_TYPE.TAX_WITHHOLDING_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseTaxWithholdingDto> {
     req.logInfo = { id };
     return this.taxWithholdingService.softDelete(id);

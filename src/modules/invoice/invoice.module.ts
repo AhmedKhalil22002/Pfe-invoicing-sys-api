@@ -9,7 +9,6 @@ import { CalculationsModule } from 'src/shared/calculations/calculations.module'
 import { AppConfigModule } from 'src/shared/app-config/app-config.module';
 import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { BankAccountModule } from '../bank-account/bank-account.module';
-import { StorageModule } from 'src/shared/storage/storage.module';
 import { InvoiceService } from './services/invoice.service';
 import { InvoiceMetaDataService } from './services/invoice-meta-data.service';
 import { InvoiceUploadService } from './services/invoice-upload.service';
@@ -28,6 +27,7 @@ import { ArticleInvoiceEntryTaxEntity } from './entities/article-invoice-entry-t
 import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.entity';
 import { InvoiceUploadEntity } from './entities/invoice-file.entity';
 import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
+import { UploadModule } from 'src/shared/uploads/uploads.module';
 
 @Module({
   controllers: [],
@@ -75,7 +75,7 @@ import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
     PdfModule,
     GatewaysModule,
     CalculationsModule,
-    StorageModule,
+    UploadModule,
   ],
 })
 export class InvoiceModule {}

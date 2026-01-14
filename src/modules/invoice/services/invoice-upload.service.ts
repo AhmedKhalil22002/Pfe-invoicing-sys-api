@@ -4,16 +4,16 @@ import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { StorageService } from 'src/shared/storage/services/storage.service';
 import { InvoiceUploadRepository } from '../repositories/invoice-upload.repository';
 import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
 import { InvoiceUploadNotFoundException } from '../errors/invoice-upload.notfound';
+import { UploadService } from 'src/shared/uploads/services/upload.service';
 
 @Injectable()
 export class InvoiceUploadService {
   constructor(
     private readonly invoiceUploadRepository: InvoiceUploadRepository,
-    private readonly storageService: StorageService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async findOneById(id: number): Promise<InvoiceUploadEntity> {
@@ -80,7 +80,7 @@ export class InvoiceUploadService {
     const originalInvoiceUpload = await this.findOneById(id);
 
     //Use the StorageService to duplicate the file
-    const duplicatedUpload = await this.storageService.duplicate(
+    const duplicatedUpload = await this.uploadService.duplicate(
       originalInvoiceUpload.uploadId,
     );
 
@@ -105,7 +105,7 @@ export class InvoiceUploadService {
 
   async softDelete(id: number): Promise<InvoiceUploadEntity> {
     const upload = await this.findOneById(id);
-    this.storageService.delete(upload.uploadId);
+    this.uploadService.delete(upload.uploadId);
     this.invoiceUploadRepository.softDelete(upload.id);
     return upload;
   }
@@ -113,7 +113,7 @@ export class InvoiceUploadService {
   async softDeleteMany(
     invoiceUploadEntities: InvoiceUploadEntity[],
   ): Promise<InvoiceUploadEntity[]> {
-    this.storageService.deleteMany(
+    this.uploadService.deleteMany(
       invoiceUploadEntities.map((qu) => qu.upload.id),
     );
     return this.invoiceUploadRepository.softDeleteMany(

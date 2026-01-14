@@ -18,10 +18,10 @@ import { CreateBankAccountDto } from '../dtos/bank-account.create.dto';
 import { UpdateBankAccountDto } from '../dtos/bank-account.update.dto';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { Request as ExpressRequest } from 'express';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
+import { AdvancedRequest } from 'src/types';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 
 @ApiTags('bank-account')
 @Controller({ version: '1', path: '/bank-account' })
@@ -60,7 +60,7 @@ export class BankAccountController {
   @LogEvent(EVENT_TYPE.BANK_ACCOUNT_CREATED)
   async save(
     @Body() createBankAccountDto: CreateBankAccountDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseBankAccountDto> {
     const bank = await this.bankAccountService.save(createBankAccountDto);
     req.logInfo = { id: bank.id };
@@ -73,7 +73,7 @@ export class BankAccountController {
   async update(
     @Param('id') id: number,
     @Body() updateBankAccountDto: UpdateBankAccountDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseBankAccountDto> {
     req.logInfo = { id };
     return await this.bankAccountService.update(id, updateBankAccountDto);
@@ -84,7 +84,7 @@ export class BankAccountController {
   @LogEvent(EVENT_TYPE.BANK_ACCOUNT_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseBankAccountDto> {
     req.logInfo = { id };
     return await this.bankAccountService.softDelete(id);

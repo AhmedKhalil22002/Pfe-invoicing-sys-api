@@ -18,11 +18,11 @@ import { UpdateActivityDto } from '../dtos/activity.update.dto';
 import { ResponseActivityDto } from '../dtos/activity.response.dto';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EVENT_TYPE } from 'src/app/enums/logger/event-types.enum';
-import { Request as ExpressRequest } from 'express';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
 import { toDto, toDtoArray } from 'src/shared/database/utils/dtos';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
+import { AdvancedRequest } from 'src/types';
 
 @ApiTags('activity')
 @Controller({ version: '1', path: '/activity' })
@@ -65,7 +65,7 @@ export class ActivityController {
   @LogEvent(EVENT_TYPE.ACTIVITY_CREATED)
   async save(
     @Body() createActivityDto: CreateActivityDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseActivityDto> {
     const activty = await this.activityService.save(createActivityDto);
     req.logInfo = { id: activty.id };
@@ -78,7 +78,7 @@ export class ActivityController {
   async update(
     @Param('id') id: number,
     @Body() updateActivityDto: UpdateActivityDto,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseActivityDto> {
     req.logInfo = { id };
     return toDto(
@@ -92,7 +92,7 @@ export class ActivityController {
   @LogEvent(EVENT_TYPE.ACTIVITY_DELETED)
   async delete(
     @Param('id') id: number,
-    @Request() req: ExpressRequest,
+    @Request() req: AdvancedRequest,
   ): Promise<ResponseActivityDto> {
     req.logInfo = { id };
     return toDto(

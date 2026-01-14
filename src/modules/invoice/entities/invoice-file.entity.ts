@@ -6,8 +6,8 @@ import {
   Column,
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { UploadEntity } from 'src/shared/storage/entities/upload.entity';
 import { InvoiceEntity } from './invoice.entity';
+import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
 
 @Entity('invoice-upload')
 export class InvoiceUploadEntity extends EntityHelper {
