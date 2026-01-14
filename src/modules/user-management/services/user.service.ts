@@ -9,7 +9,6 @@ import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { CreateUserDto } from '../dtos/user/create-user.dto';
 import { hashPassword } from 'src/shared/helpers/hash.utils';
-import { UserAlreadyExistsException } from '../errors/user/user.alreadyexists.error';
 import { UpdateUserDto } from '../dtos/user/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { ProfileService } from 'src/modules/user-management/services/profile.service';
@@ -79,17 +78,7 @@ export class UserService {
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity | null> {
     const existingUser = await this.userRepository.findOneById(id);
-    if (updateUserDto.profile && existingUser?.profileId) {
-      await this.profileService.updateWithUpload(
-        existingUser?.profileId,
-        updateUserDto.profile,
-      );
-    }
-    if (updateUserDto.password) {
-      const hashedPassword = await hashPassword(updateUserDto.password);
-      updateUserDto.password = hashedPassword;
-    }
-    delete updateUserDto.profile;
+    if (!existingUser) throw new UserNotFoundException();
     return this.userRepository.update(id, updateUserDto);
   }
 
@@ -101,31 +90,7 @@ export class UserService {
 
   @Transactional()
   async saveWithProfile(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const existingUser = await this.userRepository.findOne({
-      where: [
-        { username: createUserDto.username },
-        { email: createUserDto.email },
-      ],
-    });
-
-    if (existingUser) {
-      throw new UserAlreadyExistsException();
-    }
-
-    let profileId: number | undefined = undefined;
-
-    if (createUserDto.profile) {
-      const profile = await this.profileService.saveWithUpload(
-        createUserDto.profile,
-      );
-      profileId = profile.id;
-    }
-
-    const hashedPassword =
-      createUserDto.password && (await hashPassword(createUserDto.password));
-    createUserDto.password = hashedPassword;
-
-    return this.userRepository.save({ ...createUserDto, profileId });
+    return this.userRepository.save({ ...createUserDto });
   }
 
   async findOneByUsernameOrEmail(
@@ -138,6 +103,10 @@ export class UserService {
 
   async findOneByEmail(email: string): Promise<UserEntity | null> {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  async findOneByUsername(username: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({ where: { username } });
   }
 
   async activate(id: string): Promise<UserEntity | null> {

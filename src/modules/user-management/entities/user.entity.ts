@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RoleEntity } from './role.entity';
-import { ProfileEntity } from 'src/modules/user-management/entities/profile.entity';
 import { LogEntity } from 'src/shared/logger/entities/log.entity';
+import { ProfileEntity } from './profile.entity';
 
 @Entity('users')
 export class UserEntity extends EntityHelper {
@@ -50,11 +50,12 @@ export class UserEntity extends EntityHelper {
   @ManyToOne(() => RoleEntity, (role) => role.users, {
     onDelete: 'CASCADE',
     eager: true,
+    nullable: true,
   })
   @JoinColumn({ name: 'roleId' })
   role: RoleEntity;
 
-  @Column({})
+  @Column({ nullable: true })
   roleId: string;
 
   @OneToMany(() => LogEntity, (log) => log.user)
@@ -67,6 +68,6 @@ export class UserEntity extends EntityHelper {
   @JoinColumn({ name: 'profileId' })
   profile?: ProfileEntity;
 
-  @Column()
+  @Column({ nullable: true })
   profileId: number;
 }

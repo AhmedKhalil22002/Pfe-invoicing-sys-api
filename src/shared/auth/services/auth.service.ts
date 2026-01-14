@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/modules/user-management/services/user.service';
-import * as bcrypt from 'bcrypt';
 import { ResponseSigninDto } from '../dtos/web/response-signin.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { ResponseUserDto } from 'src/modules/user-management/dtos/user/response-user.dto';
@@ -25,6 +24,9 @@ import { ForgetPasswordTemplateProps } from 'src/assets/templates/forget-passwor
 import { identifyUser } from 'src/modules/user-management/utils/identify-user';
 import { AuthNotActiveException } from 'src/shared/auth/errors/auth.notactive.error';
 import { StoreIDs } from 'src/app/enums/store.enum';
+import { UserAlreadyExistsException } from 'src/modules/user-management/errors/user/user.alreadyexists.error';
+import { comparePasswords } from 'src/shared/helpers/hash.utils';
+import { RequestRegisterDto } from '../dtos/web/request-register.dto';
 
 @Injectable()
 export class AuthService {
@@ -41,25 +43,42 @@ export class AuthService {
     const payload = { sub: id, email: email };
 
     const access_token = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get('app.jwt.secret'),
-      expiresIn: this.configService.get('app.jwt.accessExpiration'),
+      secret: this.configService.get('app.jwtSecret'),
+      expiresIn: this.configService.get('app.jwtAccessTokenExpiration'),
     });
 
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get('app.jwt.secret'),
-      expiresIn: this.configService.get('app.jwt.refreshExpiration'),
+      secret: this.configService.get('app.jwtSecret'),
+      expiresIn: this.configService.get('app.jwtRefreshTokenExpiration'),
     });
 
     return { access_token, refresh_token };
+  }
+
+  async register(registerDto: RequestRegisterDto) {
+    const userByUsername = await this.userService.findOneByUsername(
+      registerDto.username,
+    );
+    const userByEmail = await this.userService.findOneByEmail(
+      registerDto.email,
+    );
+
+    if (userByUsername || userByEmail) throw new UserAlreadyExistsException();
+
+    return this.userService.save({
+      username: registerDto.username,
+      email: registerDto.email,
+      password: registerDto.password,
+      isActive: true,
+    });
   }
 
   async signin(
     usernameOrEmail: string,
     password: string,
   ): Promise<ResponseSigninDto> {
-    const user = await this.userRepository.findOne({
-      where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
-    });
+    const user =
+      await this.userService.findOneByUsernameOrEmail(usernameOrEmail);
 
     if (!user) {
       throw new UnauthorizedException('User does not exist');
@@ -69,7 +88,7 @@ export class AuthService {
       throw new UnauthorizedException('User does not have a password');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = comparePasswords(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }

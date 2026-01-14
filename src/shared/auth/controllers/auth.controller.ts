@@ -24,6 +24,8 @@ import { identifyUser } from 'src/modules/user-management/utils/identify-user';
 import { UserEntity } from 'src/modules/user-management/entities/user.entity';
 import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
+import { RequestRegisterDto } from '../dtos/web/request-register.dto';
+import { ResponseRegisterDto } from '../dtos/web/response-register.dto';
 
 @ApiTags('auth')
 @Controller({ version: '1', path: '/auth' })
@@ -58,6 +60,40 @@ export class AuthController {
       fullname: identifyUser(result?.user as UserEntity),
     };
     return result;
+  }
+
+  @Public()
+  @Post('register')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Register a user',
+    description: 'Registre a new user',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful registration.',
+    type: ResponseSigninDto,
+  })
+  @ApiResponse({ status: 401, description: 'Invalid credentials.' })
+  @LogEvent(EVENT_TYPE.REGISTER)
+  async register(
+    @Body() registerDto: RequestRegisterDto,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseRegisterDto> {
+    const result = await this.authService.register(registerDto);
+    req.logInfo = {
+      userId: result.id,
+      fullname: identifyUser(result as UserEntity),
+    };
+    if (result)
+      return {
+        user: result,
+        message: 'You have successfully registered a new account.',
+      };
+    return {
+      user: null,
+      message: 'An error occurred while registering a new account.',
+    };
   }
 
   @Public()

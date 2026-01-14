@@ -17,7 +17,7 @@ export default registerAs(
     jobEnable: process.env.JOB_ENABLE === 'true' || false,
     uploadPath: process.env.UPLOAD_PATH ?? '/upload',
     jwtSecret: process.env.JWT_SECRET || 'jwt-secret',
-    jwtAccessTokenExpiration: process.env.JWT_ACCESS_TOKEN_EXPIRATION || '15m',
-    jwtRefreshTokenExpiration: process.env.JWT_REFRESH_TOKEN_EXPIRATION || '7d',
+    jwtAccessTokenExpiration: process.env.JWT_ACCESS_TOKEN_EXPIRATION || '1d',
+    jwtRefreshTokenExpiration: process.env.JWT_REFRESH_TOKEN_EXPIRATION || '3d',
   }),
 );
