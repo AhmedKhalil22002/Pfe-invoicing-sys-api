@@ -2,16 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
 import { ResponseUserDto } from 'src/modules/user-management/dtos/user/response-user.dto';
-import { EventType } from 'src/app/enums/logger/event-types.enum';
+import { EVENT_TYPE } from '../enums/event-type.enum';
 
 export class ResponseLogDto extends ResponseDtoHelper {
   @ApiProperty({ type: Number, example: 1 })
   @Expose()
   id: number;
 
-  @ApiProperty({ type: String, enum: EventType })
+  @ApiProperty({ type: String, enum: EVENT_TYPE })
   @Expose()
-  event: EventType;
+  event: EVENT_TYPE;
 
   @ApiProperty({ type: String, example: '/api/v1/user/list' })
   @Expose()

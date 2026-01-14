@@ -5,8 +5,8 @@ import { tap } from 'rxjs';
 import { LoggerService } from '../services/logger.service';
 import { AccessTokenPayload } from 'src/shared/auth/interfaces/access-token-payload.interface';
 import { getTokenPayload } from 'src/shared/auth/utils/token-payload';
-import { EventType } from 'src/app/enums/logger/event-types.enum';
 import { AdvancedRequest } from 'src/types';
+import { EVENT_TYPE } from '../enums/event-type.enum';
 
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
@@ -18,7 +18,7 @@ export class LogInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
       tap(() => {
-        const event = this.reflector.get<EventType>(
+        const event = this.reflector.get<EVENT_TYPE>(
           'event',
           context.getHandler(),
         );
@@ -28,7 +28,7 @@ export class LogInterceptor implements NestInterceptor {
         const request: AdvancedRequest = context.switchToHttp().getRequest();
         const { method, url, logInfo } = request;
 
-        if (event === EventType.SIGNIN) {
+        if (event === EVENT_TYPE.SIGNIN) {
           const payload: AccessTokenPayload = getTokenPayload(request);
 
           void this.loggerService.save({

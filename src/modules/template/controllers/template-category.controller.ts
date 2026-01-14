@@ -20,7 +20,6 @@ import { ResponseTemplateCategoryDto } from '../dtos/template-category.response.
 import { CreateTemplateCategoryDto } from '../dtos/template-category.create.dto';
 import { UpdateTemplateCategoryDto } from '../dtos/template-category.update.dto';
 import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginated-resposne.decorator';
-import { EventType } from 'src/app/enums/logger/event-types.enum';
 import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
 
@@ -60,7 +59,7 @@ export class TemplateCategoryController {
   }
 
   @Post('')
-  @LogEvent(EventType.TEMPLATE_CATEGORY_CREATED)
+  @LogEvent(EVENT_TYPE.TEMPLATE_CATEGORY_CREATED)
   async save(
     @Body() createTemplateCategoryDto: CreateTemplateCategoryDto,
     @Request() req: AdvancedRequest,

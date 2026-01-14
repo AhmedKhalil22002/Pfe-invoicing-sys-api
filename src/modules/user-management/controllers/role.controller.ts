@@ -22,8 +22,8 @@ import { ApiPaginatedResponse } from 'src/shared/database/decorators/api-paginat
 import { toDto, toDtoArray } from 'src/shared/database/utils/dtos';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
-import { EventType } from 'src/app/enums/logger/event-types.enum';
 import { AdvancedRequest } from 'src/types';
+import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 
 @ApiTags('role')
 @ApiBearerAuth('access_token')
@@ -53,7 +53,7 @@ export class RoleController {
   }
 
   @Post()
-  @LogEvent(EventType.ROLE_CREATED)
+  @LogEvent(EVENT_TYPE.ROLE_CREATED)
   async create(
     @Body() createRoleDto: CreateRoleDto,
     @Request() req: AdvancedRequest,
@@ -64,7 +64,7 @@ export class RoleController {
   }
 
   @Post('duplicate/:id')
-  @LogEvent(EventType.ROLE_DUPLICATED)
+  @LogEvent(EVENT_TYPE.ROLE_DUPLICATED)
   async duplicate(
     @Param('id') id: string,
     @Request() req: AdvancedRequest,
@@ -75,7 +75,7 @@ export class RoleController {
   }
 
   @Put(':id')
-  @LogEvent(EventType.ROLE_UPDATED)
+  @LogEvent(EVENT_TYPE.ROLE_UPDATED)
   async update(
     @Param('id') id: string,
     @Body() updateRoleDto: UpdateRoleDto,
@@ -90,7 +90,7 @@ export class RoleController {
   }
 
   @Delete(':id')
-  @LogEvent(EventType.ROLE_DELETED)
+  @LogEvent(EVENT_TYPE.ROLE_DELETED)
   async delete(
     @Param('id') id: string,
     @Request() req: AdvancedRequest,

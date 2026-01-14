@@ -1,6 +1,7 @@
 export enum EVENT_TYPE {
   //Auth
   SIGNIN = 'signin',
+  REGISTER = 'register',
 
   USER_CREATED = 'user_created',
   USER_UPDATED = 'user_updated',

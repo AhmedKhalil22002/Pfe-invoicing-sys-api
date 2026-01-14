@@ -7,15 +7,15 @@ import {
 } from 'typeorm';
 import { UserEntity } from 'src/modules/user-management/entities/user.entity';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { EventType } from 'src/app/enums/logger/event-types.enum';
+import { EVENT_TYPE } from '../enums/event-type.enum';
 
 @Entity('log')
 export class LogEntity extends EntityHelper {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'enum', enum: EventType, nullable: true })
-  event: EventType;
+  @Column({ type: 'enum', enum: EVENT_TYPE, nullable: true })
+  event: EVENT_TYPE;
 
   @Column({ nullable: true })
   api?: string;
