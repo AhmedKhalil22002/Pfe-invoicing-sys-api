@@ -20,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { resolveMX } from 'src/shared/mail/utils/mx-resolve.util';
 import { MailModule } from 'src/shared/mail/mail.module';
 import { DatabaseModule } from 'src/shared/database/database.module';
+import { CommandModule } from 'nestjs-command';
 
 @Module({
   controllers: [HelloController],
@@ -60,18 +61,25 @@ import { DatabaseModule } from 'src/shared/database/database.module';
     MailerModule.forRootAsync({
       useFactory: async () => {
         const email = process.env.SMTP_USER;
+        let host = process.env.SMTP_HOST;
+        let port = parseInt(process.env.SMTP_PORT, 10);
+
         if (!email) throw new Error('SMTP_USER is not set');
 
         const domain = email.split('@')[1];
         if (!domain) throw new Error(`Invalid SMTP_USER: ${email}`);
 
-        const { host, port } = await resolveMX(domain);
+        if (!host || !port) {
+          const resolvedMx = await resolveMX(domain);
+          host = resolvedMx.host;
+          port = resolvedMx.port;
+        }
 
         return {
           transport: {
             host,
             port,
-            secure: port === 465, // Use secure for 465, STARTTLS for 587
+            secure: port === 465,
             auth: {
               user: process.env.SMTP_USER,
               pass: process.env.SMTP_PASS,
@@ -87,6 +95,7 @@ import { DatabaseModule } from 'src/shared/database/database.module';
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     RouterModule.forRoot(),
+    CommandModule,
   ],
 })
 export class AppModule {}
