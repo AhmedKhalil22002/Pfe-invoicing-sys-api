@@ -104,6 +104,10 @@ export class RoleService {
 
   //Extended Methods ===========================================================================
 
+  async findOneByLabel(label: string): Promise<RoleEntity | null> {
+    return this.roleRepository.findOne({ where: { label } });
+  }
+
   @Transactional()
   async saveWithPermissions(createRoleDto: CreateRoleDto): Promise<RoleEntity> {
     const { permissions, ...rest } = createRoleDto;

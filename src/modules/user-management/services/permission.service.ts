@@ -1,6 +1,6 @@
 import { Transactional } from '@nestjs-cls/transactional';
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
@@ -74,7 +74,9 @@ export class PermissionService {
   }
 
   @Transactional()
-  async save(createPermissionDto: CreatePermissionDto) {
+  async save(
+    createPermissionDto: DeepPartial<PermissionEntity>,
+  ): Promise<PermissionEntity> {
     const existingPermission = await this.permissionRepository.findOne({
       where: {
         label: createPermissionDto.label,

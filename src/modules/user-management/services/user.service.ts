@@ -1,6 +1,6 @@
 import { Transactional } from '@nestjs-cls/transactional';
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { UserNotFoundException } from '../errors/user/user.notfound.error';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
@@ -65,7 +65,7 @@ export class UserService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async save(createUserDto: Partial<UserEntity>): Promise<UserEntity> {
+  async save(createUserDto: DeepPartial<UserEntity>): Promise<UserEntity> {
     const hashedPassword =
       createUserDto.password && (await hashPassword(createUserDto.password));
     createUserDto.password = hashedPassword;

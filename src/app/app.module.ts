@@ -20,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { resolveMX } from 'src/shared/mail/utils/mx-resolve.util';
 import { MailModule } from 'src/shared/mail/mail.module';
 import { DatabaseModule } from 'src/shared/database/database.module';
+import { SeedersModule } from 'src/seeders/seeders.module';
 import { CommandModule } from 'nestjs-command';
 
 @Module({
@@ -96,6 +97,7 @@ import { CommandModule } from 'nestjs-command';
     ScheduleModule.forRoot(),
     RouterModule.forRoot(),
     CommandModule,
+    SeedersModule,
   ],
 })
 export class AppModule {}

@@ -40,9 +40,16 @@ import { TaxController } from 'src/modules/tax/controllers/tax.controller';
 import { TaxModule } from 'src/modules/tax/tax.module';
 import { TemplateCategoryController } from 'src/modules/template/controllers/template-category.controller';
 import { TemplateModule } from 'src/modules/template/template.module';
+import { UserController } from 'src/modules/user-management/controllers/user.controller';
+import { RoleController } from 'src/modules/user-management/controllers/role.controller';
+import { PermissionController } from 'src/modules/user-management/controllers/permission.controller';
+import { UserManagementModule } from 'src/modules/user-management/user-management.module';
 
 @Module({
   controllers: [
+    UserController,
+    RoleController,
+    PermissionController,
     AuthController,
     ActivityController,
     AddressController,
@@ -88,6 +95,7 @@ import { TemplateModule } from 'src/modules/template/template.module';
     TaxModule,
     TaxWithholdingModule,
     TemplateModule,
+    UserManagementModule,
   ],
 })
 export class RoutesPublicModule {}

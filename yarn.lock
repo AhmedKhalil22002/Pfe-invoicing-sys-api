@@ -6014,7 +6014,7 @@ nestjs-cls@^4.4.1:
   resolved "https://registry.yarnpkg.com/nestjs-cls/-/nestjs-cls-4.5.0.tgz#c18914b35b808429b6974a197385aa28e11d8176"
   integrity sha512-oi3GNCc5pnsnVI5WJKMDwmg4NP+JyEw+edlwgepyUba5+RGGtJzpbVaaxXGW1iPbDuQde3/fA8Jdjq9j88BVcQ==
 
-nestjs-command@^3.1.4:
+nestjs-command@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/nestjs-command/-/nestjs-command-3.1.5.tgz#52a8923aecb3894bf380f6d58f1a9399c2c43e80"
   integrity sha512-s1oJNwKvgwivxjbzHAmggnaoPS/0mLaek2d9h93aEjECXHI8NLiJEXG4BTJo9Th61NgIRqkZcNGLXfG3LyrrqQ==
