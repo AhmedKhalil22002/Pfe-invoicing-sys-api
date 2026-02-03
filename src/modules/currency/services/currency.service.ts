@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CurrencyRepository } from '../repositories/currency.repository';
 import { CurrencyEntity } from '../entities/currency.entity';
-import { CreateCurrencyDto } from '../dtos/currency.create.dto';
 import { CurrencyNotFoundException } from '../errors/currency.notfound.error';
 import { ConfigService } from '@nestjs/config';
+import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class CurrencyService {
@@ -44,14 +44,16 @@ export class CurrencyService {
     return reorderedCurrencies;
   }
 
-  async save(createCurrencyDto: CreateCurrencyDto): Promise<CurrencyEntity> {
+  async save(
+    createCurrencyDto: DeepPartial<CurrencyEntity>,
+  ): Promise<CurrencyEntity> {
     return this.currencyRepository.save(createCurrencyDto);
   }
 
   async saveMany(
-    createCurrencyDtos: CreateCurrencyDto[],
+    currencies: DeepPartial<CurrencyEntity>[],
   ): Promise<CurrencyEntity[]> {
-    return this.currencyRepository.saveMany(createCurrencyDtos);
+    return this.currencyRepository.saveMany(currencies);
   }
 
   async softDelete(id: number): Promise<CurrencyEntity> {

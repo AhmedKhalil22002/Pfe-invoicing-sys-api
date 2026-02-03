@@ -1,15 +1,15 @@
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('currency')
 export class CurrencyEntity extends EntityHelper {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255 })
   label: string;
 
-  @Column({ type: 'varchar', length: 3, nullable: true })
+  @Column({ type: 'varchar', length: 3 })
   code: string;
 
   @Column({ type: 'varchar', length: 10, nullable: true })
