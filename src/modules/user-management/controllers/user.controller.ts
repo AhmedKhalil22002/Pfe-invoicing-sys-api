@@ -63,6 +63,16 @@ export class UserController {
     return toDto(ResponseUserDto, await this.userService.findOneByEmail(email));
   }
 
+  @Get('/current')
+  async findCurrentUser(
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    return toDto(
+      ResponseUserDto,
+      await this.userService.findOneById(req.user.sub),
+    );
+  }
+
   @Get(':id')
   async findOneById(@Param('id') id: string): Promise<ResponseUserDto | null> {
     return toDto(ResponseUserDto, await this.userService.findOneById(id));
