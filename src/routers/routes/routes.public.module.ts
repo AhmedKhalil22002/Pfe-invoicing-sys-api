@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from 'src/shared/app-config/app-config.module';
 import { AppConfigController } from 'src/shared/app-config/controllers/app-config.controller';
-import { AuthModule } from 'src/shared/auth/auth.module';
-import { AuthController } from 'src/shared/auth/controllers/auth.controller';
 import { LoggerModule } from 'src/shared/logger/logger.module';
 import { ActivityModule } from 'src/modules/activity/activity.module';
 import { ActivityController } from 'src/modules/activity/controllers/activity.controller';
@@ -50,7 +48,6 @@ import { UserManagementModule } from 'src/modules/user-management/user-managemen
     UserController,
     RoleController,
     PermissionController,
-    AuthController,
     ActivityController,
     AddressController,
     ArticleController,
@@ -75,7 +72,6 @@ import { UserManagementModule } from 'src/modules/user-management/user-managemen
   exports: [],
   imports: [
     LoggerModule,
-    AuthModule,
     ActivityModule,
     AddressModule,
     ArticleModule,
