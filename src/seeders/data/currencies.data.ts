@@ -827,12 +827,7 @@ export const currenciesSeed = [
     symbol: '$',
     digitsAfterComma: 2,
   },
-  {
-    code: 'TND',
-    label: 'Tunisian dinar',
-    symbol: 'DT',
-    digitsAfterComma: 3,
-  },
+
   {
     code: 'TRY',
     label: 'Turkish lira',
