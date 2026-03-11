@@ -20,7 +20,7 @@
                 <%= quotation.cabinet.enterpriseName %>
             </h2>
             <div>
-                <%= quotation.cabinet.address.address %>, <%= quotation.cabinet.address.zipcode %>
+                 <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.alpha2Code %>
                         <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.alpha2code %>
             </div>
             <div>
@@ -45,7 +45,7 @@
                             <br><span>
                                 <%= quotation.firm.deliveryAddress.zipcode %>
                                     <%= quotation.firm.deliveryAddress.region %>
-                                        <%= quotation.firm.deliveryAddress.country.alpha2code %>
+                                        <%= quotation.firm.deliveryAddress.country.alpha2Code %>
                             </span>
                     </p>
                     <% } %>
@@ -57,7 +57,7 @@
                                     <br> <span>
                                         <%= quotation.firm.invoicingAddress.zipcode %>
                                             <%= quotation.firm.invoicingAddress.region %>
-                                                <%= quotation.firm.invoicingAddress.country.alpha2code %>
+                                                <%= quotation.firm.invoicingAddress.country.alpha2Code %>
                                     </span>
                             </p>
                             <% } %>

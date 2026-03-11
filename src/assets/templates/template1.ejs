@@ -25,7 +25,7 @@
             <div>
                 <%= quotation.cabinet.address.address %>,<br />
                     <%= quotation.cabinet.address.zipcode %>
-                        <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.alpha2code %>
+                        <%= quotation.cabinet.address.region %>, <%= quotation.cabinet.address.country.alpha2Code %>
             </div>
             <div>
                 <%= quotation.cabinet.phone %>
@@ -42,16 +42,14 @@
                 <div><span>ADRESSE DE LIVRAISON</span><br>
                     <%= quotation.firm.deliveryAddress.address %>,<%= quotation.firm.deliveryAddress.zipcode %>
                             <%= quotation.firm.deliveryAddress.region %>,
-                                <%= quotation.firm.deliveryAddress.country.alpha2code %>
-                </div>
+                                <%= quotation.firm.deliveryAddress.country.alpha2Code %>                </div>
                 <% } %>
                     <% if (meta.showInvoiceAddress ) { %>
                         <div><span>ADRESSE DE FACTURATION</span><br>
                             <%= quotation.firm.invoicingAddress.address %>, <%= quotation.firm.invoicingAddress.zipcode
                                     %>
                                     <%= quotation.firm.invoicingAddress.region %>,
-                                        <%= quotation.firm.invoicingAddress.country.alpha2code %>
-                        </div>
+                                        <%= quotation.firm.invoicingAddress.country.alpha2Code %>                        </div>
                         <% } %>
                             <div><span>DATE</span>
                                 <%= quotation.date %>

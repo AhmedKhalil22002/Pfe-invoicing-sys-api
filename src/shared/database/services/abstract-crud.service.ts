@@ -89,13 +89,21 @@ export class AbstractCrudService<T extends ObjectLiteral> {
     return this.repository.saveMany(dtos);
   }
 
-  async softDelete(id: string): Promise<T | null> {
-    return this.repository.softDelete(id);
+  async softDelete(id: string | number): Promise<T | null> {
+        return this.repository.softDelete(id);
   }
 
-  async delete(id: string): Promise<T | null> {
-    const entity = await this.findOneById(id);
+  async delete(id: string | number): Promise<T | null> {
+        const entity = await this.findOneById(id);
     if (!entity) throw new Error('Entity not found');
     return this.repository.remove(entity);
   }
 }
+  async deleteAll(): Promise<void> {
+    return this.repository.deleteAll();
+  }
+
+  async getTotal(): Promise<number> {
+    return this.repository.getTotalCount();
+  }
+  

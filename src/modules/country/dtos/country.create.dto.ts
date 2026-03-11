@@ -10,10 +10,10 @@ export class CreateCountryDto {
   @ApiProperty({ example: 'TN', type: String })
   @IsString()
   @MinLength(2)
-  alpha2code: string;
+  alpha2Code: string;
 
   @ApiProperty({ example: 'TUN', type: String })
   @IsString()
   @MinLength(3)
-  alpha3code: string;
+  alpha3Code: string;
 }

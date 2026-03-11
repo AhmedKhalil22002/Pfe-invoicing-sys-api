@@ -6,8 +6,8 @@ export class ResponseCountryDto extends ResponseDtoHelper {
   id: number;
 
   @ApiProperty({ example: 'TN', type: String })
-  alpha2code: string;
+  alpha2Code: string;
 
   @ApiProperty({ example: 'TUN', type: String })
-  alpha3code: string;
+  alpha3Code: string;
 }

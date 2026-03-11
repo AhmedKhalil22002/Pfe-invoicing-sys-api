@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCabinetDto } from '../dtos/cabinet.create.dto';
 import { CabinetEntity } from '../entities/cabinet.entity';
 import { AddressService } from 'src/modules/address/services/address.service';
 import {
@@ -12,6 +11,7 @@ import { CurrencyService } from 'src/modules/currency/services/currency.service'
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { CabinetRepository } from '../repositories/cabinet.repository';
 import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class CabinetService {
@@ -43,7 +43,9 @@ export class CabinetService {
     return this.cabinetRepository.findAll();
   }
 
-  async save(createCabinetDto: CreateCabinetDto): Promise<CabinetEntity> {
+  async save(
+    createCabinetDto: DeepPartial<CabinetEntity>,
+  ): Promise<CabinetEntity> {
     await this.activityService.findOneById(createCabinetDto.activityId);
     await this.currencyService.findOneById(createCabinetDto.currencyId);
 
@@ -62,12 +64,7 @@ export class CabinetService {
       throw new TaxIdNumberDuplicateException();
     }
 
-    const address = await this.addressService.save(createCabinetDto.address);
-
-    return this.cabinetRepository.save({
-      ...createCabinetDto,
-      addressId: address.id,
-    });
+    return this.cabinetRepository.save(createCabinetDto);
   }
 
   async update(
