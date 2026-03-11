@@ -90,15 +90,15 @@ export class AbstractCrudService<T extends ObjectLiteral> {
   }
 
   async softDelete(id: string | number): Promise<T | null> {
-        return this.repository.softDelete(id);
+    return this.repository.softDelete(id);
   }
 
   async delete(id: string | number): Promise<T | null> {
-        const entity = await this.findOneById(id);
+    const entity = await this.findOneById(id);
     if (!entity) throw new Error('Entity not found');
     return this.repository.remove(entity);
   }
-}
+
   async deleteAll(): Promise<void> {
     return this.repository.deleteAll();
   }
@@ -106,4 +106,4 @@ export class AbstractCrudService<T extends ObjectLiteral> {
   async getTotal(): Promise<number> {
     return this.repository.getTotalCount();
   }
-  
+}
