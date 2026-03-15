@@ -1,0 +1,44 @@
+import { format } from 'date-fns';
+import { DateFormat } from 'src/modules/sequence/enums/date-format.enum';
+
+const DateFormat_PATTERNS: { [key in DateFormat]: RegExp } = {
+  [DateFormat.YYYY]: /^\d{4}$/,
+  [DateFormat.YYMM]: /^\d{2}-\d{2}$/,
+  [DateFormat.YYYYMM]: /^\d{4}-\d{2}$/,
+};
+
+export function parseSequential(sequence: string) {
+  const regex = /^(.+?)-(\d{4}-\d{2}|\d{2}-\d{2}|\d{4})-(\d+)$/;
+  const match = sequence.match(regex);
+
+  if (!match) {
+    return {
+      prefix: '',
+      dateFormat: DateFormat.YYYY,
+      next: 0,
+    };
+  }
+
+  const [, prefix, dateFormat, nextStr] = match;
+  const next = parseInt(nextStr, 10);
+
+  const knownFormat =
+    (Object.keys(DateFormat_PATTERNS).find((format) =>
+      DateFormat_PATTERNS[format as DateFormat].test(dateFormat),
+    ) as DateFormat) || DateFormat.YYYY;
+
+  return {
+    prefix,
+    dateFormat: knownFormat,
+    next: isNaN(next) ? 0 : next,
+  };
+}
+
+export function formSequential(
+  prefix: string,
+  dateFormat: DateFormat,
+  next: number,
+  date: Date = new Date(),
+): string {
+  return `${prefix}-${format(date, dateFormat)}-${next}`;
+}

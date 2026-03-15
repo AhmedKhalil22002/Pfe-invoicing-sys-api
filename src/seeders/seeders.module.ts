@@ -13,6 +13,8 @@ import { CountryModule } from 'src/modules/country/country.module';
 import { CountriesSeederCommand } from './countries.seeder';
 import { CabinetSeederCommand } from './cabinet.seeder';
 import { CabinetModule } from 'src/modules/cabinet/cabinet.module';
+import { SequencesSeederCommand } from './sequences.seeder';
+import { SequenceModule } from 'src/modules/sequence/sequence.module';
 import { AddressModule } from 'src/modules/address/address.module';
 @Module({
   providers: [
@@ -23,6 +25,7 @@ import { AddressModule } from 'src/modules/address/address.module';
     ActivitiesSeederCommand,
     PaymentConditionsSeederCommand,
     CountriesSeederCommand,
+    SequencesSeederCommand,
     CabinetSeederCommand,
   ],
   imports: [
@@ -33,6 +36,7 @@ import { AddressModule } from 'src/modules/address/address.module';
     CountryModule,
     CabinetModule,
     AddressModule,
+    SequenceModule,
   ],
 })
 export class SeedersModule {}
