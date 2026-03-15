@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional } from 'class-validator';
-import { DATE_FORMAT } from 'src/app/enums/date-formats.enum';
+import { DateFormat } from 'src/modules/sequence/enums/date-format.enum';
 
 export class UpdateInvoiceSequenceDto {
   @ApiProperty({ example: 'INV', type: String })
   @IsOptional()
   prefix: string;
 
-  @ApiProperty({ enum: DATE_FORMAT, example: DATE_FORMAT.yy_MM })
+  @ApiProperty({ enum: DateFormat })
   @IsOptional()
-  dynamic_sequence: DATE_FORMAT;
+  dateFormat: DateFormat;
 
   @ApiProperty({ example: 1, type: String })
   @IsOptional()

@@ -493,11 +493,11 @@ INSERT INTO
 VALUES
     (
         'quotation_sequence',
-        '{"label": "quotation", "prefix": "QUO", "dynamicSequence": "yyyy-MM", "next": 1}'
+        '{"label": "quotation", "prefix": "QUO", "dateFormat": "yyyy-MM", "next": 1}'
     ),
     (
         'invoice_sequence',
-        '{"label": "invoice", "prefix": "INV", "dynamicSequence": "yyyy-MM", "next": 1}'
+        '{"label": "invoice", "prefix": "INV", "dateFormat": "yyyy-MM", "next": 1}'
     );
 
 INSERT INTO

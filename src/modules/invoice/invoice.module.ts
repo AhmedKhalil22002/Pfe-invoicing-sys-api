@@ -28,7 +28,7 @@ import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.enti
 import { InvoiceUploadEntity } from './entities/invoice-file.entity';
 import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
 import { UploadModule } from 'src/shared/uploads/uploads.module';
-
+import { SequenceModule } from '../sequence/sequence.module';
 @Module({
   controllers: [],
   providers: [
@@ -71,6 +71,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     InterlocutorModule,
     TaxModule,
     TaxWithholdingModule,
+    SequenceModule,
     //abstract modules
     PdfModule,
     GatewaysModule,

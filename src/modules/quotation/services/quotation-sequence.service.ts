@@ -4,7 +4,7 @@ import { QuotationSequentialNotFoundException } from '../errors/quotation.sequen
 import { AppConfigEntity } from 'src/shared/app-config/entities/app-config.entity';
 import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
-import { formSequential } from 'src/utils/sequence.utils';
+import { formSequential } from 'src/modules/sequence/utils/sequence.utils';
 import { WSRoom } from 'src/app/enums/ws-room.enum';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class QuotationSequenceService {
     );
     return formSequential(
       sequence.value.prefix,
-      sequence.value.dynamicSequence,
+      sequence.value.dateFormat,
       sequence.value.next,
     );
   }

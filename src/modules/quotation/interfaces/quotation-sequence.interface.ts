@@ -1,7 +1,7 @@
-import { DATE_FORMAT } from 'src/app/enums/date-formats.enum';
+import { DateFormat } from 'src/modules/sequence/enums/date-format.enum';
 
 export interface QuotationSequence {
   prefix: string;
-  dynamicSequence: DATE_FORMAT;
+  DateFormat: DateFormat;
   next: number;
 }

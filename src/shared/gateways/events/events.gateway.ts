@@ -50,7 +50,7 @@ export class EventsGateway
     }
     try {
       const decoded = this.jwtService.verify(token, {
-        secret: this.configService.get('app.jwtSecret', { infer: true }),
+        secret: this.configService.get('app.jwtSecret'),
       });
 
       if (!decoded || !decoded.email) {
@@ -60,8 +60,6 @@ export class EventsGateway
 
       const uniqueId = randomBytes(4).toString('hex');
       client.data.user = { ...decoded, email: `${decoded.email}#${uniqueId}` };
-
-      console.log(`Client connected: ${client.data.user.email}`);
     } catch (error) {
       client.disconnect(true);
       console.error('Token verification failed:', error);

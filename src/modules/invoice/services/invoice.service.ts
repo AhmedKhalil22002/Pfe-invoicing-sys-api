@@ -31,7 +31,7 @@ import { InvoiceSequence } from '../interfaces/invoice-sequence.interface';
 import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
 import { TaxWithholdingService } from 'src/modules/tax-withholding/services/tax-withholding.service';
 import { ciel } from 'src/utils/number.utils';
-import { parseSequential } from 'src/utils/sequence.utils';
+import { parseSequential } from 'src/modules/sequence/utils/sequence.utils';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
 import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
 
@@ -152,7 +152,7 @@ export class InvoiceService {
   async findInvoicesByRange(id: number): Promise<ResponseInvoiceRangeDto> {
     // Get the current sequential
     const currentSequential = await this.invoiceSequenceService.get();
-    const lastSequence = currentSequential.value.next - 1;
+    const lastSequence = currentSequential.next - 1;
 
     // fetch the invoice
     const invoice = await this.findOneById(id);
@@ -561,7 +561,7 @@ export class InvoiceService {
   async updateInvoiceSequence(
     updatedSequenceDto: UpdateInvoiceSequenceDto,
   ): Promise<InvoiceSequence> {
-    return (await this.invoiceSequenceService.set(updatedSequenceDto)).value;
+    return this.invoiceSequenceService.set(updatedSequenceDto);
   }
 
   async softDelete(id: number): Promise<InvoiceEntity> {
