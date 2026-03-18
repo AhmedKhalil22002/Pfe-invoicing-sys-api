@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { WSRoom } from '../../../app/enums/ws-room.enum';
 import { Logger } from '@nestjs/common';
 import { randomBytes } from 'crypto';
-
+import { UserRepository } from 'src/modules/user-management/repositories/user.repository';
 @WebSocketGateway({
   path: '/ws',
   cors: {
@@ -37,6 +37,7 @@ export class EventsGateway
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
+  private readonly userRepository: UserRepository,
 
   afterInit() {
     this.logger.log('WebSocket server initialized');
@@ -45,24 +46,60 @@ export class EventsGateway
   async handleConnection(client: IoSocket) {
     const token = client.handshake?.headers?.authorization?.split(' ')[1];
     if (!token) {
+      this.logger.warn('Connection rejected: No token provided');
       client.disconnect(true);
       return;
     }
-    try {
-      const decoded = this.jwtService.verify(token, {
-        secret: this.configService.get('app.jwtSecret'),
-      });
+    // Use verifyAsync and proper secret like AuthService does
+      const payload: { sub: string; email: string } =
+        await this.jwtService.verifyAsync(token, {
+          secret: this.configService.get('app.jwtSecret'),
+        });
 
-      if (!decoded || !decoded.email) {
+      if (!payload || !payload.sub || !payload.email) {
+        this.logger.warn('Connection rejected: Invalid token payload');
         client.disconnect(true);
         return;
       }
 
+       // Verify user exists and is active (like AuthService does)
+      const user = await this.userRepository.findOneById(payload.sub);
+      if (!user) {
+        this.logger.warn(
+          `Connection rejected: User ${payload.sub} does not exist`,
+        );
+        client.disconnect(true);
+        return;
+      }
+       if (!user.isActive) {
+        this.logger.warn(
+          `Connection rejected: User ${user.email} is not active`,
+        );
+        client.disconnect(true);
+        return;
+      }
+
+      if (!user.isApproved) {
+        this.logger.warn(
+          `Connection rejected: User ${user.email} is not approved`,
+        );
+        client.disconnect(true);
+        return;
+      }
+
+      // Generate unique identifier for this connection
+
       const uniqueId = randomBytes(4).toString('hex');
-      client.data.user = { ...decoded, email: `${decoded.email}#${uniqueId}` };
+      client.data.user = {
+        id: payload.sub,
+        email: `${payload.email}#${uniqueId}`,
+        originalEmail: payload.email,
+      };
+
+      this.logger.log(`User ${payload.email} connected successfully`);
     } catch (error) {
+      this.logger.error('Token verification failed:', error.message);
       client.disconnect(true);
-      console.error('Token verification failed:', error);
       return;
     }
   }
@@ -73,6 +110,7 @@ export class EventsGateway
     @MessageBody() roomName: WSRoom,
   ): void {
     if (!client.data.user) {
+      this.logger.warn('Join room rejected: No authenticated user');
       client.disconnect(true);
       return;
     }
@@ -81,7 +119,7 @@ export class EventsGateway
       this.rooms.set(roomName, new Set());
     }
     this.rooms.get(roomName)!.add(client.data.user.email);
-    console.log(`${client.data.user.email} joined room ${roomName}`);
+    this.logger.log(`${client.data.user.email} joined room ${roomName}`);
   }
 
   @SubscribeMessage('leaveRoom')
@@ -90,6 +128,7 @@ export class EventsGateway
     @MessageBody() roomName: WSRoom,
   ): void {
     if (!client.data.user) {
+      this.logger.warn('Leave room rejected: No authenticated user');
       client.disconnect(true);
       return;
     }
@@ -101,15 +140,15 @@ export class EventsGateway
       this.rooms.get(roomName)!.delete(client.data.user.email);
     }
 
-    console.log(`${client.data.user.email} left room ${roomName}`);
+        this.logger.log(`${client.data.user.email} left room ${roomName}`);
   }
 
   sendToRoom(roomName: WSRoom, message: string, data: any): void {
     if (this.rooms.has(roomName)) {
       this.server.to(roomName).emit(message, data);
-      console.log(`Message sent to room ${roomName}: ${message}`);
+      this.logger.log(`Message sent to room ${roomName}: ${message}`);
     } else {
-      console.log(`Room ${roomName} does not exist.`);
+       this.logger.log(`Room ${roomName} does not exist.`);
     }
   }
 
@@ -121,7 +160,7 @@ export class EventsGateway
 
   handleDisconnect(client: IoSocket): any {
     if (!client.data.user || !client.data.user.email) {
-      console.log('Client disconnected, no user found');
+      this.logger.log('Client disconnected, no user found');
       return;
     }
 
@@ -129,6 +168,7 @@ export class EventsGateway
       members.delete(client.data.user.email);
     });
 
-    console.log(`${client.data.user.email} disconnected`);
+    this.logger.log(`${client.data.user.email} disconnected`);
   }
 }
+
