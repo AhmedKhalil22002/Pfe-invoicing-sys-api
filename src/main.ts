@@ -100,6 +100,9 @@ async function bootstrap() {
   await app.listen(port);
   logger.log(`==========================================================`);
   logger.log(`Http Server running on ${await app.getUrl()}`, 'NestApplication');
+  logger.log(
+    `Storage driver is set to ${configService.get<string>('app.storageDriver')}`,
+  );
   logger.log(`==========================================================`);
 }
 

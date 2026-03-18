@@ -15,6 +15,7 @@ export default registerAs(
     },
 
     jobEnable: process.env.JOB_ENABLE === 'true' || false,
+    storageDriver: process.env.STORAGE_DRIVER ?? 'local',
     uploadPath: process.env.UPLOAD_PATH ?? '/upload',
     jwtSecret: process.env.JWT_SECRET || 'jwt-secret',
     jwtAccessTokenExpiration: process.env.JWT_ACCESS_TOKEN_EXPIRATION || '1d',
