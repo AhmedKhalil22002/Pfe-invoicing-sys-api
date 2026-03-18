@@ -40,5 +40,5 @@ export function formSequential(
   next: number,
   date: Date = new Date(),
 ): string {
-  return `${prefix}-${format(date, dateFormat)}-${next}`;
+  return `${prefix}-${format(date, dateFormat.toLowerCase())}-${next}`;
 }

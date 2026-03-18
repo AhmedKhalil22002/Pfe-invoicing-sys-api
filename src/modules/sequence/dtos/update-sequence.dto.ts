@@ -11,10 +11,6 @@ import {
 export class UpdateSequenceDto {
   @ApiProperty({ type: String })
   @IsString()
-  label: string;
-
-  @ApiProperty({ type: String })
-  @IsString()
   @MaxLength(3)
   prefix?: string;
 

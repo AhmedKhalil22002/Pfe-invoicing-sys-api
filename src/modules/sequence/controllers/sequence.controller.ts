@@ -19,7 +19,7 @@ import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { toDto, toDtoArray } from 'src/shared/database/utils/dtos';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
-import { UpdateSequenceDto } from '../dtos/upadate-sequence.dto';
+import { UpdateSequenceDto } from '../dtos/update-sequence.dto';
 import { AdvancedRequest } from 'src/types';
 
 @ApiTags('sequence')
@@ -59,6 +59,15 @@ export class SequenceController {
     return toDto(
       ResponseSequenceDto,
       await this.sequenceService.findOneById(id),
+    );
+  }
+  @Get('label/:label')
+  async findOneByLabel(
+    @Param('label') label: string,
+  ): Promise<ResponseSequenceDto | null> {
+    return toDto(
+      ResponseSequenceDto,
+      await this.sequenceService.findByLabel(label),
     );
   }
 
