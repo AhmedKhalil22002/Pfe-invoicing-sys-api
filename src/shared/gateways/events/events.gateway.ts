@@ -15,6 +15,7 @@ import { WSRoom } from '../../../app/enums/ws-room.enum';
 import { Logger } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { UserRepository } from 'src/modules/user-management/repositories/user.repository';
+
 @WebSocketGateway({
   path: '/ws',
   cors: {
@@ -36,8 +37,8 @@ export class EventsGateway
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userRepository: UserRepository,
   ) {}
-  private readonly userRepository: UserRepository,
 
   afterInit() {
     this.logger.log('WebSocket server initialized');
@@ -50,7 +51,9 @@ export class EventsGateway
       client.disconnect(true);
       return;
     }
-    // Use verifyAsync and proper secret like AuthService does
+
+    try {
+      // Use verifyAsync and proper secret like AuthService does
       const payload: { sub: string; email: string } =
         await this.jwtService.verifyAsync(token, {
           secret: this.configService.get('app.jwtSecret'),
@@ -62,7 +65,7 @@ export class EventsGateway
         return;
       }
 
-       // Verify user exists and is active (like AuthService does)
+      // Verify user exists and is active (like AuthService does)
       const user = await this.userRepository.findOneById(payload.sub);
       if (!user) {
         this.logger.warn(
@@ -71,7 +74,8 @@ export class EventsGateway
         client.disconnect(true);
         return;
       }
-       if (!user.isActive) {
+
+      if (!user.isActive) {
         this.logger.warn(
           `Connection rejected: User ${user.email} is not active`,
         );
@@ -88,7 +92,6 @@ export class EventsGateway
       }
 
       // Generate unique identifier for this connection
-
       const uniqueId = randomBytes(4).toString('hex');
       client.data.user = {
         id: payload.sub,
@@ -140,7 +143,7 @@ export class EventsGateway
       this.rooms.get(roomName)!.delete(client.data.user.email);
     }
 
-        this.logger.log(`${client.data.user.email} left room ${roomName}`);
+    this.logger.log(`${client.data.user.email} left room ${roomName}`);
   }
 
   sendToRoom(roomName: WSRoom, message: string, data: any): void {
@@ -148,7 +151,7 @@ export class EventsGateway
       this.server.to(roomName).emit(message, data);
       this.logger.log(`Message sent to room ${roomName}: ${message}`);
     } else {
-       this.logger.log(`Room ${roomName} does not exist.`);
+      this.logger.log(`Room ${roomName} does not exist.`);
     }
   }
 
@@ -171,4 +174,3 @@ export class EventsGateway
     this.logger.log(`${client.data.user.email} disconnected`);
   }
 }
-
