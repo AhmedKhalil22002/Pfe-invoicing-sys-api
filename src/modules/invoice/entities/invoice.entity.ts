@@ -116,11 +116,13 @@ export class InvoiceEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   quotationId: number;
 
-  @ManyToOne(() => TaxEntity)
+  @ManyToOne(() => TaxEntity, {
+    nullable: true,
+  })
   @JoinColumn({ name: 'taxStampId' })
   taxStamp: TaxEntity;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   taxStampId: number;
 
   @OneToMany(() => PaymentInvoiceEntryEntity, (entry) => entry.invoice)
