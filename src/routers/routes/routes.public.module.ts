@@ -42,6 +42,8 @@ import { UserController } from 'src/modules/user-management/controllers/user.con
 import { RoleController } from 'src/modules/user-management/controllers/role.controller';
 import { PermissionController } from 'src/modules/user-management/controllers/permission.controller';
 import { UserManagementModule } from 'src/modules/user-management/user-management.module';
+import { SequenceController } from 'src/modules/sequence/controllers/sequence.controller';
+import { SequenceModule } from 'src/modules/sequence/sequence.module';
 
 @Module({
   controllers: [
@@ -62,6 +64,7 @@ import { UserManagementModule } from 'src/modules/user-management/user-managemen
     InterlocutorController,
     InvoiceController,
     PaymentController,
+    SequenceController,
     PaymentConditionController,
     QuotationController,
     TaxController,
@@ -88,6 +91,7 @@ import { UserManagementModule } from 'src/modules/user-management/user-managemen
     PaymentConditionModule,
     PaymentModule,
     QuotationModule,
+    SequenceModule,
     TaxModule,
     TaxWithholdingModule,
     TemplateModule,

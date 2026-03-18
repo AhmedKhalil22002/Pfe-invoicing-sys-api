@@ -79,4 +79,5 @@ export enum EVENT_TYPE {
   FIRM_BANK_ACCOUNT_CREATED = 'firm_bank_account_created',
   FIRM_BANK_ACCOUNT_UPDATED = 'firm_bank_account_updated',
   FIRM_BANK_ACCOUNT_DELETED = 'firm_bank_account_deleted',
+  SEQUENCE_UPDATED = 'sequence_updated',
 }
