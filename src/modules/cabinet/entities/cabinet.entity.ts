@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { AddressEntity } from 'src/modules/address/entities/address.entity';
-import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
+import { StorageEntity } from 'src/shared/storage/entities/storage.entity';
 
 @Entity('cabinet')
 export class CabinetEntity extends EntityHelper {
@@ -49,16 +49,16 @@ export class CabinetEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   addressId: number;
 
-  @ManyToOne(() => UploadEntity)
+  @ManyToOne(() => StorageEntity)
   @JoinColumn({ name: 'logoId' })
-  logo: UploadEntity;
+  logo: StorageEntity;
 
   @Column({ type: 'int', nullable: true })
   logoId: number;
 
-  @ManyToOne(() => UploadEntity)
+  @ManyToOne(() => StorageEntity)
   @JoinColumn({ name: 'signatureId' })
-  signature: UploadEntity;
+  signature: StorageEntity;
 
   @Column({ type: 'int', nullable: true })
   signatureId: number;

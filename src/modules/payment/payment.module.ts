@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { PaymentService } from './services/payment.service';
-import { PaymentUploadService } from './services/payment-upload.service';
+import { PaymentStorageService } from './services/payment-upload.service';
 import { PaymentInvoiceEntryService } from './services/payment-invoice-entry.service';
 import { InvoiceModule } from '../invoice/invoice.module';
 import { CurrencyModule } from '../currency/currency.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentEntity } from './entities/payment.entity';
 import { PaymentInvoiceEntryEntity } from './entities/payment-invoice-entry.entity';
-import { PaymentUploadEntity } from './entities/payment-file.entity';
+import { PaymentStorageEntity } from './entities/payment-file.entity';
 import { PaymentRepository } from './repositories/payment-file.repository';
 import { PaymentInvoiceEntryRepository } from './repositories/payment-invoice-entry.repository';
 import { PaymentUploadRepository } from './repositories/payment.repository';
-import { UploadModule } from 'src/shared/uploads/uploads.module';
+import { StorageModule } from 'src/shared/uploads/uploads.module';
 
 @Module({
   controllers: [],
@@ -20,7 +20,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     PaymentInvoiceEntryRepository,
     PaymentUploadRepository,
     PaymentService,
-    PaymentUploadService,
+    PaymentStorageService,
     PaymentInvoiceEntryService,
   ],
   exports: [
@@ -33,12 +33,12 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     TypeOrmModule.forFeature([
       PaymentEntity,
       PaymentInvoiceEntryEntity,
-      PaymentUploadEntity,
+      PaymentStorageEntity,
     ]),
 
     CurrencyModule,
     InvoiceModule,
-    UploadModule,
+    StorageModule,
   ],
 })
 export class PaymentModule {}

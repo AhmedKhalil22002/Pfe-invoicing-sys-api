@@ -11,7 +11,7 @@ import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { BankAccountModule } from '../bank-account/bank-account.module';
 import { InvoiceService } from './services/invoice.service';
 import { InvoiceMetaDataService } from './services/invoice-meta-data.service';
-import { InvoiceUploadService } from './services/invoice-upload.service';
+import { InvoiceStorageService } from './services/invoice-upload.service';
 import { InvoiceSequenceService } from './services/invoice-sequence.service';
 import { ArticleInvoiceEntryService } from './services/article-invoice-entry.service';
 import { ArticleInvoiceEntryTaxService } from './services/article-invoice-entry-tax.service';
@@ -25,10 +25,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InvoiceEntity } from './entities/invoice.entity';
 import { ArticleInvoiceEntryTaxEntity } from './entities/article-invoice-entry-tax.entity';
 import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.entity';
-import { InvoiceUploadEntity } from './entities/invoice-file.entity';
+import { InvoiceStorageEntity } from './entities/invoice-file.entity';
 import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
 import { UploadModule } from 'src/shared/uploads/uploads.module';
-import { SequenceModule } from '../sequence/sequence.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 @Module({
   controllers: [],
   providers: [
@@ -40,7 +40,7 @@ import { SequenceModule } from '../sequence/sequence.module';
 
     InvoiceService,
     InvoiceMetaDataService,
-    InvoiceUploadService,
+    InvoiceStorageService,
     InvoiceSequenceService,
     ArticleInvoiceEntryService,
     ArticleInvoiceEntryTaxService,
@@ -58,7 +58,7 @@ import { SequenceModule } from '../sequence/sequence.module';
       InvoiceEntity,
       ArticleInvoiceEntryTaxEntity,
       ArticleInvoiceEntryEntity,
-      InvoiceUploadEntity,
+      InvoiceStorageEntity,
       InvoiceMetaDataEntity,
     ]),
 
@@ -71,7 +71,7 @@ import { SequenceModule } from '../sequence/sequence.module';
     InterlocutorModule,
     TaxModule,
     TaxWithholdingModule,
-    SequenceModule,
+    StorageModule,
     //abstract modules
     PdfModule,
     GatewaysModule,

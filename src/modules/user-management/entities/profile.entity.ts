@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Gender } from '../enums/gender.enum';
-import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
+import { StorageEntity } from 'src/shared/storage/entities/storage.entity';
 
 @Entity('profiles')
 export class ProfileEntity extends EntityHelper {
@@ -34,13 +34,13 @@ export class ProfileEntity extends EntityHelper {
   @Column({ nullable: true })
   regionId?: number;
 
-  @ManyToOne(() => UploadEntity, {
+  @ManyToOne(() => StorageEntity, {
     onDelete: 'CASCADE',
     eager: true,
     nullable: true,
   })
   @JoinColumn({ name: 'pictureId' })
-  picture?: UploadEntity;
+  picture?: StorageEntity;
 
   @Column({ nullable: true })
   pictureId?: number;

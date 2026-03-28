@@ -15,19 +15,19 @@ import { QuotationSequenceService } from './services/quotation-sequence.service'
 import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
 import { BankAccountModule } from '../bank-account/bank-account.module';
-import { QuotationUploadService } from './services/quotation-upload.service';
+import { QuotationStorageService } from './services/quotation-upload.service';
 import { InvoiceModule } from '../invoice/invoice.module';
 import { QuotationEntity } from './entities/quotation.entity';
 import { QuotationMetaDataEntity } from './entities/quotation-meta-data.entity';
 import { ArticleQuotationEntryEntity } from './entities/article-quotation-entry.entity';
 import { ArticleQuotationEntryTaxEntity } from './entities/article-quotation-entry-tax.entity';
-import { QuotationUploadEntity } from './entities/quotation-file.entity';
+import { QuotationStorageEntity } from './entities/quotation-file.entity';
 import { QuotationRepository } from './repositories/quotation.repository';
 import { QuotationMetaDataRepository } from './repositories/quotation-meta-data-repository';
 import { ArticleQuotationEntryRepository } from './repositories/article-quotation-entry.repository';
 import { ArticleQuotationEntryTaxRepository } from './repositories/article-quotation-entry-tax.repository';
 import { QuotationUploadRepository } from './repositories/quotation-upload.repository';
-import { UploadModule } from 'src/shared/uploads/uploads.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 
 @Module({
   controllers: [],
@@ -41,7 +41,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     // Services
     QuotationService,
     QuotationMetaDataService,
-    QuotationUploadService,
+    QuotationStorageService,
     QuotationSequenceService,
     ArticleQuotationEntryService,
     ArticleQuotationEntryTaxService,
@@ -54,7 +54,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
       QuotationMetaDataEntity,
       ArticleQuotationEntryEntity,
       ArticleQuotationEntryTaxEntity,
-      QuotationUploadEntity,
+      QuotationStorageEntity,
     ]),
     ArticleModule,
     AppConfigModule,
@@ -67,7 +67,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     PdfModule,
     GatewaysModule,
     CalculationsModule,
-    UploadModule,
+    StorageModule,
   ],
 })
 export class QuotationModule {}

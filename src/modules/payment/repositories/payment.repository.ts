@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm';
-import { PaymentUploadEntity } from '../entities/payment-file.entity';
+import { PaymentStorageEntity } from '../entities/payment-file.entity';
 import { DatabaseAbstractRepository } from 'src/shared/database/repositories/database.repository';
 
 @Injectable()
-export class PaymentUploadRepository extends DatabaseAbstractRepository<PaymentUploadEntity> {
+export class PaymentUploadRepository extends DatabaseAbstractRepository<PaymentStorageEntity> {
   constructor(
-    @InjectRepository(PaymentUploadEntity)
-    private readonly paymentUploadRepository: Repository<PaymentUploadEntity>,
+    @InjectRepository(PaymentStorageEntity)
+    private readonly paymentUploadRepository: Repository<PaymentStorageEntity>,
     txHost: TransactionHost<TransactionalAdapterTypeOrm>,
   ) {
     super(paymentUploadRepository, txHost);

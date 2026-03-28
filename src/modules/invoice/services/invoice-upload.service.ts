@@ -5,18 +5,18 @@ import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { InvoiceUploadRepository } from '../repositories/invoice-upload.repository';
-import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
+import { InvoiceStorageEntity } from '../entities/invoice-file.entity';
 import { InvoiceUploadNotFoundException } from '../errors/invoice-upload.notfound';
-import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
-export class InvoiceUploadService {
+export class InvoiceStorageService {
   constructor(
     private readonly invoiceUploadRepository: InvoiceUploadRepository,
-    private readonly uploadService: UploadService,
+    private readonly StorageService: StorageService,
   ) {}
 
-  async findOneById(id: number): Promise<InvoiceUploadEntity> {
+  async findOneById(id: number): Promise<InvoiceStorageEntity> {
     const upload = await this.invoiceUploadRepository.findOneById(id);
     if (!upload) {
       throw new InvoiceUploadNotFoundException();
@@ -26,27 +26,27 @@ export class InvoiceUploadService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<InvoiceUploadEntity | null> {
+  ): Promise<InvoiceStorageEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const upload = await this.invoiceUploadRepository.findOne(
-      queryOptions as FindOneOptions<InvoiceUploadEntity>,
+      queryOptions as FindOneOptions<InvoiceStorageEntity>,
     );
     if (!upload) return null;
     return upload;
   }
 
-  async findAll(query: IQueryObject): Promise<InvoiceUploadEntity[]> {
+  async findAll(query: IQueryObject): Promise<InvoiceStorageEntity[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.invoiceUploadRepository.findAll(
-      queryOptions as FindManyOptions<InvoiceUploadEntity>,
+      queryOptions as FindManyOptions<InvoiceStorageEntity>,
     );
   }
 
   async findAllPaginated(
     query: IQueryObject,
-  ): Promise<PageDto<InvoiceUploadEntity>> {
+  ): Promise<PageDto<InvoiceStorageEntity>> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const count = await this.invoiceUploadRepository.getTotalCount({
@@ -54,7 +54,7 @@ export class InvoiceUploadService {
     });
 
     const entities = await this.invoiceUploadRepository.findAll(
-      queryOptions as FindManyOptions<InvoiceUploadEntity>,
+      queryOptions as FindManyOptions<InvoiceStorageEntity>,
     );
 
     const pageMetaDto = new PageMetaDto({
@@ -71,20 +71,23 @@ export class InvoiceUploadService {
   async save(
     invoiceId: number,
     uploadId: number,
-  ): Promise<InvoiceUploadEntity> {
+  ): Promise<InvoiceStorageEntity> {
     return this.invoiceUploadRepository.save({ invoiceId, uploadId });
   }
 
-  async duplicate(id: number, invoiceId: number): Promise<InvoiceUploadEntity> {
+  async duplicate(
+    id: number,
+    invoiceId: number,
+  ): Promise<InvoiceStorageEntity> {
     //Find the original invoice upload entity
     const originalInvoiceUpload = await this.findOneById(id);
 
     //Use the StorageService to duplicate the file
-    const duplicatedUpload = await this.uploadService.duplicate(
+    const duplicatedUpload = await this.StorageService.duplicate(
       originalInvoiceUpload.uploadId,
     );
 
-    //Save the duplicated InvoiceUploadEntity
+    //Save the duplicated InvoiceStorageEntity
     const duplicatedInvoiceUpload = await this.invoiceUploadRepository.save({
       invoiceId: invoiceId,
       uploadId: duplicatedUpload.id,
@@ -96,24 +99,24 @@ export class InvoiceUploadService {
   async duplicateMany(
     ids: number[],
     invoiceId: number,
-  ): Promise<InvoiceUploadEntity[]> {
+  ): Promise<InvoiceStorageEntity[]> {
     const duplicatedInvoiceUploads = await Promise.all(
       ids.map((id) => this.duplicate(id, invoiceId)),
     );
     return duplicatedInvoiceUploads;
   }
 
-  async softDelete(id: number): Promise<InvoiceUploadEntity> {
+  async softDelete(id: number): Promise<InvoiceStorageEntity> {
     const upload = await this.findOneById(id);
-    this.uploadService.delete(upload.uploadId);
+    this.StorageService.delete(upload.uploadId);
     this.invoiceUploadRepository.softDelete(upload.id);
     return upload;
   }
 
   async softDeleteMany(
-    invoiceUploadEntities: InvoiceUploadEntity[],
-  ): Promise<InvoiceUploadEntity[]> {
-    this.uploadService.deleteMany(
+    invoiceUploadEntities: InvoiceStorageEntity[],
+  ): Promise<InvoiceStorageEntity[]> {
+    this.StorageService.deleteMany(
       invoiceUploadEntities.map((qu) => qu.upload.id),
     );
     return this.invoiceUploadRepository.softDeleteMany(

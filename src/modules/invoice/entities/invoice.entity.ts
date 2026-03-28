@@ -17,7 +17,7 @@ import { TaxWithholdingEntity } from 'src/modules/tax-withholding/entities/tax-w
 import { PaymentInvoiceEntryEntity } from 'src/modules/payment/entities/payment-invoice-entry.entity';
 import { TaxEntity } from 'src/modules/tax/entities/tax.entity';
 import { QuotationEntity } from 'src/modules/quotation/entities/quotation.entity';
-import { InvoiceUploadEntity } from './invoice-file.entity';
+import { InvoiceStorageEntity } from './invoice-file.entity';
 import { InvoiceMetaDataEntity } from './invoice-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { ArticleInvoiceEntryEntity } from './article-invoice-entry.entity';
@@ -106,8 +106,8 @@ export class InvoiceEntity extends EntityHelper {
   @Column({ type: 'int' })
   bankAccountId: number;
 
-  @OneToMany(() => InvoiceUploadEntity, (upload) => upload.invoice)
-  uploads: InvoiceUploadEntity[];
+  @OneToMany(() => InvoiceStorageEntity, (upload) => upload.invoice)
+  uploads: InvoiceStorageEntity[];
 
   @ManyToOne(() => QuotationEntity)
   @JoinColumn({ name: 'quotationId' })

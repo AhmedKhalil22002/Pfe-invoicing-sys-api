@@ -10,13 +10,13 @@ import { ProfileNotFoundException } from '../errors/profile/profile.notfound.err
 import { CreateProfileDto } from '../dtos/profile/create-profile.dto';
 import { UpdateProfileDto } from '../dtos/profile/update-profile.dto';
 import { ProfileRepository } from '../repositories/profile.repository';
-import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private readonly profileRepository: ProfileRepository,
-    private readonly uploadService: UploadService,
+    private readonly uploadService: StorageService,
   ) {}
 
   async findOneById(id: number): Promise<ProfileEntity> {

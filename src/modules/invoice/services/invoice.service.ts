@@ -15,7 +15,7 @@ import { BankAccountService } from 'src/modules/bank-account/services/bank-accou
 import { Transactional } from '@nestjs-cls/transactional';
 import { InvoiceRepository } from '../repositories/invoice.repository';
 import { ArticleInvoiceEntryService } from './article-invoice-entry.service';
-import { InvoiceUploadService } from './invoice-upload.service';
+import { InvoiceStorageService } from './invoice-upload.service';
 import { InvoiceMetaDataService } from './invoice-meta-data.service';
 import { InvoiceSequenceService } from './invoice-sequence.service';
 import { InvoiceNotFoundException } from '../errors/invoice.notfound.error';
@@ -33,7 +33,7 @@ import { TaxWithholdingService } from 'src/modules/tax-withholding/services/tax-
 import { ciel } from 'src/utils/number.utils';
 import { parseSequential } from 'src/modules/sequence/utils/sequence.utils';
 import { ResponseInvoiceRangeDto } from '../dtos/invoice-range.response.dto';
-import { InvoiceUploadEntity } from '../entities/invoice-file.entity';
+import { InvoiceStorageEntity } from '../entities/invoice-file.entity';
 
 @Injectable()
 export class InvoiceService {
@@ -42,7 +42,7 @@ export class InvoiceService {
     private readonly invoiceRepository: InvoiceRepository,
     //entity services
     private readonly articleInvoiceEntryService: ArticleInvoiceEntryService,
-    private readonly invoiceUploadService: InvoiceUploadService,
+    private readonly invoiceStorageService: InvoiceStorageService,
     private readonly bankAccountService: BankAccountService,
     private readonly currencyService: CurrencyService,
     private readonly firmService: FirmService,
@@ -294,7 +294,7 @@ export class InvoiceService {
     if (createInvoiceDto.uploads) {
       await Promise.all(
         createInvoiceDto.uploads.map((u) =>
-          this.invoiceUploadService.save(invoice.id, u.uploadId),
+          this.invoiceStorageService.save(invoice.id, u.uploadId),
         ),
       );
     }
@@ -461,7 +461,7 @@ export class InvoiceService {
 
     const updatedUploads = await Promise.all(
       updateInvoiceDto.uploads.map((u) =>
-        this.invoiceUploadService.findOneById(u.id),
+        this.invoiceStorageService.findOneById(u.id),
       ),
     );
 
@@ -471,15 +471,15 @@ export class InvoiceService {
       newItems: newUploads,
       eliminatedItems: eliminatedUploads,
     } = await this.invoiceRepository.updateAssociations<
-      Pick<InvoiceUploadEntity, 'id' | 'invoiceId' | 'uploadId'>
+      Pick<InvoiceStorageEntity, 'id' | 'invoiceId' | 'uploadId'>
     >({
       keys: ['invoiceId', 'uploadId'],
       updatedItems: updatedUploads,
       existingItems: existingUploads,
       onCreate: (entity) =>
-        this.invoiceUploadService.save(entity.invoiceId, entity.uploadId),
+        this.invoiceStorageService.save(entity.invoiceId, entity.uploadId),
       onDelete: (id: number) =>
-        this.invoiceUploadService.softDelete(existingUploads[id].id),
+        this.invoiceStorageService.softDelete(existingUploads[id].id),
     });
 
     // Save and return the updated invoice with all updated details
@@ -539,7 +539,7 @@ export class InvoiceService {
       );
 
     const uploads = duplicateInvoiceDto.includeFiles
-      ? await this.invoiceUploadService.duplicateMany(
+      ? await this.invoiceStorageService.duplicateMany(
           existingInvoice.uploads.map((upload) => upload.id),
           invoice.id,
         )

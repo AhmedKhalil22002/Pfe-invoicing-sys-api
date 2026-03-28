@@ -7,10 +7,10 @@ import {
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { QuotationEntity } from './quotation.entity';
-import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
+import { StorageEntity } from 'src/shared/storage/entities/storage.entity';
 
 @Entity('quotation-upload')
-export class QuotationUploadEntity extends EntityHelper {
+export class QuotationStorageEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,9 +21,9 @@ export class QuotationUploadEntity extends EntityHelper {
   @Column({ type: 'int' })
   quotationId: number;
 
-  @ManyToOne(() => UploadEntity)
+  @ManyToOne(() => StorageEntity)
   @JoinColumn({ name: 'uploadId' })
-  upload: UploadEntity;
+  upload: StorageEntity;
 
   @Column({ type: 'int' })
   uploadId: number;

@@ -10,7 +10,7 @@ import { UpdateCabinetDto } from '../dtos/cabinet.update.dto';
 import { CurrencyService } from 'src/modules/currency/services/currency.service';
 import { ActivityService } from 'src/modules/activity/services/activity.service';
 import { CabinetRepository } from '../repositories/cabinet.repository';
-import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 import { DeepPartial } from 'typeorm';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class CabinetService {
     private readonly addressService: AddressService,
     private readonly currencyService: CurrencyService,
     private readonly activityService: ActivityService,
-    private readonly uploadService: UploadService,
+    private readonly uploadService: StorageService,
   ) {}
 
   async findOneById(id: number): Promise<CabinetEntity> {

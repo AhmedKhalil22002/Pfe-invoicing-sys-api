@@ -6,17 +6,17 @@ import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
 import { PaymentUploadRepository } from '../repositories/payment.repository';
 import { PaymentUploadNotFoundException } from '../errors/payment-upload.notfound.error';
-import { PaymentUploadEntity } from '../entities/payment-file.entity';
-import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { PaymentStorageEntity } from '../entities/payment-file.entity';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
-export class PaymentUploadService {
+export class PaymentStorageService {
   constructor(
     private readonly paymentUploadRepository: PaymentUploadRepository,
-    private readonly uploadService: UploadService,
+    private readonly uploadService: StorageService,
   ) {}
 
-  async findOneById(id: number): Promise<PaymentUploadEntity> {
+  async findOneById(id: number): Promise<PaymentStorageEntity> {
     const upload = await this.paymentUploadRepository.findOneById(id);
     if (!upload) {
       throw new PaymentUploadNotFoundException();
@@ -26,27 +26,27 @@ export class PaymentUploadService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<PaymentUploadEntity | null> {
+  ): Promise<PaymentStorageEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const upload = await this.paymentUploadRepository.findOne(
-      queryOptions as FindOneOptions<PaymentUploadEntity>,
+      queryOptions as FindOneOptions<PaymentStorageEntity>,
     );
     if (!upload) return null;
     return upload;
   }
 
-  async findAll(query: IQueryObject): Promise<PaymentUploadEntity[]> {
+  async findAll(query: IQueryObject): Promise<PaymentStorageEntity[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.paymentUploadRepository.findAll(
-      queryOptions as FindManyOptions<PaymentUploadEntity>,
+      queryOptions as FindManyOptions<PaymentStorageEntity>,
     );
   }
 
   async findAllPaginated(
     query: IQueryObject,
-  ): Promise<PageDto<PaymentUploadEntity>> {
+  ): Promise<PageDto<PaymentStorageEntity>> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const count = await this.paymentUploadRepository.getTotalCount({
@@ -54,7 +54,7 @@ export class PaymentUploadService {
     });
 
     const entities = await this.paymentUploadRepository.findAll(
-      queryOptions as FindManyOptions<PaymentUploadEntity>,
+      queryOptions as FindManyOptions<PaymentStorageEntity>,
     );
 
     const pageMetaDto = new PageMetaDto({
@@ -71,11 +71,14 @@ export class PaymentUploadService {
   async save(
     paymentId: number,
     uploadId: number,
-  ): Promise<PaymentUploadEntity> {
+  ): Promise<PaymentStorageEntity> {
     return this.paymentUploadRepository.save({ paymentId, uploadId });
   }
 
-  async duplicate(id: number, paymentId: number): Promise<PaymentUploadEntity> {
+  async duplicate(
+    id: number,
+    paymentId: number,
+  ): Promise<PaymentStorageEntity> {
     //Find the original payment upload entity
     const originalPaymentUpload = await this.findOneById(id);
 
@@ -84,7 +87,7 @@ export class PaymentUploadService {
       originalPaymentUpload.uploadId,
     );
 
-    //Save the duplicated PaymentUploadEntity
+    //Save the duplicated PaymentStorageEntity
     const duplicatedPaymentUpload = await this.paymentUploadRepository.save({
       paymentId,
       uploadId: duplicatedUpload.id,
@@ -96,14 +99,14 @@ export class PaymentUploadService {
   async duplicateMany(
     ids: number[],
     paymentId: number,
-  ): Promise<PaymentUploadEntity[]> {
+  ): Promise<PaymentStorageEntity[]> {
     const duplicatedPaymentUploads = await Promise.all(
       ids.map((id) => this.duplicate(id, paymentId)),
     );
     return duplicatedPaymentUploads;
   }
 
-  async softDelete(id: number): Promise<PaymentUploadEntity> {
+  async softDelete(id: number): Promise<PaymentStorageEntity> {
     const upload = await this.findOneById(id);
     this.uploadService.delete(upload.uploadId);
     this.paymentUploadRepository.softDelete(upload.id);
@@ -111,8 +114,8 @@ export class PaymentUploadService {
   }
 
   async softDeleteMany(
-    quotationUploadEntities: PaymentUploadEntity[],
-  ): Promise<PaymentUploadEntity[]> {
+    quotationUploadEntities: PaymentStorageEntity[],
+  ): Promise<PaymentStorageEntity[]> {
     this.uploadService.deleteMany(
       quotationUploadEntities.map((qu) => qu.upload.id),
     );

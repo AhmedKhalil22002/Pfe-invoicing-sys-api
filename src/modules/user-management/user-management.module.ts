@@ -15,7 +15,7 @@ import { RolePermissionEntity } from './entities/role-permission.entity';
 import { ProfileEntity } from './entities/profile.entity';
 import { ProfileRepository } from './repositories/profile.repository';
 import { ProfileService } from './services/profile.service';
-import { UploadModule } from 'src/shared/uploads/uploads.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 
 @Module({
   controllers: [],
@@ -52,7 +52,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
       RolePermissionEntity,
       ProfileEntity,
     ]),
-    UploadModule,
+    StorageModule,
   ],
 })
 export class UserManagementModule {}

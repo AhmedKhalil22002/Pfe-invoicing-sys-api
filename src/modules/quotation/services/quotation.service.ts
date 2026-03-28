@@ -21,7 +21,7 @@ import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { QuotationMetaDataService } from './quotation-meta-data.service';
 import { TaxService } from 'src/modules/tax/services/tax.service';
 import { BankAccountService } from 'src/modules/bank-account/services/bank-account.service';
-import { QuotationUploadService } from './quotation-upload.service';
+import { QuotationStorageService } from './quotation-upload.service';
 import { ResponseQuotationUploadDto } from '../dtos/quotation-upload.response.dto';
 import { QuotationSequence } from '../interfaces/quotation-sequence.interface';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
@@ -38,7 +38,7 @@ export class QuotationService {
     private readonly quotationRepository: QuotationRepository,
     //entity services
     private readonly articleQuotationEntryService: ArticleQuotationEntryService,
-    private readonly quotationUploadService: QuotationUploadService,
+    private readonly quotationStorageService: QuotationStorageService,
     private readonly bankAccountService: BankAccountService,
     private readonly currencyService: CurrencyService,
     private readonly firmService: FirmService,
@@ -243,7 +243,7 @@ export class QuotationService {
     if (createQuotationDto.uploads) {
       await Promise.all(
         createQuotationDto.uploads.map((u) =>
-          this.quotationUploadService.save(quotation.id, u.uploadId),
+          this.quotationStorageService.save(quotation.id, u.uploadId),
         ),
       );
     }
@@ -278,14 +278,14 @@ export class QuotationService {
         );
         if (!exists)
           eliminatedUploads.push(
-            await this.quotationUploadService.softDelete(upload.id),
+            await this.quotationStorageService.softDelete(upload.id),
           );
         else keptUploads.push(upload);
       }
       for (const upload of updateQuotationDto.uploads) {
         if (!upload.id)
           newUploads.push(
-            await this.quotationUploadService.save(id, upload.uploadId),
+            await this.quotationStorageService.save(id, upload.uploadId),
           );
       }
     }
@@ -435,7 +435,7 @@ export class QuotationService {
       );
 
     const uploads = duplicateQuotationDto.includeFiles
-      ? await this.quotationUploadService.duplicateMany(
+      ? await this.quotationStorageService.duplicateMany(
           existingQuotation.uploads.map((upload) => upload.id),
           quotation.id,
         )

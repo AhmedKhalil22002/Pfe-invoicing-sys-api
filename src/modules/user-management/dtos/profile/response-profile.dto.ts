@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../../enums/gender.enum';
 import { Expose, Type } from 'class-transformer';
 import { ResponseUserDto } from 'src/modules/user-management/dtos/user/response-user.dto';
-import { ResponseUploadDto } from 'src/shared/uploads/dtos/response-upload.dto';
+import { ResponseStorageDto } from 'src/shared/storage/dtos/response-storage.dto';
 
 export class ResponseProfileDto {
   @ApiProperty({ type: Number })
@@ -33,10 +33,10 @@ export class ResponseProfileDto {
   @Expose()
   pictureId?: number;
 
-  @ApiProperty({ type: ResponseUploadDto })
+  @ApiProperty({ type: ResponseStorageDto })
   @Expose()
-  @Type(() => ResponseUploadDto)
-  picture?: ResponseUploadDto;
+  @Type(() => ResponseStorageDto)
+  picture?: ResponseStorageDto;
 
   @ApiProperty({ type: () => ResponseUserDto })
   @Expose()

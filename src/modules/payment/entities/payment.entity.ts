@@ -8,7 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PAYMENT_MODE } from '../enums/payment-mode.enum';
-import { PaymentUploadEntity } from './payment-file.entity';
+import { PaymentStorageEntity } from './payment-file.entity';
 import { PaymentInvoiceEntryEntity } from './payment-invoice-entry.entity';
 import { CurrencyEntity } from 'src/modules/currency/entities/currency.entity';
 import { FirmEntity } from 'src/modules/firm/entities/firm.entity';
@@ -43,8 +43,8 @@ export class PaymentEntity extends EntityHelper {
   @Column({ type: 'int', nullable: true })
   currencyId: number;
 
-  @OneToMany(() => PaymentUploadEntity, (upload) => upload.payment)
-  uploads: PaymentUploadEntity[];
+  @OneToMany(() => PaymentStorageEntity, (upload) => upload.payment)
+  uploads: PaymentStorageEntity[];
 
   @OneToMany(() => PaymentInvoiceEntryEntity, (invoice) => invoice.payment)
   invoices: PaymentInvoiceEntryEntity[];

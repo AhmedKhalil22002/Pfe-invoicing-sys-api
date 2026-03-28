@@ -6,7 +6,7 @@ import { ActivityModule } from '../activity/activity.module';
 import { CabinetRepository } from './repositories/cabinet.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CabinetEntity } from './entities/cabinet.entity';
-import { UploadModule } from 'src/shared/uploads/uploads.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 
 @Module({
   controllers: [],
@@ -17,7 +17,7 @@ import { UploadModule } from 'src/shared/uploads/uploads.module';
     ActivityModule,
     AddressModule,
     CurrencyModule,
-    UploadModule,
+    StorageModule,
   ],
 })
 export class CabinetModule {}

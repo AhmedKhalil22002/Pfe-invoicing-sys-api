@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { QuotationUploadRepository } from '../repositories/quotation-upload.repository';
-import { QuotationUploadEntity } from '../entities/quotation-file.entity';
+import { QuotationStorageEntity } from '../entities/quotation-file.entity';
 import { QuotationUploadNotFoundException } from '../errors/quotation-upload.notfound';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
 import { QueryBuilder } from 'src/shared/database/utils/database-query-builder';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { PageDto } from 'src/shared/database/dtos/database.page.dto';
 import { PageMetaDto } from 'src/shared/database/dtos/database.page-meta.dto';
-import { UploadService } from 'src/shared/uploads/services/upload.service';
+import { StorageService } from 'src/shared/storage/services/storage.service';
 
 @Injectable()
-export class QuotationUploadService {
+export class QuotationStorageService {
   constructor(
     private readonly quotationUploadRepository: QuotationUploadRepository,
-    private readonly uploadService: UploadService,
+    private readonly uploadService: StorageService,
   ) {}
 
-  async findOneById(id: number): Promise<QuotationUploadEntity> {
+  async findOneById(id: number): Promise<QuotationStorageEntity> {
     const upload = await this.quotationUploadRepository.findOneById(id);
     if (!upload) {
       throw new QuotationUploadNotFoundException();
@@ -26,27 +26,27 @@ export class QuotationUploadService {
 
   async findOneByCondition(
     query: IQueryObject,
-  ): Promise<QuotationUploadEntity | null> {
+  ): Promise<QuotationStorageEntity | null> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const upload = await this.quotationUploadRepository.findOne(
-      queryOptions as FindOneOptions<QuotationUploadEntity>,
+      queryOptions as FindOneOptions<QuotationStorageEntity>,
     );
     if (!upload) return null;
     return upload;
   }
 
-  async findAll(query: IQueryObject): Promise<QuotationUploadEntity[]> {
+  async findAll(query: IQueryObject): Promise<QuotationStorageEntity[]> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     return await this.quotationUploadRepository.findAll(
-      queryOptions as FindManyOptions<QuotationUploadEntity>,
+      queryOptions as FindManyOptions<QuotationStorageEntity>,
     );
   }
 
   async findAllPaginated(
     query: IQueryObject,
-  ): Promise<PageDto<QuotationUploadEntity>> {
+  ): Promise<PageDto<QuotationStorageEntity>> {
     const queryBuilder = new QueryBuilder();
     const queryOptions = queryBuilder.build(query);
     const count = await this.quotationUploadRepository.getTotalCount({
@@ -54,7 +54,7 @@ export class QuotationUploadService {
     });
 
     const entities = await this.quotationUploadRepository.findAll(
-      queryOptions as FindManyOptions<QuotationUploadEntity>,
+      queryOptions as FindManyOptions<QuotationStorageEntity>,
     );
 
     const pageMetaDto = new PageMetaDto({
@@ -71,14 +71,14 @@ export class QuotationUploadService {
   async save(
     quotationId: number,
     uploadId: number,
-  ): Promise<QuotationUploadEntity> {
+  ): Promise<QuotationStorageEntity> {
     return this.quotationUploadRepository.save({ quotationId, uploadId });
   }
 
   async duplicate(
     id: number,
     quotationId: number,
-  ): Promise<QuotationUploadEntity> {
+  ): Promise<QuotationStorageEntity> {
     //Find the original quotation upload entity
     const originalQuotationUpload = await this.findOneById(id);
 
@@ -87,7 +87,7 @@ export class QuotationUploadService {
       originalQuotationUpload.uploadId,
     );
 
-    //Save the duplicated QuotationUploadEntity
+    //Save the duplicated QuotationStorageEntity
     const duplicatedQuotationUpload = await this.quotationUploadRepository.save(
       { quotationId: quotationId, uploadId: duplicatedUpload.id },
     );
@@ -98,14 +98,14 @@ export class QuotationUploadService {
   async duplicateMany(
     ids: number[],
     quotationId: number,
-  ): Promise<QuotationUploadEntity[]> {
+  ): Promise<QuotationStorageEntity[]> {
     const duplicatedQuotationUploads = await Promise.all(
       ids.map((id) => this.duplicate(id, quotationId)),
     );
     return duplicatedQuotationUploads;
   }
 
-  async softDelete(id: number): Promise<QuotationUploadEntity> {
+  async softDelete(id: number): Promise<QuotationStorageEntity> {
     const upload = await this.findOneById(id);
     this.uploadService.delete(upload.uploadId);
     this.quotationUploadRepository.softDelete(upload.id);
@@ -113,8 +113,8 @@ export class QuotationUploadService {
   }
 
   async softDeleteMany(
-    quotationUploadEntities: QuotationUploadEntity[],
-  ): Promise<QuotationUploadEntity[]> {
+    quotationUploadEntities: QuotationStorageEntity[],
+  ): Promise<QuotationStorageEntity[]> {
     this.uploadService.deleteMany(
       quotationUploadEntities.map((qu) => qu.upload.id),
     );

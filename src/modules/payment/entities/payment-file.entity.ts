@@ -7,10 +7,10 @@ import {
 } from 'typeorm';
 import { EntityHelper } from 'src/shared/database/interfaces/database.entity.interface';
 import { PaymentEntity } from './payment.entity';
-import { UploadEntity } from 'src/shared/uploads/entities/upload.entity';
+import { StorageEntity } from 'src/shared/storage/entities/storage.entity';
 
 @Entity('payment-upload')
-export class PaymentUploadEntity extends EntityHelper {
+export class PaymentStorageEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,9 +21,9 @@ export class PaymentUploadEntity extends EntityHelper {
   @Column({ type: 'int' })
   paymentId: number;
 
-  @ManyToOne(() => UploadEntity)
+  @ManyToOne(() => StorageEntity)
   @JoinColumn({ name: 'uploadId' })
-  upload: UploadEntity;
+  upload: StorageEntity;
 
   @Column({ type: 'int' })
   uploadId: number;
