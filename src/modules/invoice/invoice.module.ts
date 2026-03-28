@@ -27,7 +27,7 @@ import { ArticleInvoiceEntryTaxEntity } from './entities/article-invoice-entry-t
 import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.entity';
 import { InvoiceStorageEntity } from './entities/invoice-file.entity';
 import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
-
+import { SequenceModule } from '../sequence/sequence.module';
 import { StorageModule } from 'src/shared/storage/storage.module';
 @Module({
   controllers: [],
@@ -71,6 +71,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
     InterlocutorModule,
     TaxModule,
     TaxWithholdingModule,
+    SequenceModule,
     StorageModule,
     //abstract modules
     PdfModule,
