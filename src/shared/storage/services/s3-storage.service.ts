@@ -48,7 +48,7 @@ export class S3StorageService extends StorageService {
 
   async store(
     file: Express.Multer.File,
-    isTemporary: boolean,
+    isTemporary: boolean = false,
   ): Promise<StorageEntity> {
     const slug = uuidv4();
     const filename = file.originalname;
@@ -89,7 +89,7 @@ export class S3StorageService extends StorageService {
 
   async storeMultiple(
     files: Express.Multer.File[],
-    isTemporary: boolean,
+    isTemporary: boolean = false,
   ): Promise<StorageEntity[]> {
     return Promise.all(files.map((file) => this.store(file, isTemporary)));
   }

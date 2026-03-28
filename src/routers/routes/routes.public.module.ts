@@ -44,7 +44,8 @@ import { PermissionController } from 'src/modules/user-management/controllers/pe
 import { UserManagementModule } from 'src/modules/user-management/user-management.module';
 import { SequenceController } from 'src/modules/sequence/controllers/sequence.controller';
 import { SequenceModule } from 'src/modules/sequence/sequence.module';
-
+import { StorageController } from 'src/shared/storage/controllers/storage.controller';
+import { StorageModule } from 'src/shared/storage/storage.module';
 @Module({
   controllers: [
     UserController,
@@ -68,6 +69,7 @@ import { SequenceModule } from 'src/modules/sequence/sequence.module';
     PaymentConditionController,
     QuotationController,
     TaxController,
+    StorageController,
     TaxWithholdingController,
     TemplateCategoryController,
   ],
@@ -92,6 +94,7 @@ import { SequenceModule } from 'src/modules/sequence/sequence.module';
     PaymentModule,
     QuotationModule,
     SequenceModule,
+    StorageModule,
     TaxModule,
     TaxWithholdingModule,
     TemplateModule,

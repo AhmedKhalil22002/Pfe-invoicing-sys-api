@@ -22,12 +22,12 @@ export abstract class StorageService extends AbstractCrudService<StorageEntity> 
 
   abstract store(
     file: Express.Multer.File,
-    isTemporary: boolean,
+    isTemporary?: boolean,
   ): Promise<StorageEntity>;
 
   abstract storeMultiple(
     files: Express.Multer.File[],
-    isTemporary: boolean,
+    isTemporary?: boolean,
   ): Promise<StorageEntity[]>;
 
   async confirm(id: number): Promise<StorageEntity> {
