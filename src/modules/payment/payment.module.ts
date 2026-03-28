@@ -11,7 +11,7 @@ import { PaymentStorageEntity } from './entities/payment-file.entity';
 import { PaymentRepository } from './repositories/payment-file.repository';
 import { PaymentInvoiceEntryRepository } from './repositories/payment-invoice-entry.repository';
 import { PaymentUploadRepository } from './repositories/payment.repository';
-import { StorageModule } from 'src/shared/uploads/uploads.module';
+import { StorageModule } from 'src/shared/storage/storage.module';
 
 @Module({
   controllers: [],

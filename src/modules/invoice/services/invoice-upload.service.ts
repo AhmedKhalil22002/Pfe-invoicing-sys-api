@@ -13,7 +13,7 @@ import { StorageService } from 'src/shared/storage/services/storage.service';
 export class InvoiceStorageService {
   constructor(
     private readonly invoiceUploadRepository: InvoiceUploadRepository,
-    private readonly StorageService: StorageService,
+    private readonly storageService: StorageService,
   ) {}
 
   async findOneById(id: number): Promise<InvoiceStorageEntity> {
@@ -83,7 +83,7 @@ export class InvoiceStorageService {
     const originalInvoiceUpload = await this.findOneById(id);
 
     //Use the StorageService to duplicate the file
-    const duplicatedUpload = await this.StorageService.duplicate(
+    const duplicatedUpload = await this.storageService.duplicate(
       originalInvoiceUpload.uploadId,
     );
 
@@ -108,7 +108,7 @@ export class InvoiceStorageService {
 
   async softDelete(id: number): Promise<InvoiceStorageEntity> {
     const upload = await this.findOneById(id);
-    this.StorageService.delete(upload.uploadId);
+    this.storageService.delete(upload.uploadId);
     this.invoiceUploadRepository.softDelete(upload.id);
     return upload;
   }
@@ -116,7 +116,7 @@ export class InvoiceStorageService {
   async softDeleteMany(
     invoiceUploadEntities: InvoiceStorageEntity[],
   ): Promise<InvoiceStorageEntity[]> {
-    this.StorageService.deleteMany(
+    this.storageService.deleteMany(
       invoiceUploadEntities.map((qu) => qu.upload.id),
     );
     return this.invoiceUploadRepository.softDeleteMany(

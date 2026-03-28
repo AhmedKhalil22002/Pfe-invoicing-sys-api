@@ -27,7 +27,7 @@ import { ArticleInvoiceEntryTaxEntity } from './entities/article-invoice-entry-t
 import { ArticleInvoiceEntryEntity } from './entities/article-invoice-entry.entity';
 import { InvoiceStorageEntity } from './entities/invoice-file.entity';
 import { InvoiceMetaDataEntity } from './entities/invoice-meta-data.entity';
-import { UploadModule } from 'src/shared/uploads/uploads.module';
+
 import { StorageModule } from 'src/shared/storage/storage.module';
 @Module({
   controllers: [],
@@ -76,7 +76,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
     PdfModule,
     GatewaysModule,
     CalculationsModule,
-    UploadModule,
+    StorageModule,
   ],
 })
 export class InvoiceModule {}
