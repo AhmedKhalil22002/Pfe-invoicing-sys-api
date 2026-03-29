@@ -11,52 +11,32 @@ import {
 } from 'class-validator';
 
 export class CreateBankAccountDto {
-  @ApiProperty({
-    required: false,
-    example: faker.name.firstName(),
-  })
-  @IsOptional()
+  @ApiProperty({ example: faker.name.firstName() })
   @IsString()
   @MaxLength(255)
-  name?: string;
+  name: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.bic(),
-  })
-  @IsOptional()
+  @ApiProperty({ example: faker.finance.bic() })
   @IsBIC()
-  bic?: string;
+  bic: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.account(20),
-  })
-  @IsOptional()
+  @ApiProperty({ example: faker.finance.account(20) })
   @IsString()
   @MaxLength(20)
-  rib?: string;
+  rib: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.iban(),
-  })
+  @ApiProperty({ example: faker.finance.iban() })
   @IsIBAN()
-  iban?: string;
+  iban: string;
 
   @ApiProperty({
-    required: false,
     example: 1,
   })
-  @IsOptional()
   @IsInt()
-  currencyId?: number;
+  currencyId: number;
 
-  @ApiProperty({
-    required: false,
-    example: faker.datatype.boolean(),
-  })
-  @IsOptional()
+  @ApiProperty({ example: faker.datatype.boolean() })
   @IsBoolean()
+  @IsOptional()
   isMain?: boolean;
 }

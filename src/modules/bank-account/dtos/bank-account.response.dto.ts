@@ -1,44 +1,40 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
-export class ResponseBankAccountDto {
-  @ApiProperty({
-    required: false,
-    example: faker.datatype.number(),
-  })
-  id?: number;
-  @ApiProperty({
-    required: false,
-    example: faker.name.firstName(),
-  })
-  name?: string;
+import { Expose, Type } from 'class-transformer';
+import { ResponseCurrencyDto } from 'src/modules/currency/dtos/currency.response.dto';
+import { ResponseDtoHelper } from 'src/shared/database/dtos/database.response.dto';
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.bic(),
-  })
-  bic?: string;
+export class ResponseBankAccountDto extends ResponseDtoHelper {
+  @ApiProperty({ example: faker.datatype.number() })
+  @Expose()
+  id: number;
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.account(20),
-  })
-  rib?: string;
+  @ApiProperty({ example: faker.name.firstName() })
+  @Expose()
+  name: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.finance.iban(),
-  })
-  iban?: string;
+  @ApiProperty({ example: faker.finance.bic() })
+  @Expose()
+  bic: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.datatype.number({ min: 1, max: 1000 }),
-  })
-  currencyId?: number;
+  @ApiProperty({ example: faker.finance.account(20) })
+  @Expose()
+  rib: string;
 
-  @ApiProperty({
-    required: false,
-    example: faker.datatype.boolean(),
-  })
-  isMain?: boolean;
+  @ApiProperty({ example: faker.finance.iban() })
+  @Expose()
+  iban: string;
+
+  @ApiProperty({ type: String })
+  @Expose()
+  currencyId: number;
+
+  @ApiProperty({ type: ResponseCurrencyDto })
+  @Expose()
+  @Type(() => ResponseCurrencyDto)
+  currency: ResponseCurrencyDto;
+
+  @ApiProperty({ example: faker.datatype.boolean() })
+  @Expose()
+  isMain: boolean;
 }
