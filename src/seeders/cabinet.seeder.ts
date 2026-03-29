@@ -34,6 +34,7 @@ export class CabinetSeederCommand {
     const currencyRandomIndex = Math.floor(Math.random() * currencies.length);
     const country = await this.countryService.findOneByCondition({
       filter: `alpha2Code||$eq||FR`,
+      
     });
 
     const address = await this.addressService.save({
