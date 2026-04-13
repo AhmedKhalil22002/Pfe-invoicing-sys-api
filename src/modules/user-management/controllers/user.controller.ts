@@ -124,6 +124,27 @@ export class UserController {
     req.logInfo = { id };
     return toDto(ResponseUserDto, await this.userService.deactivate(id));
   }
+  @Put('/approve/:id')
+  @LogEvent(EVENT_TYPE.USER_UPDATED)
+  async approve(
+    @Param('id') id: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    const user = await this.userService.approve(id);
+    req.logInfo = { id: user?.id, firstName: user?.firstName };
+    return toDto(ResponseUserDto, user);
+  }
+
+  @Put('/disapprove/:id')
+  @LogEvent(EVENT_TYPE.USER_UPDATED)
+  async disapprove(
+    @Param('id') id: string,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponseUserDto | null> {
+    const user = await this.userService.disapprove(id);
+    req.logInfo = { id: user?.id, firstName: user?.firstName };
+    return toDto(ResponseUserDto, user);
+  }
 
   @Delete(':id')
   @LogEvent(EVENT_TYPE.USER_DELETED)
