@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { AppConfigService } from 'src/shared/app-config/services/app-config.service';
 import { QuotationSequentialNotFoundException } from '../errors/quotation.sequential.error';
-import { AppConfigEntity } from 'src/shared/app-config/entities/app-config.entity';
 import { EventsGateway } from 'src/shared/gateways/events/events.gateway';
 import { UpdateQuotationSequenceDto } from '../dtos/quotation-seqence.update.dto';
 import { formSequential } from 'src/modules/sequence/utils/sequence.utils';
 import { WSRoom } from 'src/app/enums/ws-room.enum';
+import { SequenceService } from 'src/modules/sequence/services/sequence.service';
+import { Sequences } from 'src/app/enums/sequences.enum';
+import { SequenceEntity } from 'src/modules/sequence/entities/sequence.entity';
 
 @Injectable()
 export class QuotationSequenceService {
   constructor(
-    private readonly appConfigService: AppConfigService,
+    private readonly sequenceService: SequenceService,
     private readonly wsGateway: EventsGateway,
   ) {}
 
-  async get(): Promise<AppConfigEntity> {
-    const sequence =
-      await this.appConfigService.findOneByName('quotation_sequence');
+  async get(): Promise<SequenceEntity> {
+    const sequence = await this.sequenceService.findByLabel(
+      Sequences.QUOTATION,
+    );
     if (!sequence) {
       throw new QuotationSequentialNotFoundException();
     }
@@ -25,26 +27,26 @@ export class QuotationSequenceService {
 
   async set(
     updateQuotationSequenceDto: UpdateQuotationSequenceDto,
-  ): Promise<AppConfigEntity> {
+  ): Promise<SequenceEntity> {
     const sequence = await this.get();
-    const updatedSequence = await this.appConfigService.update(sequence.id, {
-      value: updateQuotationSequenceDto,
-    });
+    const updatedSequence = await this.sequenceService.update(
+      sequence.id,
+      updateQuotationSequenceDto,
+    );
     return updatedSequence;
   }
-
   async getSequential(): Promise<string> {
     const sequence = await this.get();
-    this.set({ ...sequence.value, next: sequence.value.next + 1 });
+    this.set({
+      prefix: sequence.prefix,
+      dateFormat: sequence.dateFormat,
+      next: sequence.next + 1,
+    });
     this.wsGateway.sendToRoom(
       WSRoom.QUOTATION_SEQUENCE,
       'quotation-sequence-updated',
-      { value: sequence.value.next + 1 },
+      { value: sequence.next + 1 },
     );
-    return formSequential(
-      sequence.value.prefix,
-      sequence.value.dateFormat,
-      sequence.value.next,
-    );
+    return formSequential(sequence.prefix, sequence.dateFormat, sequence.next);
   }
 }

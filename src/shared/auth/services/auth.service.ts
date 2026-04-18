@@ -88,7 +88,7 @@ export class AuthService {
       throw new UnauthorizedException('User does not have a password');
     }
 
-    const isPasswordValid = comparePasswords(password, user.password);
+    const isPasswordValid = await comparePasswords(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }

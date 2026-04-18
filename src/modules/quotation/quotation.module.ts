@@ -10,7 +10,6 @@ import { TaxModule } from '../tax/tax.module';
 import { ArticleModule } from '../article/article.module';
 import { PdfModule } from 'src/shared/pdf/pdf.module';
 import { CalculationsModule } from 'src/shared/calculations/calculations.module';
-import { AppConfigModule } from 'src/shared/app-config/app-config.module';
 import { QuotationSequenceService } from './services/quotation-sequence.service';
 import { GatewaysModule } from 'src/shared/gateways/gateways.module';
 import { QuotationMetaDataService } from './services/quotation-meta-data.service';
@@ -28,6 +27,7 @@ import { ArticleQuotationEntryRepository } from './repositories/article-quotatio
 import { ArticleQuotationEntryTaxRepository } from './repositories/article-quotation-entry-tax.repository';
 import { QuotationUploadRepository } from './repositories/quotation-upload.repository';
 import { StorageModule } from 'src/shared/storage/storage.module';
+import { SequenceModule } from '../sequence/sequence.module';
 
 @Module({
   controllers: [],
@@ -57,7 +57,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
       QuotationStorageEntity,
     ]),
     ArticleModule,
-    AppConfigModule,
+    SequenceModule,
     BankAccountModule,
     CurrencyModule,
     FirmModule,

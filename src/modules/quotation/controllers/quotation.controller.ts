@@ -30,7 +30,7 @@ import { EVENT_TYPE } from 'src/shared/logger/enums/event-type.enum';
 import { AdvancedRequest } from 'src/types';
 
 @ApiTags('quotation')
-@Controller({ version: '1', path: '/quotation' })
+@Controller('/quotation')
 @UseInterceptors(LogInterceptor)
 export class QuotationController {
   constructor(

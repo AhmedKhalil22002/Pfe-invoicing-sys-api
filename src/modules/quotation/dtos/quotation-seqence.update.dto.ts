@@ -9,7 +9,7 @@ export class UpdateQuotationSequenceDto {
 
   @ApiProperty({ enum: DateFormat })
   @IsOptional()
-  dynamic_sequence: DateFormat;
+  dateFormat: DateFormat;
 
   @ApiProperty({ example: 'EST', type: String })
   @IsOptional()

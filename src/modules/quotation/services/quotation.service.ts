@@ -465,7 +465,7 @@ export class QuotationService {
   async updateQuotationSequence(
     updatedSequenceDto: UpdateQuotationSequenceDto,
   ): Promise<QuotationSequence> {
-    return (await this.quotationSequenceService.set(updatedSequenceDto)).value;
+    return this.quotationSequenceService.set(updatedSequenceDto);
   }
 
   @Transactional()
