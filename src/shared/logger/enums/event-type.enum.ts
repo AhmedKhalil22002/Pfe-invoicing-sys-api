@@ -80,4 +80,10 @@ export enum EVENT_TYPE {
   FIRM_BANK_ACCOUNT_UPDATED = 'firm_bank_account_updated',
   FIRM_BANK_ACCOUNT_DELETED = 'firm_bank_account_deleted',
   SEQUENCE_UPDATED = 'sequence_updated',
+
+  // ****************************************************************
+
+  QUOTATION_CREATED = '_quotation_created',
+  QUOTATION_UPDATED = '_quotation_updated',
+  QUOTATION_DELETED = '_quotation_deleted',
 }
