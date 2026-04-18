@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateQuotationDto {
   @ApiProperty({ enum: ['incoming', 'outgoing'] })
@@ -7,11 +7,11 @@ export class CreateQuotationDto {
   direction: 'incoming' | 'outgoing';
 
   @ApiProperty({ type: Date })
-  @IsDate()
+  @IsDateString()
   date: Date;
 
   @ApiProperty({ type: Date })
-  @IsDate()
+  @IsDateString()
   dueDate: Date;
 
   @ApiProperty({ type: String })

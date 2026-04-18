@@ -9,8 +9,8 @@ export class QuotationEntity extends EntityHelper {
   @Column({ type: 'enum', enum: ['incoming', 'outgoing'] })
   direction: 'incoming' | 'outgoing';
 
-  @Column({ type: 'varchar', unique: true })
-  sequence: string;
+  //@Column({ type: 'varchar', unique: true })
+  //sequence: string;
 
   @Column({ nullable: true })
   date: Date;

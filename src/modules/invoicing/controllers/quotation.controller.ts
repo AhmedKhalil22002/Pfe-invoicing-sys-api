@@ -77,7 +77,7 @@ export class PseudoQuotationController {
     const quotation = await this.quotationService.save(createQuotationDto);
     req.logInfo = {
       id: quotation.id,
-      seqence: quotation.sequence,
+      //seqence: quotation.sequence,
       direction: quotation.direction,
     };
     return toDto(ResponseQuotationDto, quotation);
@@ -107,7 +107,7 @@ export class PseudoQuotationController {
     );
     req.logInfo = {
       id,
-      seqence: quotation?.sequence,
+      // seqence: quotation?.sequence,
       direction: quotation?.direction,
     };
     return toDto(ResponseQuotationDto, quotation);
