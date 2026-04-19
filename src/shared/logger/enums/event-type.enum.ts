@@ -34,6 +34,14 @@ export enum EVENT_TYPE {
   SELLING_QUOTATION_INVOICED = 'quotation_invoiced',
   SELLING_QUOTATION_DUPLICATED = 'quotation_duplicated',
 
+  //Buying Quotation
+  BUYING_QUOTATION_CREATED = 'buying_quotation_created',
+  BUYING_QUOTATION_UPDATED = 'buying_quotation_updated',
+  BUYING_QUOTATION_DELETED = 'buying_quotation_deleted',
+  BUYING_QUOTATION_PRINTED = 'buying_quotation_printed',
+  BUYING_QUOTATION_INVOICED = 'buying_quotation_invoiced',
+  BUYING_QUOTATION_DUPLICATED = 'buying_quotation_duplicated',
+
   //Selling Invoice
   SELLING_INVOICE_CREATED = 'invoice_created',
   SELLING_INVOICE_UPDATED = 'invoice_updated',

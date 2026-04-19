@@ -122,7 +122,7 @@ export class PseudoQuotationController {
     const quotation = await this.quotationService.softDelete(id);
     req.logInfo = {
       id,
-      seqence: quotation?.sequence,
+      //seqence: quotation?.sequence,
       direction: quotation?.direction,
     };
     return toDto(ResponseQuotationDto, quotation);

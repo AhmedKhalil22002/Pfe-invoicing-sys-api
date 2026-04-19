@@ -32,6 +32,8 @@ import { PaymentController } from 'src/modules/payment/controllers/payment.contr
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { QuotationController } from 'src/modules/quotation/controllers/quotation.controller';
 import { QuotationModule } from 'src/modules/quotation/quotation.module';
+import { PurchaseQuotationController } from 'src/modules/purchase-quotation/controllers/purchase-quotation.controller';
+import { PurchaseQuotationModule } from 'src/modules/purchase-quotation/purchase-quotation.module';
 import { TaxWithholdingController } from 'src/modules/tax-withholding/controllers/tax-withholding.controller';
 import { TaxWithholdingModule } from 'src/modules/tax-withholding/tax-withholding.module';
 import { TaxController } from 'src/modules/tax/controllers/tax.controller';
@@ -68,6 +70,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
     SequenceController,
     PaymentConditionController,
     QuotationController,
+    PurchaseQuotationController,
     TaxController,
     StorageController,
     TaxWithholdingController,
@@ -93,6 +96,7 @@ import { StorageModule } from 'src/shared/storage/storage.module';
     PaymentConditionModule,
     PaymentModule,
     QuotationModule,
+    PurchaseQuotationModule,
     SequenceModule,
     StorageModule,
     TaxModule,
