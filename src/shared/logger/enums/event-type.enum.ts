@@ -48,6 +48,12 @@ export enum EVENT_TYPE {
   SELLING_INVOICE_DELETED = 'invoice_deleted',
   SELLING_INVOICE_PRINTED = 'invoice_printed',
   SELLING_INVOICE_DUPLICATED = 'invoice_duplicated',
+  //Buying Invoice
+  BUYING_INVOICE_CREATED = 'buying_invoice_created',
+  BUYING_INVOICE_UPDATED = 'buying_invoice_updated',
+  BUYING_INVOICE_DELETED = 'buying_invoice_deleted',
+  BUYING_INVOICE_PRINTED = 'buying_invoice_printed',
+  BUYING_INVOICE_DUPLICATED = 'buying_invoice_duplicated',
 
   //Selling Payment
   SELLING_PAYMENT_CREATED = 'payment_created',
