@@ -14,6 +14,11 @@ import { CreatePurchaseInvoiceMetaDataDto } from './purchase-invoice-meta-data.c
 import { CreatePurchaseInvoiceUploadDto } from './purchase-invoice-upload.create.dto';
 
 export class CreatePurchaseInvoiceDto {
+  @ApiProperty({ example: 1, type: Number })
+  @IsOptional()
+  @IsInt()
+  cabinetId?: number;
+
   @ApiProperty({ example: faker.date.anytime() })
   date?: Date;
 

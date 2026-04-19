@@ -20,7 +20,7 @@ import { PurchaseQuotationStorageEntity } from './purchase-quotation-file.entity
 import { PURCHASE_QUOTATION_STATUS } from '../enums/purchase-quotation-status.enum';
 import { InterlocutorEntity } from 'src/modules/interlocutor/entities/interlocutor.entity';
 
-@Entity('purchase-quotation')
+@Entity('purchase_quotation')
 export class PurchaseQuotationEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

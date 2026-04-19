@@ -2,7 +2,7 @@ import { EntityHelper } from 'src/shared/database/interfaces/database.entity.int
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PurchaseQuotationEntity } from './purchase-quotation.entity';
 
-@Entity('purchase-quotation_meta_data')
+@Entity('purchase_quotation_meta_data')
 export class PurchaseQuotationMetaDataEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;

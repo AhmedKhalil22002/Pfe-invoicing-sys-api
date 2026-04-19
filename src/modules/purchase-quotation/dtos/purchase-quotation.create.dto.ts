@@ -15,6 +15,11 @@ import { CreatePurchaseQuotationMetaDataDto } from './purchase-quotation-meta-da
 import { CreatePurchaseQuotationUploadDto } from './purchase-quotation-upload.create.dto';
 
 export class CreatePurchaseQuotationDto {
+  @ApiProperty({ example: 1, type: Number })
+  @IsOptional()
+  @IsInt()
+  cabinetId?: number;
+
   @ApiProperty({ example: faker.date.anytime() })
   date?: Date;
 

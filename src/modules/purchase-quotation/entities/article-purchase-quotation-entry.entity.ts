@@ -12,7 +12,7 @@ import {
 import { ArticlePurchaseQuotationEntryTaxEntity } from './article-purchase-quotation-entry-tax.entity';
 import { PurchaseQuotationEntity } from './purchase-quotation.entity';
 
-@Entity('article-purchase-quotation-entry')
+@Entity('article_purchase_quotation_entry')
 export class ArticlePurchaseQuotationEntryEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,7 +43,7 @@ export class ArticlePurchaseQuotationEntryEntity extends EntityHelper {
   articleId: number;
 
   @ManyToOne(() => PurchaseQuotationEntity)
-  @JoinColumn({ name: 'purchase-quotationId' })
+  @JoinColumn({ name: 'purchaseQuotationId' })
   purchaseQuotation: PurchaseQuotationEntity;
 
   @Column({ type: 'int', nullable: true })
