@@ -7,7 +7,8 @@ export class InvoicingCalculationsService {
   constructor() {}
   //calulate subtotal for a line item
   calculateSubTotalForLineItem(lineItem: LineItem) {
-    const { quantity, unit_price } = lineItem;
+    const quantity = lineItem.quantity || 0;
+    const unit_price = lineItem.unit_price || 0;
     return quantity * unit_price;
   }
 
@@ -19,8 +20,8 @@ export class InvoicingCalculationsService {
 
     const discountAmount =
       discount_type === DISCOUNT_TYPES.PERCENTAGE
-        ? (subTotal * discount) / 100
-        : discount;
+        ? (subTotal * (discount || 0)) / 100
+        : (discount || 0);
 
     const subTotalPlusDiscount = subTotal - discountAmount;
 
@@ -126,10 +127,11 @@ export class InvoicingCalculationsService {
   ): number {
     let discountAmount = 0;
 
+    const validDiscount = discount || 0;
     if (discount_type === DISCOUNT_TYPES.AMOUNT) {
-      discountAmount = discount;
+      discountAmount = validDiscount;
     } else {
-      discountAmount = (total * discount) / 100;
+      discountAmount = (total * validDiscount) / 100;
     }
 
     if (applyDiscountAfter) {
