@@ -20,7 +20,7 @@ import { UpdatePurchaseQuotationSequenceDto } from '../dtos/purchase-quotation-s
 import { DuplicatePurchaseQuotationDto } from '../dtos/purchase-quotation.duplicate.dto';
 import { PurchaseQuotationSequence } from '../interfaces/purchase-quotation-sequence.interface';
 import { PURCHASE_QUOTATION_STATUS } from '../enums/purchase-quotation-status.enum';
-import { InvoiceService } from 'src/modules/invoice/services/invoice.service';
+import { PurchaseInvoiceService } from 'src/modules/purchase-invoice/services/purchase-invoice.service';
 import { LogInterceptor } from 'src/shared/logger/decorators/logger.interceptor';
 import { LogEvent } from 'src/shared/logger/decorators/log-event.decorator';
 import { IQueryObject } from 'src/shared/database/interfaces/database-query-options.interface';
@@ -35,7 +35,7 @@ import { AdvancedRequest } from 'src/types';
 export class PurchaseQuotationController {
   constructor(
     private readonly purchaseQuotationService: PurchaseQuotationService,
-    private readonly invoiceService: InvoiceService,
+    private readonly purchaseInvoiceService: PurchaseInvoiceService,
   ) {}
 
   @Get('/all')
@@ -110,6 +110,35 @@ export class PurchaseQuotationController {
     return this.purchaseQuotationService.updatePurchaseQuotationSequence(updatedSequenceDto);
   }
 
+  @ApiParam({ name: 'id', type: 'number', required: true })
+  @ApiParam({ name: 'create', type: 'boolean', required: false })
+  @Put('/invoice/:id/:create')
+  @LogEvent(EVENT_TYPE.BUYING_QUOTATION_INVOICED)
+  async invoice(
+    @Param('id') id: number,
+    @Param('create') create: boolean,
+    @Request() req: AdvancedRequest,
+  ): Promise<ResponsePurchaseQuotationDto> {
+    req.logInfo = { quotationId: id, invoiceId: null };
+    const purchaseQuotation = await this.purchaseQuotationService.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join:
+        'purchaseQuotationMetaData,' +
+        'articlePurchaseQuotationEntries,' +
+        `articlePurchaseQuotationEntries.article,` +
+        `articlePurchaseQuotationEntries.articlePurchaseQuotationEntryTaxes,` +
+        `articlePurchaseQuotationEntries.articlePurchaseQuotationEntryTaxes.tax`,
+    });
+    if (purchaseQuotation.status === PURCHASE_QUOTATION_STATUS.Invoiced || create) {
+      const invoice = await this.purchaseInvoiceService.saveFromQuotation(purchaseQuotation);
+      req.logInfo.invoiceId = invoice.id;
+    }
+    await this.purchaseQuotationService.updateStatus(id, PURCHASE_QUOTATION_STATUS.Invoiced);
+    return this.purchaseQuotationService.findOneByCondition({
+      filter: `id||$eq||${id}`,
+      join: 'purchaseInvoices',
+    });
+  }
 
   @ApiParam({ name: 'id', type: 'number', required: true })
   @Put('/:id')

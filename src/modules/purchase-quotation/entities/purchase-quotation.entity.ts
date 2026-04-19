@@ -16,6 +16,7 @@ import { CabinetEntity } from 'src/modules/cabinet/entities/cabinet.entity';
 import { PurchaseQuotationMetaDataEntity } from './purchase-quotation-meta-data.entity';
 import { BankAccountEntity } from 'src/modules/bank-account/entities/bank-account.entity';
 import { PurchaseQuotationStorageEntity } from './purchase-quotation-file.entity';
+import { PurchaseInvoiceEntity } from 'src/modules/purchase-invoice/entities/purchase-invoice.entity';
 
 import { PURCHASE_QUOTATION_STATUS } from '../enums/purchase-quotation-status.enum';
 import { InterlocutorEntity } from 'src/modules/interlocutor/entities/interlocutor.entity';
@@ -103,4 +104,6 @@ export class PurchaseQuotationEntity extends EntityHelper {
   @OneToMany(() => PurchaseQuotationStorageEntity, (upload) => upload.purchaseQuotation)
   uploads: PurchaseQuotationStorageEntity[];
 
+  @OneToMany(() => PurchaseInvoiceEntity, (invoice) => invoice.purchaseQuotation)
+  purchaseInvoices: PurchaseInvoiceEntity[];
 }
